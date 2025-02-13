@@ -1,39 +1,40 @@
 {
-  "editor.defaultFormatter": "biomejs.biome",
-  "github.copilot.chat.codeGeneration.instructions": [
-    {
-      "file": ".vscode/instructions/code.md"
-    }
-  ],
-  "github.copilot.chat.commitMessageGeneration.instructions": [
-    {
-      "file": ".vscode/instructions/git.md"
-    }
-  ],
-  "github.copilot.chat.reviewSelection.instructions": [
-    {
-      "file": ".vscode/instructions/review.md"
-    }
-  ],
-  "github.copilot.chat.testGeneration.instructions": [
-    {
-      "file": ".vscode/instructions/test.md"
-    }
-  ],
-  "material-icon-theme.activeIconPack": "none",
-  "material-icon-theme.folders.associations": {
-    "domain": "interface",
-    "instructions": "rules",
-    ".cursor": "quasar",
-    ".ai": "robot"
-  },
-  "material-icon-theme.files.associations": {
-    "*.component.ts": "templ",
-    "*.controller.ts": "c",
-    "*.page.ts": "routing",
-    "*.service.ts": "silcerstripe",
-    "*.repository.ts": "database",
-    "*.type.ts": "raml",
-    "*.utils.ts": "tilt"
-  },
+	"editor.defaultFormatter": "biomejs.biome",
+	"editor.formatOnSave": true,
+	"github.copilot.chat.codeGeneration.instructions": [
+		{
+			"file": ".vscode/instructions/code.md"
+		}
+	],
+	"github.copilot.chat.commitMessageGeneration.instructions": [
+		{
+			"file": ".vscode/instructions/git.md"
+		}
+	],
+	"github.copilot.chat.reviewSelection.instructions": [
+		{
+			"file": ".vscode/instructions/review.md"
+		}
+	],
+	"github.copilot.chat.testGeneration.instructions": [
+		{
+			"file": ".vscode/instructions/test.md"
+		}
+	],
+	"material-icon-theme.activeIconPack": "none",
+	"material-icon-theme.folders.associations": {
+		"domain": "interface",
+		"instructions": "rules",
+		".cursor": "quasar",
+		".ai": "robot"
+	},
+	"material-icon-theme.files.associations": {
+		"*.component.ts": "templ",
+		"*.controller.ts": "c",
+		"*.page.ts": "routing",
+		"*.service.ts": "silcerstripe",
+		"*.repository.ts": "database",
+		"*.type.ts": "raml",
+		"*.utils.ts": "tilt"
+	}
 }

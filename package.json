@@ -1,19 +1,25 @@
 {
-  "name": "full_stack_blueprint",
-  "version": "0.0.1",
-  "description": "A blueprint for building modern full stack applications with AI agents",
-  "main": "src/main.ts",
-  "scripts": {
-    "dev": "bun --watch run src/main.ts",
-    "start": "bun run src/main.ts"
-  },
-  "module": "src/main.ts",
-  "type": "module",
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  }
+	"name": "full_stack_blueprint",
+	"version": "0.0.1",
+	"description": "A blueprint for building modern full stack applications with AI agents",
+	"author": {
+		"name": "Alberto Basalo",
+		"email": "alberto@aicode.academy",
+		"url": "https://albertobasalo.dev"
+	},
+	"license": "MIT",
+	"main": "src/main.ts",
+	"scripts": {
+		"dev": "bun --watch run src/main.ts",
+		"start": "bun run src/main.ts"
+	},
+	"module": "src/main.ts",
+	"type": "module",
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	}
 }

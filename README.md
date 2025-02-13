@@ -77,3 +77,7 @@ bun dev
 # To run the project:
 bun start
 ```
+
+## License
+
+MIT Made with ❤️ by [Alberto Basalo](https://albertobasalo.dev) for [AI Code Academy](https://aicode.academy)

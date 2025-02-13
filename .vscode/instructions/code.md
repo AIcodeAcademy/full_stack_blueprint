@@ -29,6 +29,7 @@ tests/
 - Avoid deep nested control structures by using early returns
 - Validate data using plain TS functions no ValueObjects needed
 - Avoid external libraries as much as possible
+- For debugging use `console.log("source code that generated this", inspectedObject)`
 
 # Web rules
 
