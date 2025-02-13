@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "oven.bun-vscode",
+    "pkief.material-icon-theme",
+    "ms-playwright.playwright"
+  ]
+}

@@ -1,0 +1,48 @@
+---
+description: Html and css code rules
+globs: 
+---
+# Web development rules
+
+## HTML rules
+
+- Use standard HTML semantic tags like : `article`, `section`, `nav`, `header`, `footer`, `aside`...
+- Avoid `div` or `p` for layout and use proper semantic tags
+- Add ARIA attributes for accessibility
+- Add `role` attribute when needed
+- Add `id` `name` or `role` attributes to facilitate node selections
+
+## CSS rules
+
+- We use PicoCSS as reset to avoid classes
+- Do not create custom classes
+
+## Images
+
+- Avoid svg and use emojis for icons
+
+## PicoCSS
+
+- Use a basic reset such
+- Use variables for colors, fonts, and spacing
+- Use containers and grid for layout
+- Nice to have light/dark mode
+
+## Web APIs
+
+- Use fetch API for HTTP requests
+- Use localStorage for data storage
+- Avoid external libraries as much as possible
+
+## Web Components
+
+- Use Web Components
+- Do not use shadow DOM
+- Write the template in a variable as 
+  ```ts
+  const html = String.raw;
+  const template = html`<div>...</div>`;
+  ```
+- Use the `connectedCallback` lifecycle method to initialize the element
+- Use the `disconnectedCallback` lifecycle method to destroy the element
+
