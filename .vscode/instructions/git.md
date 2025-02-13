@@ -9,6 +9,7 @@
 - Add any pending changes
 - Generate a message with the summary of changes
 - Using conventional commits for messages
+- Be explicit and detailed about the changes
 
 ## Git release
 
