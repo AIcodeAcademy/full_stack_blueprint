@@ -3,11 +3,20 @@ import { api } from "./api/api.controller";
 import { initializeToolsTable } from "./api/tools/tools.repository";
 import { notFound } from "./shared/response.utils";
 
+/**
+ * Initialize the server
+ */
 export const initialize = () => {
 	initializeToolsTable();
 	console.log("Server initialized");
 };
 
+/**
+ * Process the request
+ * @param request - The request
+ * @param server - The server
+ * @returns The response
+ */
 export const processRequest = (
 	request: Request,
 	server: Server,

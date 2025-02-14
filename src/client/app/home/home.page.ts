@@ -1,5 +1,8 @@
 const html = String.raw;
 
+/**
+ * Home page component
+ */
 export class HomePage extends HTMLElement {
 	#appName = "Fullstack Blueprint";
 	#template = html`

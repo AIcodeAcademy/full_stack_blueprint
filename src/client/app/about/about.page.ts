@@ -5,6 +5,9 @@ import { getTools } from "./tools.repository";
 const html = String.raw;
 customElements.define("app-tools-table", ToolsTableComponent);
 
+/**
+ * About page component
+ */
 export class AboutPage extends HTMLElement {
 	#template = html`
     <h1>About</h1>

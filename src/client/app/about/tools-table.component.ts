@@ -20,10 +20,9 @@ export class ToolsTableComponent extends HTMLElement {
 
 	#tools: Tool[] = [];
 
-	get tools(): Tool[] {
-		return this.#tools;
-	}
-
+	/**
+	 * Set the tools and render them
+	 */
 	set tools(value: Tool[]) {
 		this.#tools = value;
 		this.#renderTools();
