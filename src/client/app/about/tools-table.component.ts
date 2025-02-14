@@ -4,17 +4,16 @@ const html = String.raw;
 /**
  * A Table component that displays a list of tools.
  */
-class ToolsTableComponent extends HTMLElement {
+export class ToolsTableComponent extends HTMLElement {
 	#template = html`
     <table>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Description</th>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
         </tr>
       </thead>
-      <tbody>
-        
+      <tbody> 
       </tbody>
     </table>
   `;
@@ -27,7 +26,7 @@ class ToolsTableComponent extends HTMLElement {
 
 	set tools(value: Tool[]) {
 		this.#tools = value;
-		this.renderTools();
+		this.#renderTools();
 	}
 
 	constructor() {
@@ -35,16 +34,14 @@ class ToolsTableComponent extends HTMLElement {
 		this.innerHTML = this.#template;
 	}
 
-	private renderTools(): void {
+	#renderTools(): void {
 		const tbody = this.querySelector("tbody");
-		if (tbody) {
-			tbody.innerHTML = "";
-			for (const tool of this.#tools) {
-				tbody.insertAdjacentHTML(
-					"beforeend",
-					`<tr><td>${tool.name}</td><td>${tool.description}</td></tr>`,
-				);
-			}
+		if (!tbody) return;
+		tbody.innerHTML = "";
+		for (const tool of this.#tools) {
+			const toolLink = html`<a href="${tool.url}" target="_blank">${tool.name}</a>`;
+			const toolRow = html`<tr><td>${toolLink}</td><td>${tool.description}</td></tr>`;
+			tbody.insertAdjacentHTML("beforeend", toolRow);
 		}
 	}
 }

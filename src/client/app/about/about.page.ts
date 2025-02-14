@@ -1,5 +1,6 @@
 import type { Tool } from "../../../server/domain/tool.type";
-import "../tools-table.component";
+import "./tools-table.component";
+import type { ToolsTableComponent } from "./tools-table.component";
 import { getTools } from "./tools.repository";
 
 const html = String.raw;
@@ -9,19 +10,19 @@ class AboutPage extends HTMLElement {
     <h1>About</h1>
     <app-tools-table></app-tools-table>
   `;
-	tools: Tool[] = [];
+	#tools: Tool[] = [];
+	#toolsTable: ToolsTableComponent | null = null;
+
 	constructor() {
 		super();
 		this.innerHTML = this.#template;
 	}
 
 	async connectedCallback() {
-		this.tools = await getTools();
-		const tableElement = this.querySelector(
-			"app-tools-table",
-		) as HTMLElement & { tools: Tool[] };
-		if (tableElement) {
-			tableElement.tools = this.tools;
+		this.#tools = await getTools();
+		this.#toolsTable = this.querySelector("app-tools-table");
+		if (this.#toolsTable) {
+			this.#toolsTable.tools = this.#tools;
 		}
 	}
 }
