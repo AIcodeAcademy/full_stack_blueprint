@@ -50,10 +50,8 @@ const login = async (credentials: Credentials): Promise<Response> => {
 		return unauthorized("Invalid credentials");
 	}
 
-	// Don't send the password hash back to the client
-	const { password: _, ...userWithoutPassword } = user;
 	const userToken = generateUserToken(user.id);
-	return ok({ user: userWithoutPassword, token: userToken });
+	return ok(userToken);
 };
 
 const register = async (credentials: Credentials): Promise<Response> => {
@@ -64,9 +62,6 @@ const register = async (credentials: Credentials): Promise<Response> => {
 
 	const hashedPassword = await hashPassword(credentials.password);
 	const user = await createUser(credentials.email, hashedPassword);
-
-	// Don't send the password hash back to the client
-	const { password: _, ...userWithoutPassword } = user;
 	const userToken = generateUserToken(user.id);
-	return ok({ user: userWithoutPassword, token: userToken });
+	return ok(userToken);
 };
