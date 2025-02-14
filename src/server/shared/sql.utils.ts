@@ -2,30 +2,44 @@ import { Database } from "bun:sqlite";
 
 const db = new Database(":memory:", { safeIntegers: false });
 
-// biome-ignore lint: params could be really any thing
-export const select = (query: string, params?: any): unknown[] => {
+export const selectAll = <R>(query: string): R[] => {
 	const q = db.query(query);
-	const r = q.all(params);
-	return r;
+	const r = q.all();
+	return r as R[];
 };
 
-// biome-ignore lint: params could be really any thing
-export const insert = (query: string, params: any): number => {
-	const result = db.query(query).run(params);
-	return Number(result.lastInsertRowid);
+export const selectById = <R>(query: string, id: string): R => {
+	const q = db.query(query);
+	const r = q.get({ $id: id });
+	return r as R;
 };
 
-export const update = (query: string): number => {
-	const result = db.query(query).run();
-	return Number(result.changes);
+export const select = <P, R>(query: string, params?: P): R => {
+	const q = db.query(query);
+	const r = params ? q.all(params) : q.all();
+	return r as R;
 };
 
-export const create = (query: string): number => {
-	const result = db.query(query).run();
-	return Number(result.changes);
+export const insert = <P>(query: string, params: P): number => {
+	const q = db.query(query);
+	const r = params ? q.run(params) : q.run();
+	return r.changes;
 };
 
-export const drop = (table: string): number => {
-	const result = db.query(`DROP TABLE IF EXISTS ${table}`).run();
-	return Number(result.changes);
+export const update = <P>(query: string, params: P): number => {
+	const q = db.query(query);
+	const r = params ? q.run(params) : q.run();
+	return r.changes;
+};
+
+export const create = (tableCreationCommand: string): number => {
+	const q = db.query(tableCreationCommand);
+	const r = q.run();
+	return r.changes;
+};
+
+export const drop = (tableName: string): number => {
+	const q = db.query(`DROP TABLE IF EXISTS ${tableName}`);
+	const r = q.run();
+	return r.changes;
 };

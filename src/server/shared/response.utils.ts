@@ -1,5 +1,5 @@
-export const ok = (message: unknown = "OK"): Response => {
-	return new Response(JSON.stringify(message), { status: 200 });
+export const ok = <T>(body: T): Response => {
+	return new Response(JSON.stringify(body), { status: 200 });
 };
 
 export const badRequest = (message = "Bad request"): Response => {
@@ -12,6 +12,14 @@ export const notFound = (message = "Not found"): Response => {
 
 export const unauthorized = (message = "Unauthorized"): Response => {
 	return new Response(message, { status: 401 });
+};
+
+export const forbidden = (message = "Forbidden"): Response => {
+	return new Response(message, { status: 403 });
+};
+
+export const methodNotAllowed = (message = "Method not allowed"): Response => {
+	return new Response(message, { status: 405 });
 };
 
 export const internalServerError = (
