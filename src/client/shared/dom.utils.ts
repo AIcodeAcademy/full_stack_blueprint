@@ -1,3 +1,4 @@
+const html = String.raw;
 export function select(selector: string): HTMLElement | null {
 	return document.querySelector(selector);
 }
@@ -26,4 +27,8 @@ export function removeListener(
 	callback: (e: unknown) => void,
 ) {
 	select(selector)?.removeEventListener(event, callback);
+}
+
+export function renderAnchor(url: string, text: string): string {
+	return html`<a href="${url}" target="_blank">${text}</a>`;
 }

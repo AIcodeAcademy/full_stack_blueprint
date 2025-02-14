@@ -1,4 +1,4 @@
-import type { Tool } from "../../../server/domain/tool.type";
+import type { Tool } from "@/client/domain/tool.type";
 
 const html = String.raw;
 /**

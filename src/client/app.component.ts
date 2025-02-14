@@ -7,11 +7,9 @@ const html = String.raw;
  * App web component attached to main body element
  */
 class App extends HTMLElement {
-	#mainTitle = "Fullstack Blueprint";
 	#template = html`
     <app-header></app-header>
-    <main id="router-outlet">
-    </main>
+    <main id="router-outlet"></main>
     <app-footer></app-footer>
   `;
 	constructor() {

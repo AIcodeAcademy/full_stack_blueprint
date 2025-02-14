@@ -1,3 +1,5 @@
+import { renderAnchor } from "./dom.utils";
+
 const html = String.raw;
 /**
  * A semantic footer web component
@@ -14,8 +16,8 @@ export class Footer extends HTMLElement {
 	};
 	#template = html` 
         <span>&copy; ${this.#currentYear}</span>
-        <span>By <a href="${this.#author.url}" target="_blank">${this.#author.name}</a></span>
-        <span>for <a href="${this.#company.url}" target="_blank">${this.#company.name}</a></span>
+        <span>By ${renderAnchor(this.#author.url, this.#author.name)}</span>
+        <span>for ${renderAnchor(this.#company.url, this.#company.name)}</span>
       </p>
     </footer>
   `;

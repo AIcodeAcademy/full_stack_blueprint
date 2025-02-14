@@ -24,19 +24,6 @@ export class ThemeToggle extends HTMLElement {
 		this.removeEventListener("click", this.#onToggleTheme);
 	}
 
-	#onToggleTheme() {
-		const html = document.documentElement;
-		const currentTheme = html.getAttribute("data-theme");
-		const newTheme = currentTheme === "dark" ? "light" : "dark";
-		this.#setTheme(newTheme);
-	}
-
-	#getSystemTheme() {
-		const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-		const systemTheme = prefersDark.matches ? "dark" : "light";
-		return systemTheme;
-	}
-
 	#setTheme(theme: string) {
 		const html = document.documentElement;
 		html.setAttribute("data-theme", theme);
@@ -45,6 +32,17 @@ export class ThemeToggle extends HTMLElement {
 		if (!light || !dark) return;
 		light.style.display = theme === "light" ? "block" : "none";
 		dark.style.display = theme === "dark" ? "block" : "none";
+	}
+	#getSystemTheme() {
+		const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+		const systemTheme = prefersDark.matches ? "dark" : "light";
+		return systemTheme;
+	}
+	#onToggleTheme() {
+		const html = document.documentElement;
+		const currentTheme = html.getAttribute("data-theme");
+		const newTheme = currentTheme === "dark" ? "light" : "dark";
+		this.#setTheme(newTheme);
 	}
 }
 
