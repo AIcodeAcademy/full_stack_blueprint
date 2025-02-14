@@ -1,5 +1,8 @@
-import "../app/about/about.page";
-import "../app/home/home.page";
+import { AboutPage } from "../app/about/about.page";
+import { HomePage } from "../app/home/home.page";
+
+customElements.define("app-about-page", AboutPage);
+customElements.define("app-home-page", HomePage);
 
 export const navigate = (path: string | null) => {
 	const pageComponent = path ? path.replace("#", "") : "home";

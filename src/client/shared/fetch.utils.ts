@@ -11,6 +11,7 @@ export const get = async <T>(url: string): Promise<ResponseBody<T>> => {
 	const response = await fetch(url);
 	return createResult<T>(response);
 };
+
 export type ResponseBody<T> = {
 	body?: T;
 	status: number;

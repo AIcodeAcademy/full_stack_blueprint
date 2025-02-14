@@ -1,11 +1,11 @@
 import type { Tool } from "@/client/domain/tool.type";
-import "./tools-table.component";
-import type { ToolsTableComponent } from "./tools-table.component";
+import { ToolsTableComponent } from "./tools-table.component";
 import { getTools } from "./tools.repository";
 
 const html = String.raw;
+customElements.define("app-tools-table", ToolsTableComponent);
 
-class AboutPage extends HTMLElement {
+export class AboutPage extends HTMLElement {
 	#template = html`
     <h1>About</h1>
     <app-tools-table></app-tools-table>
@@ -26,5 +26,3 @@ class AboutPage extends HTMLElement {
 		}
 	}
 }
-
-customElements.define("app-about-page", AboutPage);

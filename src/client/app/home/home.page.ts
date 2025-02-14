@@ -1,13 +1,13 @@
 const html = String.raw;
 
-class HomePage extends HTMLElement {
+export class HomePage extends HTMLElement {
+	#appName = "Fullstack Blueprint";
 	#template = html`
-    <h1>Home</h1>
+    <h1>Welcome</h1>
+    <p>This is the home page of the ${this.#appName} application.</p>
   `;
 	constructor() {
 		super();
 		this.innerHTML = this.#template;
 	}
 }
-
-customElements.define("app-home-page", HomePage);

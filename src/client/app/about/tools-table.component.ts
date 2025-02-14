@@ -45,5 +45,3 @@ export class ToolsTableComponent extends HTMLElement {
 		}
 	}
 }
-
-customElements.define("app-tools-table", ToolsTableComponent);

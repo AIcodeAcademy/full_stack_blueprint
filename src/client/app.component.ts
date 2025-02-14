@@ -1,7 +1,9 @@
-import "./shared/footer.component";
-import "./shared/header.component";
+import { Footer } from "./shared/footer.component";
+import { Header } from "./shared/header.component";
 
 const html = String.raw;
+customElements.define("app-header", Header);
+customElements.define("app-footer", Footer);
 
 /**
  * App web component attached to main body element

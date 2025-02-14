@@ -25,13 +25,8 @@ export class ThemeToggle extends HTMLElement {
 	}
 
 	#setTheme(theme: string) {
-		const html = document.documentElement;
-		html.setAttribute("data-theme", theme);
-		const light = select("#light");
-		const dark = select("#dark");
-		if (!light || !dark) return;
-		light.style.display = theme === "light" ? "block" : "none";
-		dark.style.display = theme === "dark" ? "block" : "none";
+		this.#setThemeAttribute(theme);
+		this.#toggleVisibility(theme);
 	}
 	#getSystemTheme() {
 		const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
@@ -39,11 +34,24 @@ export class ThemeToggle extends HTMLElement {
 		return systemTheme;
 	}
 	#onToggleTheme() {
-		const html = document.documentElement;
-		const currentTheme = html.getAttribute("data-theme");
+		const currentTheme = this.#getThemeAttribute();
 		const newTheme = currentTheme === "dark" ? "light" : "dark";
 		this.#setTheme(newTheme);
 	}
+	#getThemeAttribute() {
+		const html = document.documentElement;
+		const currentTheme = html.getAttribute("data-theme");
+		return currentTheme;
+	}
+	#setThemeAttribute(theme: string) {
+		const html = document.documentElement;
+		html.setAttribute("data-theme", theme);
+	}
+	#toggleVisibility(theme: string) {
+		const light = select("#light");
+		const dark = select("#dark");
+		if (!light || !dark) return;
+		light.style.display = theme === "light" ? "block" : "none";
+		dark.style.display = theme === "dark" ? "block" : "none";
+	}
 }
-
-customElements.define("app-theme-toggle", ThemeToggle);

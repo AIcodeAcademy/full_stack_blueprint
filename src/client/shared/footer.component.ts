@@ -26,5 +26,3 @@ export class Footer extends HTMLElement {
 		this.innerHTML = this.#template;
 	}
 }
-
-customElements.define("app-footer", Footer);

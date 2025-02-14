@@ -1,7 +1,10 @@
 import { renderAnchor } from "./dom.utils";
 import { navigate } from "./navigation.utils";
-import "./toggle-theme.component";
+import { ThemeToggle } from "./toggle-theme.component";
+
 const html = String.raw;
+customElements.define("app-theme-toggle", ThemeToggle);
+
 /**
  * A semantic header web component with navigation
  */
@@ -52,5 +55,3 @@ export class Header extends HTMLElement {
 		return links.join("");
 	}
 }
-
-customElements.define("app-header", Header);
