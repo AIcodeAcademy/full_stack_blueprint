@@ -38,11 +38,13 @@ globs:
 
 - Use Web Components
 - Do not use shadow DOM
-- Write the template in a variable as 
+- Write the template in a private property using html helper string 
   ```ts
   const html = String.raw;
-  const template = html`<div>...</div>`;
+  this.#template = html`<div>...</div>`;
   ```
-- Use the `connectedCallback` lifecycle method to initialize the element
-- Use the `disconnectedCallback` lifecycle method to destroy the element
+- Use the constructor to add the innerHTML and call repositories
+- Use the `connectedCallback` lifecycle method to add event listeners
+- Use the `disconnectedCallback` lifecycle method to remove event listeners
+- Do not define the custom element at the component level, instead, export the class and define it at the parent level
 

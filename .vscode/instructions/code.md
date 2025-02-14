@@ -67,10 +67,34 @@ tests/
 
 - Use Web Components
 - Do not use shadow DOM
-- Write the template in a variable as 
+- Write the template in a private property using html helper string 
   ```ts
   const html = String.raw;
-  const template = html`<div>...</div>`;
+  this.#template = html`<div>...</div>`;
   ```
-- Use the `connectedCallback` lifecycle method to initialize the element
-- Use the `disconnectedCallback` lifecycle method to destroy the element
+- Use the constructor to add the innerHTML and call repositories
+- Use the `connectedCallback` lifecycle method to add event listeners
+- Use the `disconnectedCallback` lifecycle method to remove event listeners
+- Do not define the custom element at the component level, instead, export the class and define it at the parent level
+
+### Page components
+
+- A page will be a webcomponent that will be loaded in the `router-outlet`
+- Create pages in its own folder at `src/client/app/name` folder 
+- The name must be `name.page.ts`
+- A page should use a repository to fetch data in its owm folder
+- A page should use components to display data in its own folder
+- Attach the page to the `router-outlet` in the `navigation.utils.ts`
+
+### Page repository
+
+- A repository will be a module of exported functions that helps a page to fetch data from the server
+- Create repositories in the folder of the page at `src/client/app/pagen-name` folder 
+- Must use the fetch API to fetch utils from `@/client/shared/fetch.utils.ts`
+- Should be named like the page or the resource it is fetching but with `name.repository.ts` extension
+
+### Page components
+
+- Create components in the folder of the page at `src/client/app/pagen-name/components` folder 
+- This components are just for this page and are not shared
+- A component should be named with `name.component.ts` extension
