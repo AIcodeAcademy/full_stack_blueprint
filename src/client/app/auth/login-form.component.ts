@@ -74,5 +74,3 @@ export class LoginFormComponent extends HTMLElement {
 		this.#error.textContent = "";
 	}
 }
-
-customElements.define("login-form", LoginFormComponent);

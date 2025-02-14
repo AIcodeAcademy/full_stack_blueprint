@@ -1,7 +1,11 @@
 import type { Credentials } from "@client/domain/credentials.type";
 import { login, register } from "./auth.repository";
+
 import { LoginFormComponent } from "./login-form.component";
 import { RegisterFormComponent } from "./register-form.component";
+
+customElements.define("login-form", LoginFormComponent);
+customElements.define("register-form", RegisterFormComponent);
 
 interface FormComponent extends HTMLElement {
 	showError(message: string): void;

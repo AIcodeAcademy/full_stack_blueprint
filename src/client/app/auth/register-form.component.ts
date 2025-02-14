@@ -86,5 +86,3 @@ export class RegisterFormComponent extends HTMLElement {
 		this.#error.textContent = "";
 	}
 }
-
-customElements.define("register-form", RegisterFormComponent);
