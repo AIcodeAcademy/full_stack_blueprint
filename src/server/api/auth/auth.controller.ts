@@ -1,5 +1,8 @@
 import type { Credentials } from "@server/domain/credentials.type";
+import type { JwtData } from "@server/domain/jwt-data.type";
+import type { UserToken } from "@server/domain/user-token.type";
 import { hashPassword, verifyPassword } from "@server/shared/hash.utils";
+import { generateJWT } from "@server/shared/jwt.utils";
 import { getBody } from "@server/shared/request.utils";
 import { badRequest, ok, unauthorized } from "@server/shared/response.utils";
 import { createUser, findUserByEmail } from "./auth.repository";
@@ -27,6 +30,12 @@ export const auth = async (request: Request): Promise<Response> => {
 	}
 };
 
+const generateUserToken = (userId: number): UserToken => {
+	const jwtData: JwtData = { userId };
+	const token = generateJWT(jwtData);
+	return { userId, token };
+};
+
 const login = async (credentials: Credentials): Promise<Response> => {
 	const user = await findUserByEmail(credentials.email);
 	if (!user) {
@@ -43,7 +52,8 @@ const login = async (credentials: Credentials): Promise<Response> => {
 
 	// Don't send the password hash back to the client
 	const { password: _, ...userWithoutPassword } = user;
-	return ok({ user: userWithoutPassword });
+	const userToken = generateUserToken(user.id);
+	return ok({ user: userWithoutPassword, token: userToken });
 };
 
 const register = async (credentials: Credentials): Promise<Response> => {
@@ -57,5 +67,6 @@ const register = async (credentials: Credentials): Promise<Response> => {
 
 	// Don't send the password hash back to the client
 	const { password: _, ...userWithoutPassword } = user;
-	return ok({ user: userWithoutPassword });
+	const userToken = generateUserToken(user.id);
+	return ok({ user: userWithoutPassword, token: userToken });
 };
