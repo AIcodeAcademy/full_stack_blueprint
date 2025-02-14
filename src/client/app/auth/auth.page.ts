@@ -8,78 +8,40 @@ interface FormComponent extends HTMLElement {
 	clearError(): void;
 }
 
-const template = document.createElement("template");
-template.innerHTML = `
-  <style>
-    :host {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
-      gap: 2rem;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .tab {
-      padding: 0.5rem 1rem;
-      border: none;
-      background: none;
-      font-size: 1rem;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: border-color 0.2s;
-    }
-
-    .tab.active {
-      border-bottom-color: var(--primary-color);
-      color: var(--primary-color);
-    }
-
-    .forms {
-      width: 100%;
-      max-width: 400px;
-    }
-
-    login-form,
-    register-form {
-      display: none;
-    }
-
-    login-form.active,
-    register-form.active {
-      display: flex;
-    }
-  </style>
-
-  <div class="tabs">
-    <button class="tab active" data-tab="login">Login</button>
-    <button class="tab" data-tab="register">Register</button>
-  </div>
-  <div class="forms">
-    <login-form class="active"></login-form>
-    <register-form></register-form>
-  </div>
-`;
+const html = String.raw;
 
 export class AuthPage extends HTMLElement {
 	#loginForm: FormComponent;
 	#registerForm: FormComponent;
 	#loginTab: HTMLButtonElement;
 	#registerTab: HTMLButtonElement;
+	#template = html`
+		<main class="container">
+			<nav>
+				<ul>
+					<li>
+						<button class="outline" data-tab="login" aria-pressed="true">Login</button>
+					</li>
+					<li>
+						<button class="outline" data-tab="register" aria-pressed="false">Register</button>
+					</li>
+				</ul>
+			</nav>
+			<section>
+				<login-form></login-form>
+				<register-form hidden></register-form>
+			</section>
+		</main>
+	`;
 
 	constructor() {
 		super();
-		const shadow = this.attachShadow({ mode: "open" });
-		shadow.appendChild(template.content.cloneNode(true));
+		this.innerHTML = this.#template;
 
-		const loginForm = shadow.querySelector("login-form");
-		const registerForm = shadow.querySelector("register-form");
-		const loginTab = shadow.querySelector('[data-tab="login"]');
-		const registerTab = shadow.querySelector('[data-tab="register"]');
+		const loginForm = this.querySelector("login-form");
+		const registerForm = this.querySelector("register-form");
+		const loginTab = this.querySelector('[data-tab="login"]');
+		const registerTab = this.querySelector('[data-tab="register"]');
 
 		if (!(loginForm instanceof LoginFormComponent)) {
 			throw new Error("Login form not found");
@@ -98,39 +60,51 @@ export class AuthPage extends HTMLElement {
 		this.#registerForm = registerForm;
 		this.#loginTab = loginTab;
 		this.#registerTab = registerTab;
+	}
 
+	connectedCallback() {
 		this.#loginTab.addEventListener("click", () => this.#showTab("login"));
 		this.#registerTab.addEventListener("click", () =>
 			this.#showTab("register"),
 		);
-
 		this.addEventListener("login", ((e: CustomEvent<Credentials>) => {
 			this.#handleLogin(e.detail);
 		}) as EventListener);
-
 		this.addEventListener("register", ((e: CustomEvent<Credentials>) => {
+			this.#handleRegister(e.detail);
+		}) as EventListener);
+	}
+
+	disconnectedCallback() {
+		this.#loginTab.removeEventListener("click", () => this.#showTab("login"));
+		this.#registerTab.removeEventListener("click", () =>
+			this.#showTab("register"),
+		);
+		this.removeEventListener("login", ((e: CustomEvent<Credentials>) => {
+			this.#handleLogin(e.detail);
+		}) as EventListener);
+		this.removeEventListener("register", ((e: CustomEvent<Credentials>) => {
 			this.#handleRegister(e.detail);
 		}) as EventListener);
 	}
 
 	#showTab(tab: "login" | "register") {
 		if (tab === "login") {
-			this.#loginTab.classList.add("active");
-			this.#registerTab.classList.remove("active");
-			this.#loginForm.classList.add("active");
-			this.#registerForm.classList.remove("active");
+			this.#loginTab.setAttribute("aria-pressed", "true");
+			this.#registerTab.setAttribute("aria-pressed", "false");
+			this.#loginForm.removeAttribute("hidden");
+			this.#registerForm.setAttribute("hidden", "");
 		} else {
-			this.#loginTab.classList.remove("active");
-			this.#registerTab.classList.add("active");
-			this.#loginForm.classList.remove("active");
-			this.#registerForm.classList.add("active");
+			this.#loginTab.setAttribute("aria-pressed", "false");
+			this.#registerTab.setAttribute("aria-pressed", "true");
+			this.#loginForm.setAttribute("hidden", "");
+			this.#registerForm.removeAttribute("hidden");
 		}
 	}
 
 	async #handleLogin(credentials: Credentials) {
 		try {
 			const userToken = await login(credentials);
-			// Store token and redirect
 			localStorage.setItem("token", userToken.token);
 			window.location.href = "/";
 		} catch (error) {
@@ -141,7 +115,6 @@ export class AuthPage extends HTMLElement {
 	async #handleRegister(credentials: Credentials) {
 		try {
 			const userToken = await register(credentials);
-			// Store token and redirect
 			localStorage.setItem("token", userToken.token);
 			window.location.href = "/";
 		} catch (error) {

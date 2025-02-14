@@ -1,105 +1,53 @@
 import type { Credentials } from "@client/domain/credentials.type";
 
-const template = document.createElement("template");
-template.innerHTML = `
-  <style>
-    :host {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      padding: 2rem;
-      border-radius: 0.5rem;
-      background-color: var(--surface-color);
-      box-shadow: var(--shadow);
-    }
-
-    h2 {
-      margin: 0;
-      color: var(--primary-color);
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    label {
-      font-weight: 500;
-      color: var(--text-color);
-    }
-
-    input {
-      padding: 0.5rem;
-      border: 1px solid var(--border-color);
-      border-radius: 0.25rem;
-      font-size: 1rem;
-    }
-
-    button {
-      padding: 0.75rem;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 0.25rem;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    button:hover {
-      background-color: var(--primary-dark-color);
-    }
-
-    .error {
-      color: var(--error-color);
-      font-size: 0.875rem;
-    }
-  </style>
-
-  <h2>Login</h2>
-  <form>
-    <div class="field">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required />
-    </div>
-    <div class="field">
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" required />
-    </div>
-    <div class="error"></div>
-    <button type="submit">Login</button>
-  </form>
-`;
+const html = String.raw;
 
 export class LoginFormComponent extends HTMLElement {
 	#form: HTMLFormElement;
-	#error: HTMLDivElement;
+	#error: HTMLElement;
+	#template = html`
+		<article>
+			<header>
+				<h2>Login</h2>
+			</header>
+			<form>
+				<label for="email">
+					Email
+					<input type="email" id="email" name="email" required />
+				</label>
+				<label for="password">
+					Password
+					<input type="password" id="password" name="password" required />
+				</label>
+				<small role="alert" aria-live="polite"></small>
+				<button type="submit">Login</button>
+			</form>
+		</article>
+	`;
 
 	constructor() {
 		super();
-		const shadow = this.attachShadow({ mode: "open" });
-		shadow.appendChild(template.content.cloneNode(true));
-
-		const form = shadow.querySelector("form");
-		const error = shadow.querySelector(".error");
+		this.innerHTML = this.#template;
+		const form = this.querySelector("form");
+		const error = this.querySelector("[role='alert']");
 
 		if (!(form instanceof HTMLFormElement)) {
 			throw new Error("Form element not found");
 		}
-		if (!(error instanceof HTMLDivElement)) {
+		if (!(error instanceof HTMLElement)) {
 			throw new Error("Error element not found");
 		}
 
 		this.#form = form;
 		this.#error = error;
+	}
+
+	connectedCallback() {
 		this.#form.addEventListener("submit", this.#handleSubmit.bind(this));
+	}
+
+	disconnectedCallback() {
+		this.#form.removeEventListener("submit", this.#handleSubmit.bind(this));
 	}
 
 	#handleSubmit(e: SubmitEvent) {
