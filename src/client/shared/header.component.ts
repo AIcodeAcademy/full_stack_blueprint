@@ -13,6 +13,7 @@ export class Header extends HTMLElement {
 	#links = [
 		{ href: "#home", text: "Home" },
 		{ href: "#about", text: "About" },
+		{ href: "#auth", text: "Auth" },
 	];
 	#template = html`
     <header id="main-header">
