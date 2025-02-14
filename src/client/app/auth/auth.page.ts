@@ -1,6 +1,7 @@
 import type { Credentials } from "@client/domain/credentials.type";
 import { login, register } from "./auth.repository";
 
+import { navigate } from "@/client/shared/navigation.utils";
 import { LoginFormComponent } from "./login-form.component";
 import { RegisterFormComponent } from "./register-form.component";
 
@@ -40,7 +41,6 @@ export class AuthPage extends HTMLElement {
 
 	constructor() {
 		super();
-		console.log("🔐 Initializing auth page");
 		this.innerHTML = this.#template;
 
 		const loginForm = this.querySelector("login-form");
@@ -68,7 +68,6 @@ export class AuthPage extends HTMLElement {
 	}
 
 	connectedCallback() {
-		console.log("🔌 Auth page connected");
 		this.#loginTab.addEventListener("click", () => this.#showTab("login"));
 		this.#registerTab.addEventListener("click", () =>
 			this.#showTab("register"),
@@ -82,7 +81,6 @@ export class AuthPage extends HTMLElement {
 	}
 
 	disconnectedCallback() {
-		console.log("🔌 Auth page disconnected");
 		this.#loginTab.removeEventListener("click", () => this.#showTab("login"));
 		this.#registerTab.removeEventListener("click", () =>
 			this.#showTab("register"),
@@ -96,7 +94,6 @@ export class AuthPage extends HTMLElement {
 	}
 
 	#showTab(tab: "login" | "register") {
-		console.log("📑 Switching to tab:", tab);
 		if (tab === "login") {
 			this.#loginTab.setAttribute("aria-pressed", "true");
 			this.#registerTab.setAttribute("aria-pressed", "false");
@@ -111,32 +108,24 @@ export class AuthPage extends HTMLElement {
 	}
 
 	async #handleLogin(credentials: Credentials) {
-		console.group("🔑 Login attempt");
-		console.log("Email:", credentials.email);
 		try {
 			const userToken = await login(credentials);
-			console.log("Login successful, storing token");
 			localStorage.setItem("token", userToken.token);
 			window.location.href = "/";
 		} catch (error) {
 			console.error("Login failed:", error);
 			this.#loginForm.showError("Invalid credentials");
 		}
-		console.groupEnd();
 	}
 
 	async #handleRegister(credentials: Credentials) {
-		console.group("📝 Registration attempt");
-		console.log("Email:", credentials.email);
 		try {
 			const userToken = await register(credentials);
-			console.log("Registration successful, storing token");
-			localStorage.setItem("token", userToken.token);
-			window.location.href = "/";
+			localStorage.setItem("userToken", JSON.stringify(userToken));
+			navigate("#home");
 		} catch (error) {
 			console.error("Registration failed:", error);
 			this.#registerForm.showError("Registration failed. Please try again.");
 		}
-		console.groupEnd();
 	}
 }

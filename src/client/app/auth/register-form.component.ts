@@ -13,15 +13,15 @@ export class RegisterFormComponent extends HTMLElement {
 			<form>
 				<label for="email">
 					Email
-					<input type="email" id="email" name="email" required />
+					<input type="email" id="email" name="email" required value="test@test.com" />
 				</label>
 				<label for="password">
 					Password
-					<input type="password" id="password" name="password" required />
+					<input type="password" id="password" name="password" required value="123456" />
 				</label>
 				<label for="confirm-password">
 					Confirm Password
-					<input type="password" id="confirm-password" name="confirm-password" required />
+					<input type="password" id="confirm-password" name="confirm-password" required value="123456" />
 				</label>
 				<small role="alert" aria-live="polite"></small>
 				<button type="submit">Register</button>

@@ -1,4 +1,4 @@
-import { handleInternalError, notFound } from "@server/shared/response.utils";
+import { handleInternalError, notFound } from "../shared/response.utils";
 import { auth } from "./auth/auth.controller";
 import { tools } from "./tools/tools.controller";
 

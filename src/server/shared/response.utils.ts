@@ -4,7 +4,8 @@
  * @returns Response object with JSON stringified body
  */
 export const ok = <T>(body: T): Response => {
-	return new Response(JSON.stringify(body), { status: 200 });
+	const responseBody = JSON.stringify(body);
+	return new Response(responseBody);
 };
 
 /**
