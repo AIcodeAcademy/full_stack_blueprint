@@ -1,0 +1,6 @@
+{
+  "TABLE_NAME": "users",
+  "CREATE_TABLE": "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT)",
+  "SELECT_USER_BY_EMAIL": "SELECT * FROM users WHERE email = $email",
+  "INSERT_USER": "INSERT INTO users (email, password) VALUES ($email, $password)"
+}

@@ -1,1 +1,0 @@
-// This folder is reserved for future server-side shared middleware utilities (e.g., hash, logger, etc.). 
