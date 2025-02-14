@@ -1,3 +1,4 @@
+import { navigate } from "./navigation.utils";
 import "./toggle-theme.component";
 const html = String.raw;
 /**
@@ -15,6 +16,12 @@ export class Header extends HTMLElement {
         </ul>
         <ul>
           <li>
+            <a href="#home">Home</a>
+          </li>
+          <li>
+            <a href="#about">About</a>
+          </li>
+          <li>
             <app-theme-toggle></app-theme-toggle>
           </li>
         </ul>
@@ -24,6 +31,15 @@ export class Header extends HTMLElement {
 	constructor() {
 		super();
 		this.innerHTML = this.#template;
+		const links = Array.from(this.querySelectorAll<HTMLAnchorElement>("a"));
+		for (const link of links) {
+			link.addEventListener("click", (event: Event) => {
+				event.preventDefault();
+				const href = link.getAttribute("href");
+				navigate(href);
+			});
+		}
+		navigate(window.location.hash);
 	}
 }
 

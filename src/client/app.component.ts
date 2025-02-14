@@ -10,7 +10,8 @@ class App extends HTMLElement {
 	#mainTitle = "Fullstack Blueprint";
 	#template = html`
     <app-header></app-header>
-    <h1>${this.#mainTitle}</h1>
+    <main id="router-outlet">
+    </main>
     <app-footer></app-footer>
   `;
 	constructor() {
