@@ -1,5 +1,5 @@
-import type { User } from "../../domain/user.type";
-import { insert, select } from "../../shared/sql.utils";
+import type { User } from "@server/domain/user.type";
+import { insert, select } from "@server/shared/sql.utils";
 
 export const findUserByEmail = async (
 	email: string,
