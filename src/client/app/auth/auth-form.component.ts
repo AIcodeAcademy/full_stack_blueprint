@@ -1,16 +1,23 @@
+export type Mode = "login" | "register";
+
 import type { Credentials } from "@client/domain/credentials.type";
+
+export type AuthenticateEventDetail = {
+	mode: Mode;
+	credentials: Credentials;
+};
 
 const html = String.raw;
 
 export class AuthFormComponent extends HTMLElement {
-	#mode: "login" | "register";
+	#mode: Mode;
 	#form: HTMLFormElement | null = null;
 	#error: HTMLElement | null = null;
 	#handleSubmitBound = this.#handleSubmit.bind(this);
 
 	constructor() {
 		super();
-		this.#mode = (this.getAttribute("mode") as "login" | "register") || "login";
+		this.#mode = (this.getAttribute("mode") as Mode) || "login";
 		this.render();
 	}
 
@@ -20,7 +27,7 @@ export class AuthFormComponent extends HTMLElement {
 
 	attributeChangedCallback(name: string, oldValue: string, newValue: string) {
 		if (name === "mode" && oldValue !== newValue) {
-			this.#mode = newValue as "login" | "register";
+			this.#mode = newValue as Mode;
 			this.render();
 		}
 	}
@@ -105,9 +112,9 @@ export class AuthFormComponent extends HTMLElement {
 		}
 		this.clearError();
 		const credentials: Credentials = { email, password };
-		const eventName = this.#mode === "login" ? "login" : "register";
-		const customEvent = new CustomEvent(eventName, {
-			detail: credentials,
+		// Dispatch a single custom event "authenticate" containing both mode and credentials
+		const customEvent = new CustomEvent("authenticate", {
+			detail: { mode: this.#mode, credentials },
 			bubbles: true,
 			composed: true,
 		});
@@ -138,5 +145,3 @@ export class AuthFormComponent extends HTMLElement {
 		}
 	}
 }
-
-customElements.define("auth-form", AuthFormComponent);
