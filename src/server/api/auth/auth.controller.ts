@@ -7,6 +7,11 @@ import { getBody } from "@server/shared/request.utils";
 import { badRequest, ok, unauthorized } from "@server/shared/response.utils";
 import { createUser, findUserByEmail } from "./auth.repository";
 
+/**
+ * Auth controller
+ * @param request - The request
+ * @returns The response
+ */
 export const auth = async (request: Request): Promise<Response> => {
 	if (request.method !== "POST") {
 		console.warn("Invalid method:", request.method);

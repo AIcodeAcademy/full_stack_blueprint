@@ -61,6 +61,11 @@ export const update = <P>(query: string, params: P): number => {
 	return r.changes;
 };
 
+/**
+ * Creates a table in the database
+ * @param tableCreationCommand - SQL command to create a table
+ * @returns Number of affected rows
+ */
 export const create = (tableCreationCommand: string): number => {
 	const q = db.query(tableCreationCommand);
 	const r = q.run();

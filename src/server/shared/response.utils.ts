@@ -53,12 +53,22 @@ export const methodNotAllowed = (message = "Method not allowed"): Response => {
 	return new Response(message, { status: 405 });
 };
 
+/**
+ * Creates an internal server error response with status 500
+ * @param message - Optional error message
+ * @returns Response object with error message
+ */
 export const internalServerError = (
 	message = "Internal server error",
 ): Response => {
 	return new Response(message, { status: 500 });
 };
 
+/**
+ * Handles an unknown error and returns an internal server error response
+ * @param error - The error to handle
+ * @returns Response object with error message
+ */
 export const handleInternalError = (error: unknown): Response => {
 	const errorData = {
 		message: "Unknown error",
