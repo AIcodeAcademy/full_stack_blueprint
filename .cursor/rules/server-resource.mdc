@@ -15,7 +15,7 @@ globs: src/server/api
 
 - A controller will be a module of endpoints configured at [api.controller.ts](mdc:src/server/api/api.controller.ts)
 - Each endpoint is a function with signature `async (request: Request): Promise<Response> `
-- The file name will be `page-name.controller.ts`
+- The file name will be `reource-name.controller.ts`
 - Each endpoint obtains input data from the request, calls the repository, and returns a response
 - Must use [request.utils.ts](mdc:src/server/shared/request.utils.ts) and [response.utils.ts](mdc:src/server/shared/response.utils.ts) to do so.
 - Must use its repository to interact with the database
