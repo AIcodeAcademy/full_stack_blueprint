@@ -28,18 +28,24 @@ export const get = async <T>(url: string): Promise<ResponseBody<T>> => {
  * @template T - The type of the response body data
  */
 export type ResponseBody<T> = {
-	body?: T;
+	body: T | string;
 	status: number;
-	error?: string;
+	error: boolean;
 };
 
 async function createResult<T>(response: Response): Promise<ResponseBody<T>> {
-	const result = {
-		body: response.status < 400 ? await response.json() : undefined,
+	if (response.status >= 400) {
+		return {
+			status: response.status,
+			error: true,
+			body: await response.text(),
+		};
+	}
+	return {
 		status: response.status,
-		error: response.status >= 400 ? await response.text() : undefined,
+		error: false,
+		body: (await response.json()) as T,
 	};
-	return result;
 }
 
 const headers = {

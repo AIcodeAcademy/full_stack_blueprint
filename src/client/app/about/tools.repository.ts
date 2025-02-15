@@ -5,5 +5,6 @@ const API_URL = "/api/tools";
 
 export const getTools = async (): Promise<Tool[]> => {
 	const response = await get<Tool[]>(API_URL);
-	return response.body || [];
+	if (response.error) throw response.body;
+	return response.body as Tool[];
 };

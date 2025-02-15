@@ -3,12 +3,16 @@ export type Mode = "login" | "register";
 import type { Credentials } from "@client/domain/credentials.type";
 
 export type AuthenticateEventDetail = {
-	mode: Mode;
 	credentials: Credentials;
 };
 
 const html = String.raw;
 
+/**
+ * Auth form component
+ * It displays a login or register form depending on the mode attribute
+ * @fires authenticate - Dispatched when the form is submitted
+ */
 export class AuthFormComponent extends HTMLElement {
 	#mode: Mode;
 	#form: HTMLFormElement | null = null;
@@ -112,9 +116,9 @@ export class AuthFormComponent extends HTMLElement {
 		}
 		this.clearError();
 		const credentials: Credentials = { email, password };
-		// Dispatch a single custom event "authenticate" containing both mode and credentials
+		// Dispatch a single custom event "authenticate" containing only credentials
 		const customEvent = new CustomEvent("authenticate", {
-			detail: { mode: this.#mode, credentials },
+			detail: { credentials },
 			bubbles: true,
 			composed: true,
 		});
