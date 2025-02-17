@@ -1,3 +1,5 @@
+import type { UserToken } from "@client/domain/user-token.type";
+
 /**
  * Makes a POST request to the specified URL
  * @param url - The endpoint URL
@@ -9,7 +11,8 @@ export const post = async <T>(
 	payload: unknown,
 ): Promise<ResponseBody<T>> => {
 	const body = JSON.stringify(payload);
-	const response = await fetch(url, { ...postOptions, body });
+	const options = { ...createHeaders(), method: "POST", body };
+	const response = await fetch(url, options);
 	return createResult<T>(response);
 };
 
@@ -19,7 +22,8 @@ export const post = async <T>(
  * @returns Promise resolving to a ResponseBody containing the response data or error
  */
 export const get = async <T>(url: string): Promise<ResponseBody<T>> => {
-	const response = await fetch(url);
+	const options = { ...createHeaders(), method: "GET" };
+	const response = await fetch(url, options);
 	return createResult<T>(response);
 };
 
@@ -48,11 +52,11 @@ async function createResult<T>(response: Response): Promise<ResponseBody<T>> {
 	};
 }
 
-const headers = {
-	"Content-Type": "application/json",
-};
-
-const postOptions = {
-	method: "POST",
-	headers,
+const createHeaders = (): HeadersInit => {
+	const storageToken = localStorage.getItem("userToken") || "";
+	const userToken: UserToken = storageToken ? JSON.parse(storageToken) : null;
+	return {
+		"Content-Type": "application/json",
+		Authorization: `Bearer ${userToken ? userToken.token : ""}`,
+	};
 };
