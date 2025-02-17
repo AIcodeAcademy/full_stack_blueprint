@@ -26,15 +26,14 @@ export function generateJWT(jwtData: JwtData, expiresIn = 3600): string {
 export function verifyJWT(token: string): JwtData {
 	const hasher = new Bun.CryptoHasher(ALGORITHM, SECRET);
 	const [encodedHeader, encodedPayload, encodedSign] = token.split(".");
-	const payloadString = atob(encodedPayload);
-	const sign = digestHash(hasher, payloadString);
+	const sign = digestHash(hasher, encodedPayload);
 	if (encodedSign !== sign) throw new Error("Invalid token");
-
-	const payload = JSON.parse(payloadString);
-	const { jwtData, iat, exp } = payload;
+	const payloadString = atob(encodedPayload);
+	const payload: JwtData & { exp: number } = JSON.parse(payloadString);
+	console.log("verifyJWT.payload", payload);
 	const now = Math.floor(Date.now() / 1000);
-	if (now > exp) throw new Error("Token expired");
-	return jwtData;
+	if (now > payload.exp) throw new Error("Token expired");
+	return payload;
 }
 
 export function digestHash(hasher: CryptoHasher, data: string): string {

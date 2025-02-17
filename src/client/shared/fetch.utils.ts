@@ -11,7 +11,9 @@ export const post = async <T>(
 	payload: unknown,
 ): Promise<ResponseBody<T>> => {
 	const body = JSON.stringify(payload);
-	const options = { ...createHeaders(), method: "POST", body };
+	const headers = createHeaders();
+	const options = { headers, method: "POST", body };
+	console.log("options", options);
 	const response = await fetch(url, options);
 	return createResult<T>(response);
 };
@@ -22,7 +24,9 @@ export const post = async <T>(
  * @returns Promise resolving to a ResponseBody containing the response data or error
  */
 export const get = async <T>(url: string): Promise<ResponseBody<T>> => {
-	const options = { ...createHeaders(), method: "GET" };
+	const headers = createHeaders();
+	const options = { headers, method: "GET" };
+	console.log("options", options);
 	const response = await fetch(url, options);
 	return createResult<T>(response);
 };
@@ -54,9 +58,13 @@ async function createResult<T>(response: Response): Promise<ResponseBody<T>> {
 
 const createHeaders = (): HeadersInit => {
 	const storageToken = localStorage.getItem("userToken") || "";
+	console.log("storageToken", storageToken);
 	const userToken: UserToken = storageToken ? JSON.parse(storageToken) : null;
-	return {
+	console.log("userToken", userToken);
+	const headers = {
 		"Content-Type": "application/json",
 		Authorization: `Bearer ${userToken ? userToken.token : ""}`,
 	};
+	console.log("headers", headers);
+	return headers;
 };
