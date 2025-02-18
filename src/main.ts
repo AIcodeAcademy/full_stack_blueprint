@@ -1,14 +1,3 @@
-import { initialize, processRequest } from "./server/server.bootstrap";
-import { debug } from "./server/shared/log.utils";
+import { $ } from "bun";
 
-const serverOptions = {
-	development: true,
-	/* static: {
-		"/": homepage,
-	}, */
-	fetch: processRequest,
-};
-
-initialize();
-const bunServer = Bun.serve(serverOptions);
-debug("Server", bunServer);
+await Promise.all([$`bun server`, $`bun client`]);

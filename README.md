@@ -72,11 +72,25 @@ npm install -g bun
 To install dependencies:
 
 ```bash
-bun i
-# In one terminal
-bun server
-# In another terminal
+bun i 
+```
+
+To run the client and server in parallel:
+
+```bash
+bun start
+```
+
+To run the client:
+
+```bash
 bun client
+```
+
+To run the server:
+
+```bash
+bun server
 ```
 
 ## License
