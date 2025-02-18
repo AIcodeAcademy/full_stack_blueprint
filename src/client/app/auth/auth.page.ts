@@ -1,7 +1,7 @@
 import { login, register } from "./auth.repository";
 
-import { navigate } from "@/client/shared/navigation.utils";
-import type { Credentials } from "@client/domain/credentials.type";
+import type { Credentials } from "../../domain/credentials.type";
+import { navigate } from "../../shared/navigation.utils";
 import {
 	AuthFormComponent,
 	type AuthenticateEventDetail,

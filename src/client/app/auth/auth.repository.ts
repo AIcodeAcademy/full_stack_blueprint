@@ -1,6 +1,6 @@
-import type { Credentials } from "@client/domain/credentials.type";
-import type { UserToken } from "@client/domain/user-token.type";
-import { post } from "@client/shared/fetch.utils";
+import type { Credentials } from "../../domain/credentials.type";
+import type { UserToken } from "../../domain/user-token.type";
+import { post } from "../../shared/fetch.utils";
 
 const authenticate =
 	(endpoint: string) =>

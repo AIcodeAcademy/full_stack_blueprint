@@ -1,6 +1,6 @@
 export type Mode = "login" | "register";
 
-import type { Credentials } from "@client/domain/credentials.type";
+import type { Credentials } from "../../domain/credentials.type";
 
 export type AuthenticateEventDetail = {
 	credentials: Credentials;

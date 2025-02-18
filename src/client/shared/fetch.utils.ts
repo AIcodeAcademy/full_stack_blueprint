@@ -1,5 +1,5 @@
-import type { UserToken } from "@client/domain/user-token.type";
-
+import type { UserToken } from "../domain/user-token.type";
+const API_URL = "http://localhost:3000";
 /**
  * Makes a POST request to the specified URL
  * @param url - The endpoint URL
@@ -14,7 +14,7 @@ export const post = async <T>(
 	const headers = createHeaders();
 	const options = { headers, method: "POST", body };
 	console.log("options", options);
-	const response = await fetch(url, options);
+	const response = await fetch(API_URL + url, options);
 	return createResult<T>(response);
 };
 
@@ -27,7 +27,7 @@ export const get = async <T>(url: string): Promise<ResponseBody<T>> => {
 	const headers = createHeaders();
 	const options = { headers, method: "GET" };
 	console.log("options", options);
-	const response = await fetch(url, options);
+	const response = await fetch(API_URL + url, options);
 	return createResult<T>(response);
 };
 

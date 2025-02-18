@@ -1,11 +1,10 @@
-import homepage from "./client/index.html";
 import { initialize, processRequest } from "./server/server.bootstrap";
 
 const serverOptions = {
 	development: true,
-	static: {
+	/* static: {
 		"/": homepage,
-	},
+	}, */
 	fetch: processRequest,
 };
 

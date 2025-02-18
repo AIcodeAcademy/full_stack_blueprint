@@ -81,3 +81,28 @@ export const handleInternalError = (error: unknown): Response => {
 	console.error(errorData);
 	return internalServerError(errorData.message);
 };
+
+/**
+ * Creates a CORS options response
+ * @param request - The request
+ * @returns Response object with CORS headers
+ */
+export const corsPreflight = (): Response => {
+	return new Response(null, {
+		headers: {
+			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+			"Access-Control-Allow-Headers": "Content-Type, Authorization",
+		},
+	});
+};
+
+/**
+ * Adds CORS headers to the response
+ * @param response - The response
+ * @returns The response with CORS headers
+ */
+export const addCors = (response: Response): Response => {
+	response.headers.set("Access-Control-Allow-Origin", "*");
+	return response;
+};

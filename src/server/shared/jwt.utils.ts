@@ -1,4 +1,4 @@
-import type { JwtData } from "@server/domain/jwt-data.type";
+import { type JwtData, NULL_JWT_DATA } from "@server/domain/jwt-data.type";
 import type { CryptoHasher } from "bun";
 
 const ALGORITHM = "sha256";
@@ -24,6 +24,7 @@ export function generateJWT(jwtData: JwtData, expiresIn = 3600): string {
 }
 
 export function verifyJWT(token: string): JwtData {
+	if (!token) return NULL_JWT_DATA;
 	const hasher = new Bun.CryptoHasher(ALGORITHM, SECRET);
 	const [encodedHeader, encodedPayload, encodedSign] = token.split(".");
 	const sign = digestHash(hasher, encodedPayload);

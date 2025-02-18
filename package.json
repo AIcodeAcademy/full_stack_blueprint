@@ -10,14 +10,16 @@
 	"license": "MIT",
 	"main": "src/main.ts",
 	"scripts": {
-		"dev": "bun --watch run src/main.ts",
+		"dev:server": "bun --watch run src/main.ts",
+		"dev:client": "vite src/client",
 		"start": "bun run src/main.ts"
 	},
 	"module": "src/main.ts",
 	"type": "module",
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
-		"@types/bun": "latest"
+		"@types/bun": "latest",
+		"vite": "^6.1.0"
 	},
 	"peerDependencies": {
 		"typescript": "^5.0.0"

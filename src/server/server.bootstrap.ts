@@ -2,7 +2,7 @@ import type { Server } from "bun";
 import { api } from "./api/api.controller";
 import { initializeUsersTable } from "./api/auth/auth.repository";
 import { initializeToolsTable } from "./api/tools/tools.repository";
-import { notFound } from "./shared/response.utils";
+import { addCors, corsPreflight, notFound } from "./shared/response.utils";
 
 /**
  * Initialize the server
@@ -24,6 +24,7 @@ export const processRequest = (
 	server: Server,
 ): Response | Promise<Response> => {
 	const url = new URL(request.url);
-	if (url.pathname.startsWith("/api")) return api(request);
-	return notFound();
+	if (request.method === "OPTIONS") return corsPreflight();
+	if (url.pathname.startsWith("/api")) return api(request).then(addCors);
+	return addCors(notFound());
 };

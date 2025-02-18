@@ -1,5 +1,5 @@
-import type { Tool } from "@/client/domain/tool.type";
-import { get } from "@/client/shared/fetch.utils";
+import type { Tool } from "../../domain/tool.type";
+import { get } from "../../shared/fetch.utils";
 
 const API_URL = "/api/tools";
 

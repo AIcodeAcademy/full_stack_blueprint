@@ -1,4 +1,4 @@
-import type { Tool } from "@/client/domain/tool.type";
+import type { Tool } from "../../domain/tool.type";
 import { ToolsTableComponent } from "./tools-table.component";
 import { getTools } from "./tools.repository";
 
