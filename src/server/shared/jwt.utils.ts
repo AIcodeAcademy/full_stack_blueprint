@@ -31,7 +31,6 @@ export function verifyJWT(token: string): JwtData {
 	if (encodedSign !== sign) throw new Error("Invalid token");
 	const payloadString = atob(encodedPayload);
 	const payload: JwtData & { exp: number } = JSON.parse(payloadString);
-	console.log("verifyJWT.payload", payload);
 	const now = Math.floor(Date.now() / 1000);
 	if (now > payload.exp) throw new Error("Token expired");
 	return payload;

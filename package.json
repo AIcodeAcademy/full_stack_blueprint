@@ -10,8 +10,8 @@
 	"license": "MIT",
 	"main": "src/main.ts",
 	"scripts": {
-		"dev:server": "bun --watch run src/main.ts",
-		"dev:client": "vite src/client",
+		"server": "bun --watch run src/main.ts",
+		"client": "vite src/client",
 		"start": "bun run src/main.ts"
 	},
 	"module": "src/main.ts",

@@ -2,6 +2,7 @@ import type { Server } from "bun";
 import { api } from "./api/api.controller";
 import { initializeUsersTable } from "./api/auth/auth.repository";
 import { initializeToolsTable } from "./api/tools/tools.repository";
+import { debug } from "./shared/log.utils";
 import { addCors, corsPreflight, notFound } from "./shared/response.utils";
 
 /**
@@ -10,7 +11,7 @@ import { addCors, corsPreflight, notFound } from "./shared/response.utils";
 export const initialize = () => {
 	initializeToolsTable();
 	initializeUsersTable();
-	console.log("Server initialized");
+	debug("Server", "initialized");
 };
 
 /**

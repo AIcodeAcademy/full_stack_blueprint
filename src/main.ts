@@ -1,4 +1,5 @@
 import { initialize, processRequest } from "./server/server.bootstrap";
+import { debug } from "./server/shared/log.utils";
 
 const serverOptions = {
 	development: true,
@@ -10,5 +11,4 @@ const serverOptions = {
 
 initialize();
 const bunServer = Bun.serve(serverOptions);
-const serverUrl = `http://${bunServer.hostname}:${bunServer.port}`;
-console.log(`Server running at ${serverUrl}`);
+debug("Server", bunServer);

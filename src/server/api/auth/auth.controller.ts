@@ -1,3 +1,4 @@
+import { warn } from "@/server/shared/log.utils";
 import type { Credentials } from "@server/domain/credentials.type";
 import type { JwtData } from "@server/domain/jwt-data.type";
 import type { UserToken } from "@server/domain/user-token.type";
@@ -14,7 +15,7 @@ import { createUser, findUserByEmail } from "./auth.repository";
  */
 export const auth = async (request: Request): Promise<Response> => {
 	if (request.method !== "POST") {
-		console.warn("Invalid method:", request.method);
+		warn("Invalid method:", request.method);
 		return badRequest("Method not allowed");
 	}
 	const credentials = (await getBody(request)) as Credentials;
@@ -35,7 +36,7 @@ const generateUserToken = (userId: number): UserToken => {
 const login = async (credentials: Credentials): Promise<Response> => {
 	const user = await findUserByEmail(credentials.email);
 	if (!user) {
-		console.warn("User not found:", credentials.email);
+		warn("User not found:", credentials.email);
 		return unauthorized("Invalid credentials");
 	}
 
@@ -44,7 +45,7 @@ const login = async (credentials: Credentials): Promise<Response> => {
 		user.password,
 	);
 	if (!isValidPassword) {
-		console.warn("Invalid password for user:", credentials.email);
+		warn("Invalid password for user:", credentials.email);
 		return unauthorized("Invalid credentials");
 	}
 
@@ -55,7 +56,7 @@ const login = async (credentials: Credentials): Promise<Response> => {
 const register = async (credentials: Credentials): Promise<Response> => {
 	const existingUser = await findUserByEmail(credentials.email);
 	if (existingUser) {
-		console.warn("Email already registered:", credentials.email);
+		warn("Email already registered:", credentials.email);
 		return badRequest("Email already registered");
 	}
 

@@ -13,7 +13,6 @@ export const post = async <T>(
 	const body = JSON.stringify(payload);
 	const headers = createHeaders();
 	const options = { headers, method: "POST", body };
-	console.log("options", options);
 	const response = await fetch(API_URL + url, options);
 	return createResult<T>(response);
 };
@@ -26,7 +25,6 @@ export const post = async <T>(
 export const get = async <T>(url: string): Promise<ResponseBody<T>> => {
 	const headers = createHeaders();
 	const options = { headers, method: "GET" };
-	console.log("options", options);
 	const response = await fetch(API_URL + url, options);
 	return createResult<T>(response);
 };
@@ -58,13 +56,10 @@ async function createResult<T>(response: Response): Promise<ResponseBody<T>> {
 
 const createHeaders = (): HeadersInit => {
 	const storageToken = localStorage.getItem("userToken") || "";
-	console.log("storageToken", storageToken);
 	const userToken: UserToken = storageToken ? JSON.parse(storageToken) : null;
-	console.log("userToken", userToken);
 	const headers = {
 		"Content-Type": "application/json",
 		Authorization: `Bearer ${userToken ? userToken.token : ""}`,
 	};
-	console.log("headers", headers);
 	return headers;
 };
