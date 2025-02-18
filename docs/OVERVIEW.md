@@ -4,6 +4,7 @@
 
 - **Minimalistic**: No libraries nor frameworks at all.
 - **Bun**: for server and client
+- **Vite**: for client packaging
 - **TypeScript**: for client and server
 - **PicoCSS**: for client
 - **Biome**: for linting and formatting

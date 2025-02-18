@@ -44,6 +44,7 @@ Both have rules or instructions to be used as context for the AI.
 
 - [Bun](https://bun.sh/)
 - [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
 - [Pico CSS](https://picocss.com/)
 - [Biome](https://biomejs.dev/)
 - [Playwright](https://playwright.dev/)
@@ -53,7 +54,7 @@ Both have rules or instructions to be used as context for the AI.
 This project was created using `bun init` in bun v1.2.0.
 [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
 
-To install bun:
+To install **bun**:
 
 ```bash
 # Linux or MacOS
@@ -62,7 +63,7 @@ curl -fsSL https://bun.sh/install | bash
 # Windows
 powershell -c "irm https://bun.sh/install.ps1 | iex"
 
-# With npm
+# Or with npm
 npm install -g bun
 ```
 
@@ -72,10 +73,10 @@ To install dependencies:
 
 ```bash
 bun i
-# While developing:
-bun dev
-# To run the project:
-bun start
+# In one terminal
+bun server
+# In another terminal
+bun client
 ```
 
 ## License
