@@ -1,160 +1,162 @@
-# Project overview
+## Table of Contents
+- [Table of Contents](#table-of-contents)
+- [1. Overview](#1-overview)
+- [2. Key Components](#2-key-components)
+- [3. Data Flow](#3-data-flow)
+- [4. Dependencies](#4-dependencies)
+- [5. How to Run](#5-how-to-run)
+- [6. Key Features](#6-key-features)
+- [7. Directory Structure](#7-directory-structure)
+  - [Root](#root)
+  - [Client Application](#client-application)
 
-## Tech stack
+## 1. Overview
 
-- **Minimalistic**: No libraries nor frameworks at all.
-- **Bun**: for server and client
-- **Vite**: for client packaging
-- **TypeScript**: for client and server
-- **PicoCSS**: for client
-- **Biome**: for linting and formatting
+This project is a blueprint for building full-stack web applications with a focus on simplicity and minimal dependencies. It leverages AI agents for code generation and documentation, aiming to streamline the development process. The blueprint provides a basic structure and tech stack to quickly start new projects, emphasizing convention over configuration and the use of modern web technologies.
 
-## Project folder structure
+Key technologies and frameworks used include:
+
+- **Bun**: A fast, all-in-one JavaScript runtime.
+- **TypeScript**:  A strongly typed superset of JavaScript.
+- **Vite**: A fast frontend build tool.
+- **Pico CSS**: A minimal CSS framework for styling.
+- **Biome**: A code formatter and linter.
+- **Playwright**: An end-to-end testing framework.
+
+## 2. Key Components
+
+- **`src/client`**: Contains the frontend application code.
+  - `src/client/app`:  Holds page components and their related files (components, repositories).
+  - `src/client/shared`: Contains shared utilities and components for the client-side.
+  - `src/client/domain`: Defines client-side data types.
+  - `src/client/index.html`:  The main HTML entry point for the client application.
+  - `src/client/app.component.ts`: The root component of the client application, acting as a router outlet.
+- **`src/server`**: Contains the backend application code.
+  - `src/server/api`:  Defines API controllers and repositories for different resources.
+  - `src/server/domain`: Defines server-side data types.
+  - `src/server/shared`: Contains shared utilities for the server-side, including database and request/response handling.
+  - `src/server/main.ts`: The main entry point for the server application.
+- **`docs`**: Contains project documentation, including architecture blueprints, feature specifications, and the overview documentation itself.
+- **`tests`**:  Holds end-to-end tests written with Playwright.
+- **`.ai`**: Contains instructions and prompts for AI agents used in the project.
+- **`.cursor` & `.vscode`**:  Configuration files for Cursor and VSCode editors, including rules and settings.
+- **`sql`**: Contains SQL files, potentially for database initialization or queries.
+
+Core classes/functions:
+
+- **`app.component.ts` (client)**:  The main application component that handles routing and serves as the root of the client-side application.
+- **`api.controller.ts` (server)**:  The main API controller that routes incoming requests to the appropriate resource controllers.
+- **`sql.utils.ts` (server)**: Provides utility functions for interacting with the SQLite database.
+- **`fetch.utils.ts` (client)**:  Provides utility functions for making HTTP requests to the server API.
+- **`auth.controller.ts` (server)` & `auth.repository.ts` (server)**: Implement authentication logic, handling user registration and login.
+
+## 3. Data Flow
+
+The application follows a typical client-server architecture.
+
+1. **Client Request**: The client-side application, built with web components, initiates requests, often triggered by user interactions on page components.
+2. **API Endpoint**: Client requests are sent to the server API endpoints defined in `src/server/api`.
+3. **Controller Handling**: API requests are first handled by the `api.controller.ts`, which routes them to specific resource controllers (e.g., `auth.controller.ts`, `tools.controller.ts`).
+4. **Repository Interaction**: Controllers interact with repositories (e.g., `auth.repository.ts`, `tools.repository.ts`) to fetch or manipulate data. Repositories use `sql.utils.ts` to interact with the SQLite database.
+5. **Database Queries**: `sql.utils.ts` executes SQL queries against the SQLite database (in-memory in the current setup).
+6. **Response**: The server sends back responses in JSON format to the client, which are then processed and displayed by the client-side components.
+7. **State Management**: Client-side state management is currently minimal, potentially relying on web component properties and local storage for user tokens.
+
+Authentication data flow involves:
+
+- User login/registration requests sent to `/api/auth/login` or `/api/auth/register`.
+- Server-side authentication logic in `auth.controller.ts` and `auth.repository.ts` verifies credentials, hashes passwords, and generates JWT tokens using `jwt.utils.ts`.
+- JWT tokens are stored in the client's local storage and used for subsequent authenticated requests (though current code doesn't fully demonstrate this yet).
+
+## 4. Dependencies
+
+- **External Libraries/Services**:
+  - **Pico CSS (CDN)**: For minimal CSS styling, included via CDN in `index.html`.
+  - **Google Fonts (CDN)**: For custom fonts, also included via CDN in `index.html`.
+  - **Bun Runtime**:  Essential runtime environment.
+  - **Vite**:  For frontend development server and build process.
+  - **Playwright**: For end-to-end testing.
+  - **Biome**: For code formatting and linting.
+
+- **Infrastructure Requirements**:
+  - Node.js/Bun environment to run the server and client development tools.
+  - SQLite database (in-memory for the current setup).
+
+## 5. How to Run
+
+1. **Installation**:
+   - Ensure you have Bun installed. Follow the instructions in [README.md](README.md) for Bun installation on your operating system.
+   - Clone the repository: `git clone https://github.com/AIcodeAcademy/full_stack_blueprint.git my-project`
+   - Navigate to the project directory: `cd my-project`
+   - Install dependencies: `bun i`
+
+2. **Running the application**:
+   - To start both the client and server in parallel in development mode: `bun start`
+   - To run only the client development server: `bun client`
+   - To run only the server: `bun server`
+
+3. **Environment Configuration**:
+   - The project uses environment variables (e.g., `SQL_FOLDER`), but currently, they are mostly defaults.
+   - No specific environment variables are explicitly required to run the basic application.
+
+## 6. Key Features
+
+- Basic project setup for full-stack TypeScript application.
+- Client-side application with web components and routing.
+- Server-side API with controllers and repositories.
+- SQLite in-memory database integration.
+- Authentication endpoints for login and registration.
+- Example `tools` API resource (though not fully implemented).
+- Minimal styling with Pico CSS.
+- End-to-end testing setup with Playwright.
+- Code formatting and linting with Biome.
+- AI-driven development approach with instructions and prompts for code generation and documentation.
+
+## 7. Directory Structure
+
+### Root
 
 ```
-root # Project root folder
-├── .ai/ # AI agent configuration
-├── .cursor/ # cursor specific rules
-├── .vscode/ # VSCode settings, extensions and instructions
-├── .windsurfrules # Windsurf rules file
-├── dist/ # Build output
-├── docs/ # Project documentation
-├── src/ # Source code goes here (SEE BELOW)
-├── tests/ # E2E tests go here
-├── .env # Environment variables
-├── .gitignore # Git ignore rules
-├── package.json # Project configuration
-└── README.md # Project overview
+full_stack_blueprint/
+    ├── .ai/ # AI agent instructions and prompts
+    ├── .cursor/ # Cursor editor rules
+    ├── .vscode/ # VSCode editor configurations and instructions
+    ├── docs/ # Project documentation
+    │   ├── OVERVIEW.md # Project overview documentation (this file)
+    │   └── JOURNAL.md # Project journal working notes (to be implemented)
+    ├── tests/ # End-to-end tests
+    ├── .gitignore # Git ignore file
+    ├── LICENSE # License file
+    ├── package.json # Project dependencies and scripts
+    ├── README.md # Project README file
+    └── tsconfig.json # TypeScript configuration
 ```
 
-## Folder structure for source code
+### Client Application
+
+```  
+src/client/
+    ├── app/ # Client application components and pages
+    │   ├── auth/ # Authentication feature components and pages
+    │   └── home/ # Home page components
+    ├── domain/ # Client-side data types
+    ├── shared/ # Shared client-side utilities and components
+    ├── index.html # Client HTML entry point
+    ├── app.component.ts # Main client application component (router outlet)
+    └── styles.css # Client-side styles
+```  	
+
+### Server Application
 
 ```
-src # Source code goes here
-├── client # Client-side code
-│   ├── app # Client-side application routes
-│   │   ├── about # About page feature (components and repository)
-│   │   ├── auth # Auth page feature (components and repository)
-│   │   └── home # Home page feature (components and repository)
-│   ├── domain # Client-side domain models (types, interfaces, enums, etc.)
-│   └── shared # Components and utilities (http client, selectors, etc.)
-├── server # Server-side code
-│   ├── api # Server-side API routes
-│   │   ├── auth # Auth API routes (controllers and repository)
-│   │   └── tools # Tools API routes (controllers and repository)
-│   ├── domain # Server-side domain models (types, interfaces, enums, etc.)
-│   └── shared # Middleware utilities (hash, logger, etc.)
-└── sql # Sqlite database commands
-```
-
-## Key Components and Functionality
-
-### Client-side (`src/client`)
-
-- **`app.component.ts`**:  The root component for the client-side application. 
-  - It sets up the basic layout with `<app-header>`, `<main id="router-outlet">` for page content, and `<app-footer>`.
-- **`app/`**: Contains feature-specific modules
-  -  (e.g., `about`, `home`, `auth`). Each feature folder typically includes:
-    - `{{feature}}.page.ts`:  The main page component for the feature.
-    - `{{feature}}-components`: Reusable components specific to the feature (e.g., `tools-table.component.ts`, `auth-form.component.ts`).
-    - `{{feature}}.repository.ts`:  Handles data fetching and interaction with the server API for the feature (e.g., `tools.repository.ts`, `auth.repository.ts`).
-- **`app/auth/`**: Implements the authentication feature:
-    - **`auth.page.ts`**: Manages the authentication page, providing tabs for login and registration and handling the overall authentication flow.
-    - **`auth-form.component.ts`**: A reusable form component for both login and registration. It handles user input, form submission, and dispatches an `authenticate` event with user credentials.
-    - **`auth.repository.ts`**: Handles communication with the server API for user login and registration, using `fetch.utils.ts` to make HTTP requests to `/api/auth/login` and `/api/auth/register`.
-- **`app/about/`**: Contains components and services for the "About" page:
-    - **`about.page.ts`**:  The main page component for the "About" feature, displaying a title and the `ToolsTableComponent`.
-    - **`tools-table.component.ts`**:  A component to display a table of tools, receiving tool data as input and rendering rows with tool names and descriptions.
-    - **`tools.repository.ts`**:  Handles fetching tool data from the server API endpoint `/api/tools` using `fetch.utils.ts`.
-- **`app/home/`**: Contains components for the "Home" page:
-    - **`home.page.ts`**:  The main page component for the "Home" feature, displaying a welcome message.
-- **`shared/`**:  Contains reusable components and utilities:
-    - **`header.component.ts` and `footer.component.ts`**:  Standard header and footer components with navigation and copyright information.
-    - **`navigation.utils.ts`**:  Handles client-side routing by dynamically loading page components into the `<main id="router-outlet">` based on URL hashes.
-    - **`fetch.utils.ts`**:  Provides utility functions (`get`, `post`) for making HTTP requests to the server API, simplifying API calls.
-    - **`dom.utils.ts`**:  Offers helper functions for DOM manipulation like `select`, `getValue`, `setValue`, and event listener management.
-    - **`toggle-theme.component.ts`**:  A component to toggle between light and dark themes, storing the theme preference in the `data-theme` attribute of the `<html>` element.
-- **`domain/`**: Defines TypeScript types and interfaces.
-  -  Promoting type safety (e.g., `tool.type.ts`, `credentials.type.ts`, `user-token.type.ts`).
-- **`index.html`**: The entry point for the client-side application. It includes:
-    - Meta tags for SEO and PWA.
-    - Links to PicoCSS and custom styles (`styles.css`).
-    - Loading the root component `app.component.ts` as a module.
-- **`styles.css`**:  Contains global styles and customizations. 
-  -  Including font settings and minimal CSS reset.
-- **`manifest.json`**:  PWA manifest file defining metadata
-
-### Server-side (`src/server`)
-
-- **`main.ts`**:  Handles server initialization and request processing:
-    - `initializeDb()`:  Called on server startup to initialize resources, currently initializes the `tools` and `users` tables using `initializeToolsTable()` and `initializeUsersTable()`.
-    - `initializeServer()`:  The main request handler function. It acts as a router, directing requests to the appropriate controller based on the URL path. For `/api` paths, it delegates to `api(request)`. For other paths, it returns a 404 Not Found response.
-- **`api/`**:  Contains API route handlers (controllers) organized by resource:
-    - **`api.controller.ts`**:  The main API router. It examines the URL path and dispatches requests to specific resource controllers (e.g., `/api/tools` to `tools(request)`, `/api/auth` to `auth(request)`). It also handles errors and 404s for API routes.
-    - **`tools/`**:  Handles API endpoints related to "tools":
-        - **`tools.controller.ts`**:  Controller for `/api/tools` endpoint. Currently, it only handles `GET` requests to retrieve all tools using `getTools()`. It uses `tools.repository.ts` to fetch data and `response.utils.ts` to create HTTP responses.
-        - **`tools.repository.ts`**:  Data access layer for "tools". It interacts with the SQLite database using `sql.utils.ts` to perform operations like:
-            - `initializeToolsTable()`:  Drops and recreates the `tools` table and seeds it with initial data.
-            - `selectAllTools()`:  Retrieves all tools from the database.
-            - `selectToolById(id)`: Retrieves a tool by its ID.
-            - `seedTools()`: Inserts initial tool data into the database.
-    - **`auth/`**: Handles API endpoints related to authentication:
-        - **`auth.controller.ts`**: Controller for `/api/auth` endpoints (`/api/auth/login`, `/api/auth/register`). It handles user login and registration using `auth.repository.ts` and manages password hashing and JWT token generation.
-        - **`auth.repository.ts`**: Data access layer for user authentication. It interacts with the SQLite database to perform operations like:
-            - `initializeUsersTable()`: Drops and recreates the `users` table.
-            - `findUserByEmail(email)`: Retrieves a user by their email address.
-            - `createUser(email, password)`: Creates a new user in the database.
-- **`shared/`**:  Contains reusable server-side utilities:
-    - **`response.utils.ts`**:  Provides utility functions for creating standardized HTTP responses (e.g., `ok`, `badRequest`, `notFound`, `internalServerError`). It also includes `handleInternalError` for logging and handling errors.
-    - **`request.utils.ts`**:  Offers utility functions for working with `Request` objects, such as extracting URL, path, parameters, and request body.
-    - **`sql.utils.ts`**:  Provides an abstraction layer for interacting with the in-memory SQLite database using `bun:sqlite`. It includes functions for `selectAll`, `selectById`, `insert`, `update`, `create`, and `drop` operations.
-    - **`hash.utils.ts`**: Provides utility functions for password hashing and verification using `bcrypt`.
-    - **`jwt.utils.ts`**: Provides utility functions for generating and verifying JWT (JSON Web Tokens) for authentication.
-- **`domain/`**:  Defines domain models (types), 
-  - mirroring the client-side domain models for data consistency (e.g., `tool.type.ts`, `credentials.type.ts`, `user.type.ts`, `user-token.type.ts`, `jwt-data.type.ts`).
-
-
-### Authentication Flow
-
-1. **Login/Registration Request**: The user interacts with the `AuthPage` in the client, choosing to either log in or register. The `AuthFormComponent` captures user credentials (email and password).
-2. **Form Submission and Event Dispatch**: Upon form submission in `AuthFormComponent`, an `authenticate` custom event is dispatched, containing the authentication mode (login or register) and user credentials.
-3. **Event Handling in AuthPage**: The `AuthPage` component listens for the `authenticate` event. Upon receiving it, it extracts the mode and credentials.
-4. **API Call**: Based on the authentication mode, `AuthPage` calls either the `login` or `register` function from `auth.repository.ts`. These functions use `fetch.utils.ts` to send a POST request to the server:
-    - **Login**: POST request to `/api/auth/login`
-    - **Register**: POST request to `/api/auth/register`
-5. **Server-side Routing**: The server receives the API request. `server.bootstrap.ts` routes it to `api/api.controller.ts`, which in turn directs authentication requests to `api/auth/auth.controller.ts`.
-6. **Authentication Controller Logic**: `auth.controller.ts` handles the login and register requests:
-    - **Login**:
-        - Retrieves user credentials from the request body.
-        - Uses `auth.repository.ts` to find the user by email in the database.
-        - Verifies the provided password against the stored hashed password using `hash.utils.ts` (bcrypt).
-        - If authentication is successful, generates a JWT using `jwt.utils.ts`, embedding the user ID.
-        - Returns a success response with the `UserToken` (containing userId and JWT).
-    - **Register**:
-        - Retrieves user credentials from the request body.
-        - Checks if a user with the provided email already exists using `auth.repository.ts`.
-        - Hashes the provided password using `hash.utils.ts` (bcrypt).
-        - Creates a new user in the database using `auth.repository.ts`, storing the hashed password.
-        - Generates a JWT using `jwt.utils.ts` for the newly registered user.
-        - Returns a success response with the `UserToken`.
-7. **Database Interaction**: `auth.repository.ts` uses `sql.utils.ts` to interact with the in-memory SQLite database for user data operations (finding user by email, creating user).
-8. **Token Storage and Client Navigation**: Upon successful authentication, the server responds with a `UserToken`. The client-side `auth.repository.ts` receives this token and stores it in `localStorage`. Finally, `AuthPage` uses `navigation.utils.ts` to navigate the user to the home page.
-
-### Data Flow
-
-1. **Client Request**: A user interacts with the client-side application in the browser.
-2. **Navigation**: Client-side navigation (handled by `navigation.utils.ts`) updates the displayed page component.
-3. **Data Fetching (Optional)**: If a page component needs data (e.g., `AboutPage` fetching tools), it uses `fetch.utils.ts` to make an API request to the server (e.g., `/api/tools`).
-4. **Server Routing**: The server receives the API request. `server.bootstrap.ts`'s `processRequest` function routes the request to `api/api.controller.ts`.
-5. **API Controller**: `api/api.controller.ts` further routes the request to the appropriate resource controller (e.g., `api/tools/tools.controller.ts` for `/api/tools`, `api/auth/auth.controller.ts` for `/api/auth`).
-6. **Controller Logic**: The controller (e.g., `tools.controller.ts`, `auth.controller.ts`) processes the request, often interacting with a repository to fetch or manipulate data.
-7. **Data Repository**: The repository (e.g., `tools.repository.ts`, `auth.repository.ts`) uses `sql.utils.ts` to interact with the in-memory SQLite database.
-8. **Database Query**: `sql.utils.ts` executes SQL queries against the SQLite database.
-9. **Response**: The repository returns data to the controller. The controller uses `response.utils.ts` to create a JSON response and send it back to the client.
-10. **Client Update**: The client-side `fetch.utils.ts` receives the response, parses the JSON data, and updates the client-side component (e.g., `ToolsTableComponent` in `AboutPage`, stores `UserToken` in `localStorage` after authentication).
-
-This project provides a solid foundation for building fullstack web applications with a focus on simplicity and modern tools like Bun and TypeScript, while adhering to clean architecture principles and separation of concerns. It includes basic authentication functionality to manage user registration and login, enhancing the application's security and user management capabilities.
-
-
-
-
+src/server/
+    ├── api/ # API controllers and repositories
+    │   ├── auth/ # Authentication API resource
+    │   └── tools/ # Tools API resource (example)
+    ├── domain/ # Server-side data types
+    ├── shared/ # Shared server-side utilities
+    ├── main.ts # Server entry point
+    └── index.ts # Placeholder index file
+```  	
+	
+[Full Stack Blueprint Repository](https://github.com/AIcodeAcademy/full_stack_blueprint)

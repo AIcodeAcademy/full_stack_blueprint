@@ -10,10 +10,16 @@ globs:
 
 ## Git commits
 
-- Add any pending changes
-- Generate a message with the summary of changes
-- Using conventional commits for messages
-- Be explicit and detailed about the changes
+- Review the Changes:
+  - Carefully review the pending changes in the codebase.
+  - Identify the type of changes (e.g., new features, bug fixes, documentation updates, etc.).
+- Craft a Conventional Commit Message:
+ - Use the conventional commit format: <type>(<scope>): <subject>.
+ - Common types include `feat`, `fix`, `docs`, `style`, `refactor`, `test`, and, `chore`.
+ - The scope is optional and can be used to specify the area of the codebase affected.
+ - The subject should be a concise description of the change
+- Commit the Changes:
+ - Ensure the message accurately reflects the changes and follows the conventional commit guidelines 
 
 ## Git release
 
