@@ -4,31 +4,37 @@ globs: src/client/app
 ---
 # Page rules
 
-- In a Sigle Page Application, routing is managed at client side.
+- In a Single Page Application, routing is managed at client side.
 - In this context, a page is a set of artifacts that manages what it is displayed when a route is activated
-- For each route or page create a folder under the `src/client/app/page-name` with the same 
-- For each page, create three artifacts in the page folder:
-  - the page web component 
-  - the presenter web component
-  - the repository
-
+- Pages must have a short url-friendly name in `kebab-case`
+- Pages are created at the `src/client/app/` folder in its own folder `src/client/app/page-name`
+- For each page, there will be three artifacts in the page folder:
+  - the page web component acting as a controller
+  - the presenter web component responsible for updating the view with data and handle DOM events
+  - the repository functions module responsible for data access and manipulation.
+- Follow [web.mdc](mdc:.cursor/rules/web.mdc) rules to write the page code, 
+  - avoid using any external library 
+  - avoid the creation of any custom CSS class
+ 
 ## Page component
 
-- A page will be a WebComponent loaded by the [navigation.utils.ts](mdc:src/client/shared/navigation.utils.ts) in the `router-outlet` of the [app.component.ts](mdc:src/client/app.component.ts)
-- The file name will be `page-name.page.ts`
-- A page should use a repository to fetch and save data 
-- A page should use one or more presenter components to display data
-- Follow [web.mdc](mdc:.cursor/rules/web.mdc) rules to write the page code
+- The file will be created at `src/client/app/page-name/` with name `page-name.page.ts`
+- A page component will be an exported HTMLElement derived class following @web.mdc rules
+- The page will be loaded by the [navigation.utils.ts](mdc:src/client/shared/navigation.utils.ts) in the `router-outlet` of the [app.component.ts](mdc:src/client/app.component.ts)
+- The page will import and define customElements for presenter components
+- The page will import the repository module, call its functions and wait for the promises.
 
 ### Page repository
 
-- A repository is a module of exported functions that helps a page to fetch data from the server
-- The file name will be `page-name.repository.ts`
-- Must use the fetch API to fetch utils from [fetch.utils.ts](mdc:src/client/shared/fetch.utils.ts)
+- The file will be created at `src/client/app/page-name/` with name `page-name.repository.ts`
+- A repository is a module of exported functions that helps a page to fetch data from the server API
+- To access the server will use the utilities at [fetch.utils.ts](mdc:src/client/shared/fetch.utils.ts) to get and post requests
+- Must return promises with data or errors to the page
 
 ### Presenter components
 
+- Depending of the view complexity can be more than one presenters, called sections.
+- For each section there will be a file created at `src/client/app/page-name/` with name `section-name.component.ts`
 - This components are just for this page and are not shared
 - Encapsulates complex html and ui logic to keep the page slim
-- A component should be named with `name.component.ts` extension
-- Follow [web.mdc](mdc:.cursor/rules/web.mdc) rules to write the domponent code
+- Make use of [dom.utils.ts](mdc:src/client/shared/dom.utils.ts) to manipulate and hadle the DOM

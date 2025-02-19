@@ -11,7 +11,7 @@ globs:
 - Use **AAA** pattern for organizing test code.
 - Name variables following this convention: 
   - `inputX` for input data
-  - `mockX` for mock functions or clasess
+  - `mockX` for mock functions or classes
   - `actualX` for actual results
   - `expectedX` for expected results
 
