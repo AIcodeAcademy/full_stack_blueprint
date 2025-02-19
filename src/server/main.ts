@@ -5,22 +5,21 @@ import { initializeToolsTable } from "./api/tools/tools.repository";
 import { debug } from "./shared/log.utils";
 import { addCors, corsPreflight, notFound } from "./shared/response.utils";
 
-/**
- * Initialize the server
- */
-export const initialize = () => {
+const initializeDb = () => {
 	initializeToolsTable();
 	initializeUsersTable();
-	debug("Server", "initialized");
+	debug("Database", "initialized");
 };
 
-/**
- * Process the request
- * @param request - The request
- * @param server - The server
- * @returns The response
- */
-export const processRequest = (
+const initializeServer = () => {
+	const bunServer = Bun.serve({
+		development: true,
+		fetch: processRequest,
+	});
+	debug("Server", bunServer);
+};
+
+const processRequest = (
 	request: Request,
 	server: Server,
 ): Response | Promise<Response> => {
@@ -29,3 +28,6 @@ export const processRequest = (
 	if (url.pathname.startsWith("/api")) return api(request).then(addCors);
 	return addCors(notFound());
 };
+
+initializeDb();
+initializeServer();
