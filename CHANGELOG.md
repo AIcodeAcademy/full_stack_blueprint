@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented here.
 
-## [Unreleased]
+## [0.0.1] - 2025-02-01
 
 ### Added
 - chore(scaffolding): add placeholder index.ts files for future folder structure
@@ -20,3 +20,13 @@ All notable changes to this project will be documented here.
     src/server/api/resource_n,
     src/server/domain,
     src/server/shared 
+
+## [0.1.0] - 2025-02-19
+
+- feat(auth): implement user authentication system
+  - Add login and registration endpoints
+  - Create user table with email/password
+  - Implement JWT token generation and validation
+  - Add client-side auth form component
+  - Add password hashing with Bun.password
+  - Add SQL utilities for database operations
