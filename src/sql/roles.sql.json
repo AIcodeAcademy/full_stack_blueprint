@@ -1,0 +1,6 @@
+{
+	"TABLE_NAME": "roles",
+	"CREATE_TABLE": "CREATE TABLE roles (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, createdAt DATETIME, updatedAt DATETIME)",
+	"SELECT_ROLE_BY_ID": "SELECT * FROM roles WHERE id = $id",
+	"INSERT_ROLE": "INSERT INTO roles (name, description, createdAt, updatedAt) VALUES ($name, $description, $createdAt, $updatedAt)"
+}

@@ -1,18 +1,8 @@
 import type { User } from "@server/domain/user.type";
-import { create, drop, insert, select } from "@server/shared/sql.utils";
+import { insert, select, selectById } from "@server/shared/sql.utils";
 
 const sqlFolder = process.env.SQL_FOLDER || "sql";
 const usersSql = await Bun.file(`${sqlFolder}/users.sql.json`).json();
-
-/**
- * Initializes the users table
- * @returns Number of affected rows
- */
-export const initializeUsersTable = (): number => {
-	drop(usersSql.TABLE_NAME);
-	const result = create(usersSql.CREATE_TABLE);
-	return result;
-};
 
 /**
  * Finds a user by email
@@ -35,13 +25,16 @@ export const findUserByEmail = async (
  * @param password - The password of the user
  * @returns The user
  */
-export const createUser = async (
+export const insertUser = async (
 	$email: string,
 	$password: string,
+	$roleId: number,
 ): Promise<User> => {
-	const result = insert<{ $email: string; $password: string }>(
-		usersSql.INSERT_USER,
-		{ $email, $password },
-	);
-	return { id: result, email: $email, password: $password };
+	const newUserId = insert<{
+		$email: string;
+		$password: string;
+		$roleId: number;
+	}>(usersSql.INSERT_USER, { $email, $password, $roleId });
+	const newUser = selectById<User>(usersSql.SELECT_USER_BY_ID, newUserId);
+	return newUser;
 };

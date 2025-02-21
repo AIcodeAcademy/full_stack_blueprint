@@ -1,3 +1,6 @@
+import type { JwtData } from "../domain/jwt-data.type";
+import { verifyJWT } from "./jwt.utils";
+
 export const getUrl = (request: Request): URL => {
 	return new URL(request.url);
 };
@@ -46,4 +49,31 @@ export const getSearchParam = (
 
 export const getBody = async (request: Request): Promise<unknown> => {
 	return await request.json();
+};
+
+export const setUserId = (request: Request): void => {
+	const userId = extractUserId(request);
+	request.headers.set("userId", userId.toString());
+};
+
+export const getUserId = (request: Request): number => {
+	const userId = request.headers.get("userId");
+	return userId ? Number.parseInt(userId) : 0;
+};
+
+export const guardUserId = (request: Request): void => {
+	const userId = getUserId(request);
+	if (userId === 0) throw new Error("User ID is required");
+};
+
+const extractAuthorization = (request: Request): string => {
+	const authorization = request.headers.get("Authorization");
+	const token = authorization ? authorization.split(" ")[1] : "";
+	return token;
+};
+
+const extractUserId = (request: Request): number => {
+	const token = extractAuthorization(request);
+	const jwtData: JwtData = verifyJWT(token);
+	return jwtData.userId;
 };

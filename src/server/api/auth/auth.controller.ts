@@ -1,12 +1,14 @@
+import type { CredentialsDto } from "@/server/domain/credentials-dto.type";
+import type { UserTokenDto } from "@/server/domain/user-token-dto.type";
 import { warn } from "@/server/shared/log.utils";
-import type { Credentials } from "@server/domain/credentials.type";
 import type { JwtData } from "@server/domain/jwt-data.type";
-import type { UserToken } from "@server/domain/user-token.type";
 import { hashPassword, verifyPassword } from "@server/shared/hash.utils";
 import { generateJWT } from "@server/shared/jwt.utils";
 import { getBody } from "@server/shared/request.utils";
 import { badRequest, ok, unauthorized } from "@server/shared/response.utils";
-import { createUser, findUserByEmail } from "./auth.repository";
+import { findUserByEmail, insertUser } from "./auth.repository";
+
+const DEFAULT_ROLE_ID = 1;
 
 /**
  * Auth controller
@@ -18,7 +20,9 @@ export const auth = async (request: Request): Promise<Response> => {
 		warn("Invalid method:", request.method);
 		return badRequest("Method not allowed");
 	}
-	const credentials = (await getBody(request)) as Credentials;
+	const credentials = (await getBody(request)) as CredentialsDto;
+	if (!credentials || !credentials.email || !credentials.password)
+		return badRequest("Missing required fields");
 	const url = new URL(request.url);
 	const path = url.pathname;
 	if (path === "/api/auth/login") return await login(credentials);
@@ -27,13 +31,13 @@ export const auth = async (request: Request): Promise<Response> => {
 	return badRequest("Invalid endpoint");
 };
 
-const generateUserToken = (userId: number): UserToken => {
+const createUserToken = (userId: number): UserTokenDto => {
 	const jwtData: JwtData = { userId };
 	const token = generateJWT(jwtData);
 	return { userId, token };
 };
 
-const login = async (credentials: Credentials): Promise<Response> => {
+const login = async (credentials: CredentialsDto): Promise<Response> => {
 	const user = await findUserByEmail(credentials.email);
 	if (!user) {
 		warn("User not found:", credentials.email);
@@ -49,11 +53,11 @@ const login = async (credentials: Credentials): Promise<Response> => {
 		return unauthorized("Invalid credentials");
 	}
 
-	const userToken = generateUserToken(user.id);
+	const userToken = createUserToken(user.id);
 	return ok(userToken);
 };
 
-const register = async (credentials: Credentials): Promise<Response> => {
+const register = async (credentials: CredentialsDto): Promise<Response> => {
 	const existingUser = await findUserByEmail(credentials.email);
 	if (existingUser) {
 		warn("Email already registered:", credentials.email);
@@ -61,8 +65,12 @@ const register = async (credentials: Credentials): Promise<Response> => {
 	}
 
 	const hashedPassword = await hashPassword(credentials.password);
-	const user = await createUser(credentials.email, hashedPassword);
+	const user = await insertUser(
+		credentials.email,
+		hashedPassword,
+		DEFAULT_ROLE_ID,
+	);
 
-	const userToken = generateUserToken(user.id);
-	return ok<UserToken>(userToken);
+	const userToken = createUserToken(user.id);
+	return ok<UserTokenDto>(userToken);
 };
