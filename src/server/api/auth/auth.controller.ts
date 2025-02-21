@@ -11,7 +11,7 @@ import { findUserByEmail, insertUser } from "./auth.repository";
 const DEFAULT_ROLE_ID = 1;
 
 /**
- * Auth controller
+ * Auth controller for /api/auth endpoints
  * @param request - The request
  * @returns The response
  */
@@ -25,19 +25,13 @@ export const auth = async (request: Request): Promise<Response> => {
 		return badRequest("Missing required fields");
 	const url = new URL(request.url);
 	const path = url.pathname;
-	if (path === "/api/auth/login") return await login(credentials);
-	if (path === "/api/auth/register") return await register(credentials);
+	if (path === "/api/auth/login") return await postLogin(credentials);
+	if (path === "/api/auth/register") return await postRegister(credentials);
 	console.warn("Invalid endpoint:", path);
 	return badRequest("Invalid endpoint");
 };
 
-const createUserToken = (userId: number): UserTokenDto => {
-	const jwtData: JwtData = { userId };
-	const token = generateJWT(jwtData);
-	return { userId, token };
-};
-
-const login = async (credentials: CredentialsDto): Promise<Response> => {
+const postLogin = async (credentials: CredentialsDto): Promise<Response> => {
 	const user = await findUserByEmail(credentials.email);
 	if (!user) {
 		warn("User not found:", credentials.email);
@@ -57,7 +51,7 @@ const login = async (credentials: CredentialsDto): Promise<Response> => {
 	return ok(userToken);
 };
 
-const register = async (credentials: CredentialsDto): Promise<Response> => {
+const postRegister = async (credentials: CredentialsDto): Promise<Response> => {
 	const existingUser = await findUserByEmail(credentials.email);
 	if (existingUser) {
 		warn("Email already registered:", credentials.email);
@@ -73,4 +67,10 @@ const register = async (credentials: CredentialsDto): Promise<Response> => {
 
 	const userToken = createUserToken(user.id);
 	return ok<UserTokenDto>(userToken);
+};
+
+const createUserToken = (userId: number): UserTokenDto => {
+	const jwtData: JwtData = { userId };
+	const token = generateJWT(jwtData);
+	return { userId, token };
 };

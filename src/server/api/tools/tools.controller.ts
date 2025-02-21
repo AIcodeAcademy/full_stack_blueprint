@@ -9,10 +9,15 @@ import {
 } from "@server/shared/response.utils";
 import { insertTool, selectAllTools } from "./tools.repository";
 
+/**
+ * Tools controller for /api/tools endpoints
+ * @param request - The request
+ * @returns The response
+ */
 export const tools = async (request: Request): Promise<Response> => {
 	const method = request.method;
 	if (method === "GET") return getTools();
-	if (method === "POST") return createTool(request);
+	if (method === "POST") return postTool(request);
 	return methodNotAllowed();
 };
 
@@ -21,7 +26,7 @@ const getTools = async (): Promise<Response> => {
 	return ok<Tool[]>(tools);
 };
 
-const createTool = async (request: Request): Promise<Response> => {
+const postTool = async (request: Request): Promise<Response> => {
 	const userId = getUserId(request);
 	if (userId === 0) return unauthorized();
 	const toolDto = (await request.json()) as ToolPostDto;
