@@ -57,6 +57,7 @@ export const insert = <P>(query: string, params: P): number => {
 	// const sqlParams = paramsDb as unknown as SQLQueryBindings;
 	debug("Insert", paramsDb);
 	const r = q.run(paramsDb as unknown as SQLQueryBindings);
+	if (!r.lastInsertRowid) throw new Error("Failed to insert");
 	return Number(r.lastInsertRowid);
 };
 

@@ -1,5 +1,6 @@
 import type { JwtData } from "../domain/jwt-data.type";
 import { verifyJWT } from "./jwt.utils";
+import { debug } from "./log.utils";
 
 export const getUrl = (request: Request): URL => {
 	return new URL(request.url);
@@ -52,8 +53,12 @@ export const getBody = async (request: Request): Promise<unknown> => {
 };
 
 export const setUserId = (request: Request): void => {
-	const userId = extractUserId(request);
-	request.headers.set("userId", userId.toString());
+	try {
+		const userId = extractUserId(request);
+		request.headers.set("userId", userId.toString());
+	} catch (error) {
+		debug("Error setting user ID", error);
+	}
 };
 
 export const getUserId = (request: Request): number => {
