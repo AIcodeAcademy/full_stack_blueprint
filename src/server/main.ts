@@ -11,7 +11,7 @@ const initializeServer = () => {
 		development: true,
 		fetch: processRequest,
 	});
-	debug("Server ready", bunServer);
+	debug("Server ready", bunServer.url.href);
 };
 
 const processRequest = (

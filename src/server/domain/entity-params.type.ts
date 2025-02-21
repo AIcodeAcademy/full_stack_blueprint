@@ -1,11 +1,11 @@
 export type EntityParams = {
 	$id?: number;
-	$createdAt?: Date;
-	$updatedAt?: Date;
+	$createdAt?: string;
+	$updatedAt?: string;
 };
 
 export const NULL_ENTITY_PARAMS: EntityParams = {
 	$id: 0,
-	$createdAt: new Date(),
-	$updatedAt: new Date(),
+	$createdAt: new Date().toISOString(),
+	$updatedAt: new Date().toISOString(),
 };
