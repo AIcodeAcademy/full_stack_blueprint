@@ -1,3 +1,6 @@
+import type { ApiError } from "../domain/api-error.type";
+import { debug } from "./log.utils";
+
 /**
  * Creates a successful response with status 200
  * @param body - Response body data
@@ -18,15 +21,6 @@ export const badRequest = (message = "Bad request"): Response => {
 };
 
 /**
- * Creates a not found response with status 404
- * @param message - Optional error message
- * @returns Response object with error message
- */
-export const notFound = (message = "Not found"): Response => {
-	return new Response(message, { status: 404 });
-};
-
-/**
  * Creates an unauthorized response with status 401
  * @param message - Optional error message
  * @returns Response object with error message
@@ -44,6 +38,14 @@ export const forbidden = (message = "Forbidden"): Response => {
 	return new Response(message, { status: 403 });
 };
 
+/**
+ * Creates a not found response with status 404
+ * @param message - Optional error message
+ * @returns Response object with error message
+ */
+export const notFound = (message = "Not found"): Response => {
+	return new Response(message, { status: 404 });
+};
 /**
  * Creates a method not allowed response with status 405
  * @param message - Optional error message
@@ -69,17 +71,25 @@ export const internalServerError = (
  * @param error - The error to handle
  * @returns Response object with error message
  */
-export const handleInternalError = (error: unknown): Response => {
+export const handleInternalError = (error: Error): Response => {
 	const errorData = {
-		message: "Unknown error",
-		stack: "unknown stack",
+		message: error.message || "Unknown error",
+		stack: error.stack || error.name || "unknown stack",
+		code: (error as ApiError).code || 500,
 	};
-	if (error instanceof Error) {
-		errorData.message = error.message;
-		errorData.stack = error.stack || error.name;
+	debug("Error data", errorData);
+	switch (errorData.code) {
+		case 401:
+			return unauthorized(errorData.message);
+		case 403:
+			return forbidden(errorData.message);
+		case 404:
+			return notFound(errorData.message);
+		case 405:
+			return methodNotAllowed(errorData.message);
+		default:
+			return internalServerError(errorData.message);
 	}
-	console.error(errorData);
-	return internalServerError(errorData.message);
 };
 
 /**

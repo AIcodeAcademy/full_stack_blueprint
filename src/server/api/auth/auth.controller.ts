@@ -1,13 +1,20 @@
+import {
+	BAD_REQUEST_ERROR,
+	UNAUTHORIZED_ERROR,
+} from "@/server/domain/api-error.type";
 import type { CredentialsDto } from "@/server/domain/credentials-dto.type";
 import type { UserTokenDto } from "@/server/domain/user-token-dto.type";
+import {
+	validateCredentials,
+	validatePostRequest,
+} from "@/server/domain/validations.utils";
 import { warn } from "@/server/shared/log.utils";
 import type { JwtData } from "@server/domain/jwt-data.type";
 import { hashPassword, verifyPassword } from "@server/shared/hash.utils";
 import { generateJWT } from "@server/shared/jwt.utils";
 import { getBody } from "@server/shared/request.utils";
-import { badRequest, ok, unauthorized } from "@server/shared/response.utils";
+import { badRequest, ok } from "@server/shared/response.utils";
 import { findUserByEmail, insertUser } from "./auth.repository";
-
 const DEFAULT_ROLE_ID = 1;
 
 /**
@@ -15,14 +22,10 @@ const DEFAULT_ROLE_ID = 1;
  * @param request - The request
  * @returns The response
  */
-export const auth = async (request: Request): Promise<Response> => {
-	if (request.method !== "POST") {
-		warn("Invalid method:", request.method);
-		return badRequest("Method not allowed");
-	}
+export const authController = async (request: Request): Promise<Response> => {
+	validatePostRequest(request);
 	const credentials = (await getBody(request)) as CredentialsDto;
-	if (!credentials || !credentials.email || !credentials.password)
-		return badRequest("Missing required fields");
+	validateCredentials(credentials);
 	const url = new URL(request.url);
 	const path = url.pathname;
 	if (path === "/api/auth/login") return await postLogin(credentials);
@@ -35,7 +38,7 @@ const postLogin = async (credentials: CredentialsDto): Promise<Response> => {
 	const user = await findUserByEmail(credentials.email);
 	if (!user) {
 		warn("User not found:", credentials.email);
-		return unauthorized("Invalid credentials");
+		throw UNAUTHORIZED_ERROR;
 	}
 
 	const isValidPassword = await verifyPassword(
@@ -44,7 +47,7 @@ const postLogin = async (credentials: CredentialsDto): Promise<Response> => {
 	);
 	if (!isValidPassword) {
 		warn("Invalid password for user:", credentials.email);
-		return unauthorized("Invalid credentials");
+		throw UNAUTHORIZED_ERROR;
 	}
 
 	const userToken = createUserToken(user.id);
@@ -55,7 +58,7 @@ const postRegister = async (credentials: CredentialsDto): Promise<Response> => {
 	const existingUser = await findUserByEmail(credentials.email);
 	if (existingUser) {
 		warn("Email already registered:", credentials.email);
-		return badRequest("Email already registered");
+		throw BAD_REQUEST_ERROR;
 	}
 
 	const hashedPassword = await hashPassword(credentials.password);

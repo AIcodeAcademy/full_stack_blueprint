@@ -1,3 +1,4 @@
+import { UNAUTHORIZED_ERROR } from "../domain/api-error.type";
 import type { JwtData } from "../domain/jwt-data.type";
 import { verifyJWT } from "./jwt.utils";
 import { debug } from "./log.utils";
@@ -66,9 +67,9 @@ export const getUserId = (request: Request): number => {
 	return userId ? Number.parseInt(userId) : 0;
 };
 
-export const guardUserId = (request: Request): void => {
+export const validateUserId = (request: Request): void => {
 	const userId = getUserId(request);
-	if (userId === 0) throw new Error("User ID is required");
+	if (userId === 0) throw UNAUTHORIZED_ERROR;
 };
 
 const extractAuthorization = (request: Request): string => {

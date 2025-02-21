@@ -1,12 +1,8 @@
-import type { ToolPostDto } from "@/server/domain/tool-post-dto.type";
+import { METHOD_NOT_ALLOWED_ERROR } from "@/server/domain/api-error.type";
 import type { Tool } from "@/server/domain/tool.type";
-import { getUserId } from "@/server/shared/request.utils";
-import {
-	badRequest,
-	methodNotAllowed,
-	ok,
-	unauthorized,
-} from "@server/shared/response.utils";
+import { validateTool } from "@/server/domain/validations.utils";
+import { validateUserId } from "@/server/shared/request.utils";
+import { ok } from "@server/shared/response.utils";
 import { insertTool, selectAllTools } from "./tools.repository";
 
 /**
@@ -14,11 +10,11 @@ import { insertTool, selectAllTools } from "./tools.repository";
  * @param request - The request
  * @returns The response
  */
-export const tools = async (request: Request): Promise<Response> => {
+export const toolsController = async (request: Request): Promise<Response> => {
 	const method = request.method;
 	if (method === "GET") return getTools();
 	if (method === "POST") return postTool(request);
-	return methodNotAllowed();
+	throw METHOD_NOT_ALLOWED_ERROR;
 };
 
 const getTools = async (): Promise<Response> => {
@@ -27,11 +23,10 @@ const getTools = async (): Promise<Response> => {
 };
 
 const postTool = async (request: Request): Promise<Response> => {
-	const userId = getUserId(request);
-	if (userId === 0) return unauthorized();
-	const toolDto = (await request.json()) as ToolPostDto;
-	if (!toolDto || !toolDto.name || !toolDto.description || !toolDto.url)
-		return badRequest("Missing required fields");
+	const userId = validateUserId(request);
+	const toolDto = await request.json();
+	validateTool(toolDto);
+	toolDto.userId = userId;
 	const tool = insertTool(toolDto);
 	return ok<Tool>(tool);
 };
