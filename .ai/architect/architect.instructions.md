@@ -47,7 +47,7 @@ There are 3 main steps, with specific instructions for each:
    - Offer hints and a predefined option.
    - Repeat until the architect blueprint document information is complete.
 
-3. Write the result in the **Architect Blueprint** document at `docs/architect.blueprint.md`
+3. Write the result in the **Architect Blueprint** document at `docs/architecture/architect.blueprint.md`
 
    - Use the same structure as `architect.template.md`.
    - Do not include initial YAML template instructions.
