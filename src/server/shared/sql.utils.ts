@@ -1,13 +1,11 @@
 import { Database, type SQLQueryBindings } from "bun:sqlite";
 import type { EntityParams } from "../domain/entity-params.type";
-import { debug } from "./log.utils";
 
 const db = new Database(":memory:", { safeIntegers: false });
 
 export const selectAll = <R>(query: string): R[] => {
 	const q = db.query(query);
 	const r = q.all();
-	debug("Select all", r);
 	return r as R[];
 };
 
@@ -47,16 +45,14 @@ export const select = <P, R>(query: string, params?: P): R => {
  */
 export const insert = <P>(query: string, params: P): number => {
 	if (!params) throw Error("Params are required");
-	debug("Insert query", query);
 	const q = db.query(query);
 	const paramsDb = {
 		...params,
 		$createdAt: new Date().toISOString(),
 		$updatedAt: new Date().toISOString(),
 	};
-	// const sqlParams = paramsDb as unknown as SQLQueryBindings;
-	debug("Insert", paramsDb);
-	const r = q.run(paramsDb as unknown as SQLQueryBindings);
+	const sqlParams = paramsDb as unknown as SQLQueryBindings;
+	const r = q.run(sqlParams);
 	if (!r.lastInsertRowid) throw new Error("Failed to insert");
 	return Number(r.lastInsertRowid);
 };
