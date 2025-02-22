@@ -1,4 +1,4 @@
-import type { ApiError } from "../domain/api-error.type";
+import type { ApiError } from "./api-error.type";
 import { debug } from "./log.utils";
 
 /**
@@ -81,7 +81,7 @@ export const handleInternalError = (
 		stack: error.stack || error.name || "unknown stack",
 		code: (error as ApiError).code || 500,
 	};
-	debug(`API error ${request.url}`, errorData.code);
+	debug(`API error ${request.url}`, `${errorData.message} ${errorData.stack}`);
 	switch (errorData.code) {
 		case 401:
 			return unauthorized(errorData.message);

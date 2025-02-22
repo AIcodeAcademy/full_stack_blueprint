@@ -1,5 +1,5 @@
-import { UNAUTHORIZED_ERROR } from "../domain/api-error.type";
-import type { JwtData } from "../domain/jwt-data.type";
+import { METHOD_NOT_ALLOWED_ERROR, UNAUTHORIZED_ERROR } from "./api-error.type";
+import type { JwtData } from "./jwt-data.type";
 import { verifyJWT } from "./jwt.utils";
 
 export const getUrl = (request: Request): URL => {
@@ -66,6 +66,12 @@ export const validateUserId = (request: Request): number => {
 	const userId = getUserId(request);
 	if (userId === 0) throw UNAUTHORIZED_ERROR;
 	return userId;
+};
+
+export const validatePostRequest = (request: Request): void => {
+	if (request.method !== "POST") {
+		throw METHOD_NOT_ALLOWED_ERROR;
+	}
 };
 
 const extractAuthorization = (request: Request): string => {

@@ -1,4 +1,4 @@
-import { type JwtData, NULL_JWT_DATA } from "@server/domain/jwt-data.type";
+import { type JwtData, NULL_JWT_DATA } from "@/server/shared/jwt-data.type";
 import type { CryptoHasher } from "bun";
 
 const ALGORITHM = "sha256";

@@ -1,7 +1,7 @@
 /**
  * Credentials DTO received from a user.
  */
-export type CredentialsDto = {
+export type CredentialsRequest = {
 	email: string;
 	password: string;
 };

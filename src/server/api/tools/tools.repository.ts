@@ -1,4 +1,3 @@
-import type { ToolPostDto } from "@/server/domain/tool-post-dto.type";
 import { NULL_TOOL, type Tool } from "@server/domain/tool.type";
 import {
 	insert,
@@ -19,8 +18,8 @@ export const selectToolById = (id: number): Tool => {
 	return result || NULL_TOOL;
 };
 
-export const insertTool = (toolDto: ToolPostDto): Tool => {
-	const newToolId = insert<ToolPostDto>(toolsSql.INSERT, toolDto);
-	const newTool = selectById<Tool>(toolsSql.SELECT_BY_ID, newToolId);
-	return newTool || NULL_TOOL;
+export const insertTool = (toolToInsert: Partial<Tool>): Tool => {
+	const toolId = insert<Partial<Tool>>(toolsSql.INSERT, toolToInsert);
+	const tool = selectById<Tool>(toolsSql.SELECT_BY_ID, toolId);
+	return tool || NULL_TOOL;
 };

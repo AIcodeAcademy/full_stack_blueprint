@@ -7,8 +7,8 @@ export type Tool = {
 	description: string;
 	url: string;
 	userOwnerId: number;
-	createdAt?: Date;
-	updatedAt?: Date;
+	createdAt: Date;
+	updatedAt: Date;
 };
 
 /**

@@ -14,30 +14,23 @@ const usersSql = await readCommands("users");
  * @returns The user or undefined if not found
  */
 export const findUserByEmail = async (
-	$email: string,
+	email: string,
 ): Promise<User | undefined> => {
-	const users = select<{ $email: string }, User[]>(usersSql.SELECT_BY_FIELD, {
-		$email,
+	const users = select<{ email: string }, User[]>(usersSql.SELECT_BY_FIELD, {
+		email,
 	});
 	return users[0];
 };
 
 /**
  * Creates a user
- * @param email - The email of the user
- * @param password - The password of the user
+ * @param userToInsert - The user to insert
  * @returns The user
  */
 export const insertUser = async (
-	$email: string,
-	$password: string,
-	$roleId: number,
+	userToInsert: Partial<User>,
 ): Promise<User> => {
-	const newUserId = insert<{
-		$email: string;
-		$password: string;
-		$roleId: number;
-	}>(usersSql.INSERT, { $email, $password, $roleId });
+	const newUserId = insert<Partial<User>>(usersSql.INSERT, userToInsert);
 	const newUser = selectById<User>(usersSql.SELECT_BY_ID, newUserId);
 	return newUser;
 };

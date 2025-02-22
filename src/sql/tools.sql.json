@@ -8,24 +8,24 @@
 	"DELETE": "DELETE FROM tools WHERE id = $id",
 	"SEED": [
 		{
-			"$name": "Bun",
-			"$description": "Bun is a fast, modern, all-in-one toolkit for JavaScript.",
-			"$url": "https://bun.sh/"
+			"name": "Bun",
+			"description": "Bun is a fast, modern, all-in-one toolkit for JavaScript.",
+			"url": "https://bun.sh/"
 		},
 		{
-			"$name": "Pico CSS",
-			"$description": "Pico CSS is a minimal CSS framework for semantic HTML.",
-			"$url": "https://picocss.com/"
+			"name": "Pico CSS",
+			"description": "Pico CSS is a minimal CSS framework for semantic HTML.",
+			"url": "https://picocss.com/"
 		},
 		{
-			"$name": "Playwright",
-			"$description": "Playwright is a framework for browser automation and testing.",
-			"$url": "https://playwright.dev/"
+			"name": "Playwright",
+			"description": "Playwright is a framework for browser automation and testing.",
+			"url": "https://playwright.dev/"
 		},
 		{
-			"$name": "Vite",
-			"$description": "Vite is a build tool for modern web development.",
-			"$url": "https://vitejs.dev/"
+			"name": "Vite",
+			"description": "Vite is a build tool for modern web development.",
+			"url": "https://vitejs.dev/"
 		}
 	]
 }

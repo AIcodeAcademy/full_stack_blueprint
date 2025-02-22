@@ -1,12 +1,12 @@
 /**
  * User token DTO sent to the user.
  */
-export type UserTokenDto = {
+export type UserTokenResponse = {
 	userId: number;
 	token: string;
 };
 
-export const NULL_USER_TOKEN_DTO: UserTokenDto = {
+export const NULL_USER_TOKEN_DTO: UserTokenResponse = {
 	userId: 0,
 	token: "",
 };

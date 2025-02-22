@@ -1,8 +1,9 @@
-import { METHOD_NOT_ALLOWED_ERROR } from "@/server/domain/api-error.type";
 import type { Tool } from "@/server/domain/tool.type";
 import { validateTool } from "@/server/domain/validations.utils";
+import { METHOD_NOT_ALLOWED_ERROR } from "@/server/shared/api-error.type";
 import { validateUserId } from "@/server/shared/request.utils";
 import { ok } from "@server/shared/response.utils";
+import type { ToolPostRequest } from "./tool-post-request.type";
 import { insertTool, selectAllTools } from "./tools.repository";
 
 /**
@@ -24,9 +25,12 @@ const getTools = async (): Promise<Response> => {
 
 const postTool = async (request: Request): Promise<Response> => {
 	const userId = validateUserId(request);
-	const toolDto = await request.json();
-	validateTool(toolDto);
-	toolDto.userId = userId;
-	const tool = insertTool(toolDto);
+	const toolDto = (await request.json()) as ToolPostRequest;
+	const toolToInsert: Partial<Tool> = {
+		...toolDto,
+		userOwnerId: userId,
+	};
+	validateTool(toolToInsert);
+	const tool = insertTool(toolToInsert);
 	return ok<Tool>(tool);
 };

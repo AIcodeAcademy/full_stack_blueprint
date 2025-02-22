@@ -1,8 +1,7 @@
 import { Database, type SQLQueryBindings } from "bun:sqlite";
-import type { EntityParams } from "../domain/entity-params.type";
-import type { SQL } from "../domain/sql.type";
+import type { SQL } from "./sql.type";
 
-const db = new Database(":memory:", { safeIntegers: false });
+const db = new Database(":memory:", { safeIntegers: false, strict: true });
 const sqlFolder = process.env.SQL_FOLDER || "sql";
 
 export async function readCommands(entityName: string): Promise<SQL> {
@@ -25,7 +24,7 @@ export const selectAll = <R>(query: string): R[] => {
  */
 export const selectById = <R>(query: string, id: number): R => {
 	const q = db.query(query);
-	const r = q.get({ $id: id });
+	const r = q.get({ id });
 	return r as R;
 };
 
@@ -55,8 +54,8 @@ export const insert = <P>(query: string, params: P): number => {
 	const q = db.query(query);
 	const paramsDb = {
 		...params,
-		$createdAt: new Date().toISOString(),
-		$updatedAt: new Date().toISOString(),
+		createdAt: new Date().toISOString(),
+		updatedAt: new Date().toISOString(),
 	};
 	const sqlParams = paramsDb as unknown as SQLQueryBindings;
 	const r = q.run(sqlParams);
@@ -74,10 +73,10 @@ export const insert = <P>(query: string, params: P): number => {
 export const update = <P>(query: string, params: P): number => {
 	if (!params) throw Error("Params are required");
 	const q = db.query(query);
-	const paramsDb = params as unknown as EntityParams;
-	if (!paramsDb.$updatedAt) {
-		paramsDb.$updatedAt = new Date().toISOString();
-	}
+	const paramsDb = {
+		...params,
+		updatedAt: new Date().toISOString(),
+	};
 	const r = q.run(paramsDb as unknown as SQLQueryBindings);
 	return r.changes;
 };
