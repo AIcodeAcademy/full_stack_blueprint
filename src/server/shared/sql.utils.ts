@@ -52,13 +52,12 @@ export const select = <P, R>(query: string, params?: P): R => {
 export const insert = <P>(query: string, params: P): number => {
 	if (!params) throw Error("Params are required");
 	const q = db.query(query);
-	const paramsDb = {
+	const queryBindings: SQLQueryBindings = {
 		...params,
 		createdAt: new Date().toISOString(),
 		updatedAt: new Date().toISOString(),
 	};
-	const sqlParams = paramsDb as unknown as SQLQueryBindings;
-	const r = q.run(sqlParams);
+	const r = q.run(queryBindings);
 	if (!r.lastInsertRowid) throw new Error("Failed to insert");
 	return Number(r.lastInsertRowid);
 };
@@ -73,11 +72,11 @@ export const insert = <P>(query: string, params: P): number => {
 export const update = <P>(query: string, params: P): number => {
 	if (!params) throw Error("Params are required");
 	const q = db.query(query);
-	const paramsDb = {
+	const queryBindings: SQLQueryBindings = {
 		...params,
 		updatedAt: new Date().toISOString(),
 	};
-	const r = q.run(paramsDb as unknown as SQLQueryBindings);
+	const r = q.run(queryBindings);
 	return r.changes;
 };
 

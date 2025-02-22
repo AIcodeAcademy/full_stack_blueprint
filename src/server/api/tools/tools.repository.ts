@@ -1,3 +1,4 @@
+import type { EntityProperties } from "@/server/shared/entity-params.type";
 import { NULL_TOOL, type Tool } from "@server/domain/tool.type";
 import {
 	insert,
@@ -18,8 +19,13 @@ export const selectToolById = (id: number): Tool => {
 	return result || NULL_TOOL;
 };
 
-export const insertTool = (toolToInsert: Partial<Tool>): Tool => {
-	const toolId = insert<Partial<Tool>>(toolsSql.INSERT, toolToInsert);
+export const insertTool = (
+	toolToInsert: Omit<Tool, EntityProperties>,
+): Tool => {
+	const toolId = insert<Omit<Tool, EntityProperties>>(
+		toolsSql.INSERT,
+		toolToInsert,
+	);
 	const tool = selectById<Tool>(toolsSql.SELECT_BY_ID, toolId);
 	return tool || NULL_TOOL;
 };

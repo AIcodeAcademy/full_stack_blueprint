@@ -1,10 +1,9 @@
-export type EntityParams = {
-	id?: number;
-	createdAt?: string;
-	updatedAt?: string;
+export type EntityProperties = "id" | "createdAt" | "updatedAt";
+export type EntityFields = {
+	[key in EntityProperties]?: number | string;
 };
 
-export const NULL_ENTITY_PARAMS: EntityParams = {
+export const NULL_ENTITY_FIELDS: EntityFields = {
 	id: 0,
 	createdAt: new Date().toISOString(),
 	updatedAt: new Date().toISOString(),

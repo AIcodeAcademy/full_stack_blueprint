@@ -1,3 +1,4 @@
+import type { EntityProperties } from "@/server/shared/entity-params.type";
 import type { User } from "@server/domain/user.type";
 import {
 	insert,
@@ -28,9 +29,12 @@ export const findUserByEmail = async (
  * @returns The user
  */
 export const insertUser = async (
-	userToInsert: Partial<User>,
+	userToInsert: Omit<User, EntityProperties>,
 ): Promise<User> => {
-	const newUserId = insert<Partial<User>>(usersSql.INSERT, userToInsert);
+	const newUserId = insert<Omit<User, EntityProperties>>(
+		usersSql.INSERT,
+		userToInsert,
+	);
 	const newUser = selectById<User>(usersSql.SELECT_BY_ID, newUserId);
 	return newUser;
 };
