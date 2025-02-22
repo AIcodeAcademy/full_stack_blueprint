@@ -22,14 +22,10 @@ export class AboutPage extends HTMLElement {
 	}
 
 	async connectedCallback() {
-		try {
-			this.#tools = await getTools();
-			this.#toolsTable = this.querySelector("app-tools-table");
-			if (this.#toolsTable) {
-				this.#toolsTable.tools = this.#tools;
-			}
-		} catch (error) {
-			console.error(error);
+		this.#tools = await getTools();
+		this.#toolsTable = this.querySelector("app-tools-table");
+		if (this.#toolsTable) {
+			this.#toolsTable.tools = this.#tools;
 		}
 	}
 }

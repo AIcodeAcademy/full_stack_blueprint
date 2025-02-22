@@ -30,26 +30,27 @@ export const get = async <T>(url: string): Promise<ResponseBody<T>> => {
 };
 
 /**
- * Standard response body structure for API requests
- * @template T - The type of the response body data
+ * Response structure for API requests. Avoids error handling in the caller. Only checks for status code and body or error content.
+ * @template T - The type of the response body data expected
+ * @property {T} body - The response body data if the request is successful
+ * @property {string} error - The error message of the response if the request is not successful
+ * @property {number} status - The status code of the response
  */
 export type ResponseBody<T> = {
-	body: T | string;
+	body?: T;
+	error?: string;
 	status: number;
-	error: boolean;
 };
 
 async function createResult<T>(response: Response): Promise<ResponseBody<T>> {
 	if (response.status >= 400) {
 		return {
 			status: response.status,
-			error: true,
-			body: await response.text(),
+			error: await response.text(),
 		};
 	}
 	return {
 		status: response.status,
-		error: false,
 		body: (await response.json()) as T,
 	};
 }

@@ -42,49 +42,38 @@ export class AuthPage extends HTMLElement {
 	constructor() {
 		super();
 		this.innerHTML = this.#template;
-
-		const authForm = this.querySelector("auth-form");
-		const loginTab = this.querySelector('[data-tab="login"]');
-		const registerTab = this.querySelector('[data-tab="register"]');
-
-		if (!(authForm instanceof AuthFormComponent)) {
-			throw new Error("Auth form not found");
-		}
-		if (!(loginTab instanceof HTMLButtonElement)) {
-			throw new Error("Login tab not found");
-		}
-		if (!(registerTab instanceof HTMLButtonElement)) {
-			throw new Error("Register tab not found");
-		}
-
-		this.#authForm = authForm;
-		this.#loginTab = loginTab;
-		this.#registerTab = registerTab;
+		this.#authForm = this.#selectAuthForm();
+		this.#loginTab = this.#selectTab("login");
+		this.#registerTab = this.#selectTab("register");
 		this.#mode = "login";
 	}
 
 	connectedCallback() {
-		this.#loginTab.addEventListener("click", () => this.#showTab("login"));
-		this.#registerTab.addEventListener("click", () =>
-			this.#showTab("register"),
-		);
-		this.addEventListener("authenticate", ((
-			e: CustomEvent<AuthenticateEventDetail>,
-		) => {
-			this.#handleAuth(e.detail.credentials);
-		}) as EventListener);
+		this.#loginTab.addEventListener("click", () => this.#showLogin());
+		this.#registerTab.addEventListener("click", () => this.#showRegister());
+		this.addEventListener("authenticate", this.#authenticateListener);
 	}
 
 	disconnectedCallback() {
-		this.#loginTab.removeEventListener("click", () => this.#showTab("login"));
-		this.#registerTab.removeEventListener("click", () =>
-			this.#showTab("register"),
-		);
-		this.removeEventListener("authenticate", ((
-			e: CustomEvent<AuthenticateEventDetail>,
-		) => {
-			this.#handleAuth(e.detail.credentials);
-		}) as EventListener);
+		this.#loginTab.removeEventListener("click", () => this.#showLogin());
+		this.#registerTab.removeEventListener("click", () => this.#showRegister());
+		this.removeEventListener("authenticate", this.#authenticateListener);
+	}
+
+	#selectAuthForm(): AuthFormComponent {
+		return this.querySelector("auth-form") as AuthFormComponent;
+	}
+
+	#selectTab(tab: string): HTMLButtonElement {
+		return this.querySelector(`button[data-tab="${tab}"]`) as HTMLButtonElement;
+	}
+
+	#showLogin() {
+		this.#showTab("login");
+	}
+
+	#showRegister() {
+		this.#showTab("register");
 	}
 
 	#showTab(tab: Mode) {
@@ -99,16 +88,19 @@ export class AuthPage extends HTMLElement {
 		this.#authForm.setAttribute("mode", tab);
 	}
 
+	#authenticateListener = ((e: CustomEvent<AuthenticateEventDetail>) => {
+		this.#handleAuth(e.detail.credentials);
+	}) as EventListener;
+
 	async #handleAuth(credentials: Credentials) {
-		try {
-			const userToken =
-				this.#mode === "login"
-					? await login(credentials)
-					: await register(credentials);
+		const userToken =
+			this.#mode === "login"
+				? await login(credentials)
+				: await register(credentials);
+		if (userToken.token) {
 			localStorage.setItem("userToken", JSON.stringify(userToken));
 			navigate("#home");
-		} catch (error) {
-			console.error(`${this.#mode} failed:`, error);
+		} else {
 			this.#authForm.showError(
 				this.#mode === "login"
 					? "Invalid credentials"
