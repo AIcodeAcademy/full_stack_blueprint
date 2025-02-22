@@ -1,7 +1,6 @@
 import type { Tool } from "../domain/tool.type";
 import { create, drop, insert, readCommands } from "./sql.utils";
 
-const sqlFolder = process.env.SQL_FOLDER || "sql";
 const usersSql = await readCommands("users");
 const rolesSql = await readCommands("roles");
 const toolsSql = await readCommands("tools");

@@ -21,7 +21,7 @@ const processRequest = (
 	const url = new URL(request.url);
 	if (request.method === "OPTIONS") return corsPreflight();
 	if (url.pathname.startsWith("/api")) return api(request).then(addCors);
-	return addCors(notFound());
+	return addCors(notFound(request));
 };
 
 /**
