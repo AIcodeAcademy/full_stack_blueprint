@@ -1,4 +1,8 @@
 ---
+description: 
+globs: 
+---
+---
 description: How to create a reource for the API
 globs: src/server/api
 ---
@@ -22,6 +26,7 @@ globs: src/server/api
 - Must use [request.utils.ts](mdc:src/server/shared/request.utils.ts) an [response.utils.ts](mdc:src/server/shared/response.utils.ts) to do so.
 - Must use its repository to interact with the database
 - Include error handling to manage and respond to errors gracefully.
+- Declare any types for th needed DTOS with `{{name}}-request.type.ts` or `{{name}}-response.type.ts`
 
 ### Resource repository
 
@@ -31,3 +36,4 @@ globs: src/server/api
   - There must be SQL commands at `src/sql/resource-name.sql.json` 
   - If it is not the case, define the command there. 
 - Must use the sql utils from [sql.utils.ts](mdc:src/server/shared/sql.utils.ts) to interact with the database at low level
+- Must return types declared from the domain at `src/server/domain` folder
