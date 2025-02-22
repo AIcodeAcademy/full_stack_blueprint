@@ -65,6 +65,8 @@ No need to generate the command at this point, just list them.
 
 ## Implementation plan
 
+
+### SQL Commands
 <!--
 This project relies on a json file to store the SQL commands for each table.
 Those json files are located at `/src/sql` folder.
@@ -79,12 +81,53 @@ Go to the `/src/sql` folder
  - Use them as strict templates for structure and formatting
  - Match parameter naming conventions (e.g., $-prefixed parameters)
  - Follow the same JSON schema and field organization
- - Use the same SQL commands and parameters
+ - Use the same SQL commands and parameters naming conventions
+ - Particularly see the `tools.sql.json` file as an example
 
 @for(table of tables){
 - [ ] Create if not exists a file called `{table.name}.sql.json`.
 - [ ] Fill it or update it with the SQL commands needed for this feature.
 - [ ] Add the seed data as an array of objects to the `SEED_{table.name}` property if needed.
 }
+
+### Domain types
+
+Go to the `/src/server/domain` folder 
+
+- Analyze existing implementations in similar files:
+ - Use them as strict templates for structure and formatting
+ - Match naming conventions
+ - Follow the `.cursor/rules/type-script.mdc` rules for naming and structuring the files.
+
+@for(table of tables){
+- [ ] Create if not exists a file called `{table.name}.type.ts`.
+- [ ] Fill it or update it with the domain types needed for this feature.
+}
+
+### Initialize utils
+
+Go to the `/src/server/shared/initialize.utils.ts` file 
+
+- Analyze existing implementations
+ - Use them as strict templates for structure and formatting
+ - Match naming conventions 
+ - Follow the `.cursor/rules/type-script.mdc` rules for naming and structuring the files.
+ - Ensure your code mimics the existing code in the file.
+  
+@for(table of tables){
+- [ ] Create if not exists a function called `initialize{table.name}Table` in the `initializeTables` function.
+- [ ] Add the seed data as an array of objects to the `SEED_{table.name}` property if needed.
+}
+
+
+
+## Prompt after plan
+
+Recommended prompt to use this plan:
+
+```text
+Follow the `.ai\builder\coder.instructions.md` instructions to implement the sql tier plan `{{featureNumber}}-{{feature_short_name}}.sql-plan.blueprint.md`
+Add the @rules to the prompt.
+```
 
 _End of SQL Plan for {{featureNumber}} - {{feature_short_name}}_
