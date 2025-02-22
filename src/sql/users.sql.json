@@ -1,7 +1,10 @@
 {
-	"TABLE_NAME": "users",
+	"TABLE": "users",
 	"CREATE_TABLE": "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, roleId INTEGER, createdAt DATETIME, updatedAt DATETIME)",
-	"SELECT_USER_BY_EMAIL": "SELECT * FROM users WHERE email = $email",
-	"SELECT_USER_BY_ID": "SELECT * FROM users WHERE id = $id",
-	"INSERT_USER": "INSERT INTO users (email, password, roleId, createdAt, updatedAt) VALUES ($email, $password, $roleId, $createdAt, $updatedAt)"
+	"SELECT_BY_FIELD": "SELECT * FROM users WHERE email = $email",
+	"SELECT_BY_ID": "SELECT * FROM users WHERE id = $id",
+	"INSERT": "INSERT INTO users (email, password, roleId, createdAt, updatedAt) VALUES ($email, $password, $roleId, $createdAt, $updatedAt)",
+	"SELECT_ALL": "SELECT * FROM users",
+	"UPDATE": "UPDATE users SET email = $email, password = $password, roleId = $roleId, updatedAt = $updatedAt WHERE id = $id",
+	"DELETE": "DELETE FROM users WHERE id = $id"
 }

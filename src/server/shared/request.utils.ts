@@ -1,7 +1,6 @@
 import { UNAUTHORIZED_ERROR } from "../domain/api-error.type";
 import type { JwtData } from "../domain/jwt-data.type";
 import { verifyJWT } from "./jwt.utils";
-import { warn } from "./log.utils";
 
 export const getUrl = (request: Request): URL => {
 	return new URL(request.url);
@@ -63,9 +62,10 @@ export const getUserId = (request: Request): number => {
 	return userId ? Number.parseInt(userId) : 0;
 };
 
-export const validateUserId = (request: Request): void => {
+export const validateUserId = (request: Request): number => {
 	const userId = getUserId(request);
 	if (userId === 0) throw UNAUTHORIZED_ERROR;
+	return userId;
 };
 
 const extractAuthorization = (request: Request): string => {
@@ -80,7 +80,6 @@ const extractUserId = (request: Request): number => {
 		const jwtData: JwtData = verifyJWT(token);
 		return jwtData.userId;
 	} catch (error) {
-		warn("Error extracting user ID", error);
 		return 0;
 	}
 };

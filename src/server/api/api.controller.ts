@@ -10,8 +10,8 @@ export const api = async (request: Request): Promise<Response> => {
 		setUserId(request);
 		if (path.startsWith("/api/auth")) return await authController(request);
 		if (path.startsWith("/api/tools")) return await toolsController(request);
-		return notFound();
+		return notFound(request);
 	} catch (error) {
-		return handleInternalError(error as Error);
+		return handleInternalError(request, error as Error);
 	}
 };

@@ -43,7 +43,8 @@ export const forbidden = (message = "Forbidden"): Response => {
  * @param message - Optional error message
  * @returns Response object with error message
  */
-export const notFound = (message = "Not found"): Response => {
+export const notFound = (request: Request, message = "Not found"): Response => {
+	debug(`API 404 ${request.url}`, message);
 	return new Response(message, { status: 404 });
 };
 /**
@@ -71,20 +72,23 @@ export const internalServerError = (
  * @param error - The error to handle
  * @returns Response object with error message
  */
-export const handleInternalError = (error: Error): Response => {
+export const handleInternalError = (
+	request: Request,
+	error: Error,
+): Response => {
 	const errorData = {
 		message: error.message || "Unknown error",
 		stack: error.stack || error.name || "unknown stack",
 		code: (error as ApiError).code || 500,
 	};
-	debug("Error data", errorData);
+	debug(`API error ${request.url}`, errorData.code);
 	switch (errorData.code) {
 		case 401:
 			return unauthorized(errorData.message);
 		case 403:
 			return forbidden(errorData.message);
 		case 404:
-			return notFound(errorData.message);
+			return notFound(request, errorData.message);
 		case 405:
 			return methodNotAllowed(errorData.message);
 		default:

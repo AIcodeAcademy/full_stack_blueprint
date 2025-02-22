@@ -1,12 +1,12 @@
 {
-	"TABLE_NAME": "tools",
+	"TABLE": "tools",
 	"CREATE_TABLE": "CREATE TABLE tools (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, url TEXT, createdAt DATETIME, updatedAt DATETIME)",
-	"SELECT_ALL_TOOLS": "SELECT * FROM tools",
-	"SELECT_TOOL_BY_ID": "SELECT * FROM tools WHERE id = $id",
-	"INSERT_TOOL": "INSERT INTO tools (name, description, url, createdAt, updatedAt) VALUES ($name, $description, $url, $createdAt, $updatedAt)",
-	"UPDATE_TOOL": "UPDATE tools SET name = $name, description = $description, url = $url, updatedAt = $updatedAt WHERE id = $id",
-	"DELETE_TOOL": "DELETE FROM tools WHERE id = $id",
-	"SEED_TOOLS": [
+	"SELECT_ALL": "SELECT * FROM tools",
+	"SELECT_BY_ID": "SELECT * FROM tools WHERE id = $id",
+	"INSERT": "INSERT INTO tools (name, description, url, createdAt, updatedAt) VALUES ($name, $description, $url, $createdAt, $updatedAt)",
+	"UPDATE": "UPDATE tools SET name = $name, description = $description, url = $url, updatedAt = $updatedAt WHERE id = $id",
+	"DELETE": "DELETE FROM tools WHERE id = $id",
+	"SEED": [
 		{
 			"$name": "Bun",
 			"$description": "Bun is a fast, modern, all-in-one toolkit for JavaScript.",

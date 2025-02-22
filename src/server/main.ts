@@ -1,6 +1,6 @@
 import type { Server } from "bun";
 import { api } from "./api/api.controller";
-import { initializeTables } from "./shared/intitialize.utils";
+import { initializeTables } from "./shared/initialize.utils";
 import { debug } from "./shared/log.utils";
 import { addCors, corsPreflight, notFound } from "./shared/response.utils";
 

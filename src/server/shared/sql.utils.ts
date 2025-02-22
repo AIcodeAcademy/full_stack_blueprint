@@ -1,7 +1,14 @@
 import { Database, type SQLQueryBindings } from "bun:sqlite";
 import type { EntityParams } from "../domain/entity-params.type";
+import type { SQL } from "../domain/sql.type";
 
 const db = new Database(":memory:", { safeIntegers: false });
+const sqlFolder = process.env.SQL_FOLDER || "sql";
+
+export async function readCommands(entityName: string): Promise<SQL> {
+	const sql = await Bun.file(`${sqlFolder}/${entityName}.sql.json`).json();
+	return sql;
+}
 
 export const selectAll = <R>(query: string): R[] => {
 	const q = db.query(query);
