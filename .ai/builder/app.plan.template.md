@@ -37,140 +37,116 @@ Reference documentation to be used during implementation:
 - [Client Page Rules](/.cursor/rules/client-page.mdc)
 - [TypeScript Rules](/.cursor/rules/type-script.mdc)
 
+### Domain Types
+
+@for(type of types) {
+```typescript
+export type {{type.name}} = {
+  {{type.fields}}
+};
+
+export const NULL_{{type.name | uppercase}} = {
+  {{type.defaults}}
+};
+
+{{#if type.validation}}
+export const validate{{type.name}} = (data: Partial<{{type.name}}>): boolean => {
+  {{type.validation}}
+};
+{{/if}}
+```
+}
+
 ### Page Components
 
-<!--
-Think about the page components needed.
-List them in kebab-case, with a brief description.
--->
-
 @for(page of pages) {
-- `{{page.name}}-page`: {{page.description}}
-  - Route: `#{{page.route}}`
-  - Parent: `router-outlet`
+#### {{page.name}}.page.ts
+- Route: `#{{page.route}}`
+- Parent: `router-outlet`
+- State:
+```typescript
+#state = {
+  {{page.state}}
+}
+```
+- Template:
+```typescript
+#template = html`
+  {{page.template}}
+`;
+```
+- Lifecycle:
+  - Constructor: Set template
+  - ConnectedCallback: {{page.connected}}
+  - DisconnectedCallback: {{page.disconnected}}
 }
 
 ### Presenter Components
 
-<!--
-Think about the presenter components needed.
-List them in kebab-case, with a brief description.
--->
-
 @for(presenter of presenters) {
-- `{{presenter.name}}-component`: {{presenter.description}}
-  - Parent: `{{presenter.parent}}`
-  - Events: {{presenter.events}}
+#### {{presenter.name}}.component.ts
+- Parent: `{{presenter.parent}}`
+- Properties:
+```typescript
+{{presenter.properties}}
+```
+- Events:
+```typescript
+{{presenter.events}}
+```
+- Template:
+```typescript
+#template = html`
+  {{presenter.template}}
+`;
+```
+- Lifecycle:
+  - Constructor: Set template
+  - ConnectedCallback: {{presenter.connected}}
+  - DisconnectedCallback: {{presenter.disconnected}}
 }
 
 ### Repository Functions
 
-<!--
-Think about the repository functions needed.
-List them in camelCase, with a brief description.
--->
-
 @for(repository of repositories) {
-For {{repository.name}}:
+#### {{repository.name}}.repository.ts
 @for(function of repository.functions) {
-- `{{function.name}}`: {{function.description}}
-  - Endpoint: `{{function.endpoint}}`
-  - Method: `{{function.method}}`
-  - Request: `{{function.request}}`
-  - Response: `{{function.response}}`
+```typescript
+export const {{function.name}} = async ({{function.params}}): Promise<{{function.return}}> => {
+  const response = await {{function.method}}<{{function.return}}>("{{function.endpoint}}"{{#if function.body}}, {{function.body}}{{/if}});
+  if (response.body) return response.body;
+  return {{function.default}};
+};
+```
 }
 }
 
-## Implementation plan
+## Implementation Steps
 
-### Page Structure
-
-Go to the `/src/client/app` folder
-
-1. Each page must follow the structure:
-```
-/src/client/app/page-name/
-  ├── page-name.page.ts           # Page controller
-  ├── section-name.component.ts   # Presenter components
-  └── page-name.repository.ts     # Data access
-```
-
-2. Pages must:
-   - Extend HTMLElement
-   - Use string templates with html helper
-   - Define child components
-   - Handle navigation
-   - Follow REST conventions
-
-3. Components must:
-   - Extend HTMLElement
-   - Use string templates with html helper
-   - Handle DOM events
-   - Emit custom events
-   - No shadow DOM
-
-4. Repositories must:
-   - Use fetch utils only
-   - Return typed responses
-   - Handle errors properly
-   - No direct fetch calls
-
-5. Study `about/about.page.ts` and `auth/auth.page.ts` as reference implementations
-
-@for(page of pages) {
-For {{page.name}}:
-
-- [ ] Create page folder at `src/client/app/{{page.name}}`
-- [ ] Create page component with navigation
-- [ ] Create presenter components
-- [ ] Create repository with data access
-}
-
-### Navigation Configuration
-
-Go to the `/src/client/shared/navigation.utils.ts` file
-
-1. Add routes following the pattern:
-```typescript
-customElements.define("app-page-name-page", PageNamePage);
-```
-
-2. Import and configure:
-   - New pages
-   - Route handlers
-   - Authentication if needed
-
-- [ ] Add routes for new pages
-- [ ] Update navigation handling if needed
-- [ ] Configure authentication if required
-
-### Domain Types
-
-Go to the `/src/client/domain` folder
-
-1. Each type must have:
-```typescript
-export type EntityType = {
-  id: number;
-  // ... other fields
-};
-
-export const NULL_ENTITY: EntityType = {
-  id: 0,
-  // ... default values
-};
-```
-
-2. Add validation functions if needed:
-```typescript
-export const validateEntity = (entity: Partial<EntityType>): boolean => {
-  return !!(entity.requiredField);
-};
-```
-
+1. Create Domain Types
 @for(type of types) {
-- [ ] Create if not exists `{{type.name}}.type.ts`
-- [ ] Add validation function if needed
+- [ ] Create `src/client/domain/{{type.name}}.type.ts`
 }
+
+2. Create Page Structure
+@for(page of pages) {
+- [ ] Create folder `src/client/app/{{page.name}}/`
+- [ ] Create `{{page.name}}.page.ts`
+- [ ] Create `{{page.name}}.repository.ts`
+}
+
+3. Create Presenter Components
+@for(presenter of presenters) {
+- [ ] Create `{{presenter.name}}.component.ts`
+}
+
+4. Update Navigation
+- [ ] Add routes to `navigation.utils.ts`:
+```typescript
+@for(page of pages) {
+customElements.define("app-{{page.name}}-page", {{page.className}}Page);
+}
+```
+
 
 _End of App Plan for {{featureNumber}} - {{feature_short_name}}_
