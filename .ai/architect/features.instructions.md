@@ -34,7 +34,7 @@ There are 4 main steps, with specific instructions for each:
    - There is a YAML section at the beginning of the template with instructions for you.
    - Take into account the placeholder with {{ information to fill }}.
 
-2. Read the current blueprints for **Architect** at `docs/architecture/architect.blueprint.md`, the **System Architecture** at `docs/architecture/system-architecture.blueprint.md` and the **Data Model** at `docs/architecture/data-model.blueprint.md`
+2. Read the current blueprints for **Architect**, **Systems** and **Data Model** at `docs/architect.blueprint.md`, `docs/systems.blueprint.md` and `docs/data-model.blueprint.md`
 
    - They are markdown documents with functional and technical specifications and data model.
    - Use them to fill the **feature** template.
@@ -49,7 +49,7 @@ There are 4 main steps, with specific instructions for each:
    - Offer hints and a predefined option.
    - Repeat until the **feature** document information is complete.
 
-4. Generate the features documentation, ONE BY ONE at `docs/features` folder with naming convention `<featureNumber>-<feature_short_name>/<featureNumber>-<feature_short_name>.blueprint.md`
+4. Generate the features documentation, ONE BY ONE at `docs/` folder with naming convention `<featureNumber>-<feature_short_name>/<featureNumber>-<feature_short_name>.blueprint.md`
 
    - Render the information using the structure defined in `features.template.md`.
    - Do not include initial YAML template instructions.

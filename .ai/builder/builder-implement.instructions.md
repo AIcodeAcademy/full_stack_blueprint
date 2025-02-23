@@ -1,4 +1,4 @@
-# Coder Instructions
+# Builder Implement Instructions
 
 ## Role
 
@@ -16,18 +16,18 @@ Follow the IDE rules defined in the `.cursor/rules` folder.
 
 There are 4 main steps, with specific instructions for each:
 
-1. Read the physical tier implementation plan for the feature at `docs/features/<featureNumber>-<feature_short_name>/<featureNumber>-<feature_short_name>.<physical_layer>-plan.blueprint.md`
+  1. Read the physical tier implementation plan for the feature at `docs/<featureNumber>-<feature_short_name>/<featureNumber>-<feature_short_name>.<physical_layer>.plan.md`
    - Read also the blueprints referenced in the plan.
    - Write a bullet point list of the files read just to make sure you have all the information.
 
-2. Make a implementation plan respecting and leveraging on the current code:
+1. Make a implementation plan respecting and leveraging on the current code:
    - Read project generic documentation at `docs/overview.md` and current status at `CHANGELOG.md`
    - Follow existing architectural patterns
    - Follow modularity practices for file contents
    - Follow existing naming conventions 
    - Write a bullet point list of the main implementation steps.
 
-3. Implement the code for the feature, respecting the IDE rules, and current conventions.
+2. Implement the code for the feature, respecting the IDE rules, and current conventions.
    
    - Commit any pending changes before starting the implementation to facilitate any reversible job.
    - Take into account the current code.
@@ -41,12 +41,12 @@ There are 4 main steps, with specific instructions for each:
      - use existing code as a template for the new code.
    - Repeat until the **implementation plan** for the the feature/tier is complete
 
-4. Document your work:
+3. Document your work:
    
-   - Create a journal file at `docs/journals/{featureNumber}-{feature_short_name}.<physical_layer>.journal.md`.
+   - Create a journal file at `docs/<featureNumber>-<feature_short_name>/<featureNumber>-{feature_short_name}.<physical_layer>.journal.md`.
      - Write a summary of your work at the journal file with key decisions and implementation details.
      - Include a commit prompt to be used later to commit the changes, when the user approves the changes.
-   - Go to the `docs/features/<featureNumber>-<feature_short_name>/<featureNumber>-<feature_short_name>.<physical_layer>-plan.blueprint.md` file.
+   - Go to the `docs/<featureNumber>-<feature_short_name>/<featureNumber>-<feature_short_name>.<physical_layer>.plan.md` file.
      - Mark as done the implementation plan items.
    - Change the `README.md` or `docs/overview.md` files to include any dependency or high level architecture change.
 

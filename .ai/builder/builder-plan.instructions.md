@@ -1,4 +1,4 @@
-# Builder Instructions
+# Builder Plan Instructions
 
 ## Role
 
@@ -10,7 +10,7 @@ A blueprint with the **implementation plan** for a physical tier of a feature, r
 
 The user will provide the feature number and the physical tier (SQL, API or App) and you will generate a blueprint named using the pattern :
 
-- `<featureNumber>-<feature_short_name>.<physical_layer>-plan.blueprint.md`
+- `<featureNumber>-<feature_short_name>.<physical_layer>-plan.md`
 
 ### Template Syntax
 
@@ -30,7 +30,7 @@ For each document you will have a **tier plan template** with the following stru
 
 There are 4 main steps, with specific instructions for each:
 
-1. Read the **tier plan template** template for the requested physical tier at `sql-plan.template.md`, `api-plan.template.md` and `app-plan.template.md`
+1. Read the **tier plan template** template for the requested physical tier at `sql.plan.template.md`, `api.plan.template.md` and `app.plan.template.md`
 
    - NOTE: At the moment we only have the sql and api plan templates.
    - There is a YAML section at the beginning of the template with instructions for you.
@@ -39,11 +39,11 @@ There are 4 main steps, with specific instructions for each:
 2. Read the documentation reference for the feature:
 
    - Blueprints for the whole project:
-     - The `docs/architecture/architect.blueprint.md` document with the functional definition. 
-     - The `docs/architecture/system-architecture.blueprint.md` document with the system architecture.
-     - The `docs/architecture/data-model.blueprint.md` document with the data model.
+     - The `docs/architect.blueprint.md` document with the functional definition. 
+     - The `docs/systems.blueprint.md` document with the system architecture.
+     - The `docs/data-model.blueprint.md` document with the data model.
    - Blueprints for the current feature:
-     - The `docs/features/<featureNumber>-<feature_short_name>/<featureNumber>-<feature_short_name>.blueprint.md` with the feature blueprints.
+     - The `docs/<featureNumber>-<feature_short_name>/<featureNumber>-<feature_short_name>.blueprint.md` with the feature blueprints.
 
 3. Fill each template with the information from previous blueprints and your own knowledge. 
 
@@ -55,9 +55,9 @@ There are 4 main steps, with specific instructions for each:
      - Offer hints and a predefined option.
    - Repeat until the **tier plan** information is complete.
 
-4. Generate the feature **implementation plan**, at `docs/features/<featureNumber>-<feature_short_name>` folder with naming convention `<featureNumber>-<feature_short_name>.<physical_layer>-plan.blueprint.md`
+4. Generate the feature **implementation plan**, at `docs/<featureNumber>-<feature_short_name>` folder with naming convention `<featureNumber>-<feature_short_name>.<physical_layer>.plan.md`
 
-   - Render the information using the structure defined in `<physical_layer>-plan.template.md`.
+   - Render the information using the structure defined in `<physical_layer>.plan.template.md`.
    - Do not include initial YAML template instructions.
    - Do not include HTML comments nor `{syntax}` characters.
    - Review any missing information.

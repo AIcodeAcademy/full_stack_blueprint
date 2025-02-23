@@ -36,7 +36,7 @@ There are 4 main steps, with specific instructions for each:
    - There is a YAML section at the beginning of the template with instructions for you.
    - Take into account the placeholder with {{ information to fill }}.
 
-2. Read the current **Architect Blueprint** at `docs/architecture/architect.blueprint.md` and the **System Architecture Blueprint** at `docs/architecture/system-architecture.blueprint.md`
+2. Read the current **Architect Blueprint** at `docs/architect.blueprint.md` and the **System Architecture Blueprint** at `docs/systems.blueprint.md`
 
    - They are markdown documents with functional and technical specifications.
    - Use them to fill the **data model** template.
@@ -51,7 +51,7 @@ There are 4 main steps, with specific instructions for each:
    - Offer hints and a predefined option.
    - Repeat until the **data model** document information is complete.
 
-4. Generate the **Data Model** document at `docs/architecture/data-model.blueprint.md`
+4. Generate the **Data Model** document at `docs/data-model.blueprint.md`
 
    - Render the information using the structure defined in `data-model.template.md`.
    - Do not include initial YAML template instructions.

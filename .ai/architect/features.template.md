@@ -4,7 +4,7 @@ important: This is a template for one and only one feature.
 file_name: {{featureNumber}}-{{feature_short_name}}.blueprint.md
 ---
 
-# Feature: **{{ Feature Number }} - {{ Feature Short Name }}**
+# Feature {{ Feature Number }} - **{{ Feature Short Name }}**
 
 ## Description
 
@@ -46,4 +46,4 @@ Feature: {{ Feature Name }}
 - **Preconditions**: {{ Outline any system or user preconditions required for this feature. }}
 - **Notes**: {{ Provide any extra notes or clarifications regarding the feature. }}
 
-_End of Feature Documentation for {{ Feature Name }}_
+_End of Feature Documentation for {{ Feature Number }} - {{ Feature Short Name }}_
