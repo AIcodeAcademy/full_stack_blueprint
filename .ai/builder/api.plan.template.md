@@ -40,6 +40,7 @@ Reference documentation to be used during implementation:
 
 <!--
 Think about the resources needed to implement the feature.
+Think about read only resources useful for a client app.
 List them in kebab-case, with a brief description.
 -->
 
@@ -244,6 +245,7 @@ Go to the `/src/server/domain` folder
 
 2.  Add validation functions to `validations.utils.ts`:
 
+  Validate the entities before insert or update. No validation of DTs, only entities.
     ```typescript
     import { BAD_REQUEST_ERROR } from "@/server/shared/api-error.type"; // Import error types
 
