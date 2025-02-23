@@ -13,6 +13,12 @@ function encodeObject(object: Record<string, unknown>): string {
 	return btoa(JSON.stringify(object));
 }
 
+/**
+ * Generates a JWT token
+ * @param jwtData - The JWT data to encode
+ * @param expiresIn - The expiration time in seconds (default: 3600)
+ * @returns The generated JWT token
+ */
 export function generateJWT(jwtData: JwtData, expiresIn = 3600): string {
 	const hasher = new Bun.CryptoHasher(ALGORITHM, SECRET);
 	const iat = Math.floor(Date.now() / 1000);
@@ -23,6 +29,12 @@ export function generateJWT(jwtData: JwtData, expiresIn = 3600): string {
 	return `${ENCODED_HEADER}.${encodedPayload}.${sign}`;
 }
 
+/**
+ * Verifies a JWT token
+ * @param token - The JWT token to verify
+ * @returns The decoded JWT data
+ * @throws Error if the token is invalid or expired
+ */
 export function verifyJWT(token: string): JwtData {
 	if (!token) return NULL_JWT_DATA;
 	const hasher = new Bun.CryptoHasher(ALGORITHM, SECRET);
@@ -36,6 +48,6 @@ export function verifyJWT(token: string): JwtData {
 	return payload;
 }
 
-export function digestHash(hasher: CryptoHasher, data: string): string {
+function digestHash(hasher: CryptoHasher, data: string): string {
 	return hasher.update(data).digest("base64");
 }

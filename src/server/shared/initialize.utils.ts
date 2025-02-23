@@ -1,3 +1,4 @@
+import type { Category } from "../domain/category.type";
 import type { Tool } from "../domain/tool.type";
 import { create, drop, insert, readCommands } from "./sql.utils";
 
@@ -54,7 +55,7 @@ const initializeCategoryTable = (): number => {
 const seedCategory = (): number => {
 	let results = 0;
 	for (const item of categorySQL.SEED) {
-		results += insert(categorySQL.INSERT, item);
+		results += insert<Category>(categorySQL.INSERT, item as Category);
 	}
 	return results;
 };

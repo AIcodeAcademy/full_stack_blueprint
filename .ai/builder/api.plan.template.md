@@ -29,9 +29,9 @@ Reference documentation to be used during implementation:
 - [Project System Architecture](/docs/systems.blueprint.md)
 - [Project Data model](/docs/data-model.blueprint.md)
 - [Feature](/docs/{{featureNumber}}-{{feature_short_name}}/{{featureNumber}}-{{feature_short_name}}.blueprint.md)
-- [Request Utils](/src/server/shared/request.utils.ts)
-- [Response Utils](/src/server/shared/response.utils.ts)
-- [SQL Utils](/src/server/shared/sql.utils.ts)
+- [Request Utils to get parameters, body and UserId from the request](/src/server/shared/request.utils.ts)
+- [SQL Utils to interact with the database](/src/server/shared/sql.utils.ts)
+- [Response Utils to send responses](/src/server/shared/response.utils.ts)
 - [API Error Types](/src/server/shared/api-error.type.ts)
 - [TS Rules](/.cursor/rules/type-script.mdc)
 - [Server Resource Rules](/.cursor/rules/server-resource.mdc)
@@ -94,13 +94,13 @@ Go to the `/src/server/api` folder
 /src/server/api/resource-name/
   ├── resource-name.controller.ts     # Request handlers
   ├── resource-name.repository.ts     # Data access
-  ├── request-name-request.type.ts    # Input DTOs
-  └── response-name-response.type.ts  # Output DTOs
+  ├── request-name-request.type.ts    # Input DTOs (one or more)
+  └── response-name-response.type.ts  # Output DTOs (one or more)
 ```
 
 2. Controllers must:
    - Export routes object with HTTP methods
-   - Use request/response utils
+   - Use request/response utils from `/src/server/shared/request.utils.ts` and `/src/server/shared/response.utils.ts`
    - Handle errors properly
    - Validate input data
    - Return typed responses
@@ -118,11 +118,12 @@ export const resourceRoutes = {
 ```
 
 3. Repositories must:
-   - Use SQL utils only
-   - Return domain types
+   - Naming convention: selectAllResources, selectResourceById, insertResource, updateResource, deleteResource
+   - Use readCommands for SQL commands
+   - Receive Resource type DTO as parameter
+   - Use SQL utils from `/src/server/shared/sql.utils.ts` to execute commands
    - Handle data transformations
-   - Define NULL values for types
-   - Use readCommands for SQL queries
+   - Return domain types  
 
 Example repository structure:
 ```typescript
@@ -134,7 +135,7 @@ export const selectAllResources = (): Resource[] => {
 };
 ```
 
-4. Study `tools.controller.ts` and `auth.controller.ts` as reference implementations
+1. Study `tools.controller.ts` and `auth.controller.ts` as reference implementations
 
 @for(resource of resources) {
 For {{resource.name}}:
@@ -156,7 +157,7 @@ export const apiRoutes = {
     OPTIONS: (request: Request) => corsPreflight(request),
   },
   "/api/resource": resourceRoutes,
-  "/api/resource/:param": resourceRoutes,
+  "/api/resource/:param": resourceWithParamRoutes,
 };
 ```
 

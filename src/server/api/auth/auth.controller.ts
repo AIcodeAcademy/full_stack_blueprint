@@ -1,20 +1,20 @@
-import type { CredentialsRequest } from "@/server/api/auth/credentials-request.type";
-import type { UserTokenResponse } from "@/server/api/auth/user-token-response.type";
 import type { User } from "@/server/domain/user.type";
 import { validateUser } from "@/server/domain/validations.utils";
 import {
 	BAD_REQUEST_ERROR,
 	UNAUTHORIZED_ERROR,
 } from "@/server/shared/api-error.type";
-import type { EntityProperties } from "@/server/shared/entity-params.type";
 import type { JwtData } from "@/server/shared/jwt-data.type";
 import { warn } from "@/server/shared/log.utils";
+import type { EntityProperties } from "@/server/shared/sql.type";
 import { hashPassword, verifyPassword } from "@server/shared/hash.utils";
 import { generateJWT } from "@server/shared/jwt.utils";
 import { getBody } from "@server/shared/request.utils";
 import { badRequest, ok } from "@server/shared/response.utils";
 import type { BunRequest } from "bun";
 import { findUserByEmail, insertUser } from "./auth.repository";
+import type { CredentialsRequest } from "./credentials-request.type";
+import type { UserTokenResponse } from "./user-token-response.type";
 const DEFAULT_ROLE_ID = 1;
 
 export const authRoutes = {
@@ -29,7 +29,6 @@ const authController = async (
 	const credentials = (await getBody(request)) as CredentialsRequest;
 	if (action === "login") return await postLogin(credentials);
 	if (action === "register") return await postRegister(credentials);
-	console.warn("Invalid endpoint:", action);
 	return badRequest("Invalid endpoint");
 };
 

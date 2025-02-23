@@ -49,8 +49,7 @@ export const forbidden = (message = "Forbidden"): Response => {
  * @returns Response object with error message
  */
 export const notFound = (request: Request, message = "Not found"): Response => {
-	debug(`API 404 ${request.url}`, message);
-	return addCors(new Response(message, { status: 404 }));
+	return addCors(new Response(`${request.url} ${message}`, { status: 404 }));
 };
 /**
  * Creates a method not allowed response with status 405

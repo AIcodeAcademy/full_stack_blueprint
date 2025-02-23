@@ -2,14 +2,29 @@ import { METHOD_NOT_ALLOWED_ERROR, UNAUTHORIZED_ERROR } from "./api-error.type";
 import type { JwtData } from "./jwt-data.type";
 import { verifyJWT } from "./jwt.utils";
 
+/**
+ * Retrieves the URL from the request object
+ * @param request - The incoming request object
+ * @returns The URL
+ */
 export const getUrl = (request: Request): URL => {
 	return new URL(request.url);
 };
 
+/**
+ * Retrieves the pathname from the request URL
+ * @param request - The incoming request object
+ * @returns The pathname
+ */
 export const getPath = (request: Request): string => {
 	return getUrl(request).pathname;
 };
 
+/**
+ * Retrieves the parameters from the request URL
+ * @param request - The incoming request object
+ * @returns The parameters as a record of key-value pairs
+ */
 export const getParams = (request: Request): Record<string, string> => {
 	return Object.fromEntries(getUrl(request).searchParams.entries());
 };
@@ -48,26 +63,50 @@ export const getSearchParam = (
 	return getSearchParams(request).get(key) ?? defaultValue;
 };
 
-export const getBody = async (request: Request): Promise<unknown> => {
+/**
+ * Retrieves the body of a request as a JSON object
+ * @param request - The incoming request object
+ * @returns The parsed JSON object
+ */
+export const getBody = async <T>(request: Request): Promise<T> => {
 	return await request.json();
 };
 
+/**
+ * Sets the user ID in the request headers
+ * @param request - The incoming request object
+ */
 export const setUserId = (request: Request): void => {
 	const userId = extractUserId(request);
 	request.headers.set("userId", userId.toString());
 };
 
+/**
+ * Retrieves the user ID from the request headers
+ * @param request - The incoming request object
+ * @returns The user ID
+ */
 export const getUserId = (request: Request): number => {
 	const userId = request.headers.get("userId");
 	return userId ? Number.parseInt(userId) : 0;
 };
 
+/**
+ * Validates the user ID from the request headers
+ * @param request - The incoming request object
+ * @returns The user ID
+ * @throws UNAUTHORIZED_ERROR if the user ID is not found
+ */
 export const validateUserId = (request: Request): number => {
 	const userId = getUserId(request);
 	if (userId === 0) throw UNAUTHORIZED_ERROR;
 	return userId;
 };
 
+/**
+ * Validates the POST request method
+ * @param request - The incoming request object
+ */
 export const validatePostRequest = (request: Request): void => {
 	if (request.method !== "POST") {
 		throw METHOD_NOT_ALLOWED_ERROR;

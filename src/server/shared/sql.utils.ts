@@ -1,5 +1,5 @@
 import { Database, type SQLQueryBindings } from "bun:sqlite";
-import type { SQL } from "./sql.type";
+import type { EntityProperties, SQL } from "./sql.type";
 
 const db = new Database(":memory:", { safeIntegers: false, strict: true });
 const sqlFolder = process.env.SQL_FOLDER || "sql";
@@ -29,6 +29,19 @@ export const selectById = <R>(query: string, id: number): R => {
 };
 
 /**
+ * Executes a SELECT query with a user ID parameter
+ * @template R - The type of the result
+ * @param query - SQL query string
+ * @param userId - The user ID to filter by
+ * @returns Query results cast to type R
+ */
+export const selectByUserId = <R>(query: string, userId: number): R[] => {
+	const q = db.query(query);
+	const r = q.all({ userId });
+	return r as R[];
+};
+
+/**
  * Executes a SELECT query with optional parameters
  * @template P - The type of the parameters
  * @template R - The type of the result
@@ -49,7 +62,10 @@ export const select = <P, R>(query: string, params?: P): R => {
  * @param params - Query parameters
  * @returns Number of affected rows
  */
-export const insert = <P>(query: string, params: P): number => {
+export const insert = <R>(
+	query: string,
+	params: Omit<R, EntityProperties>,
+): number => {
 	if (!params) throw Error("Params are required");
 	const q = db.query(query);
 	const queryBindings: SQLQueryBindings = {
