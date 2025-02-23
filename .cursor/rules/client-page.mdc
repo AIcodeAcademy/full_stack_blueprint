@@ -2,39 +2,61 @@
 description: How to create a page componente
 globs: src/client/app
 ---
-# Page rules
+---
+description: How to create a page componment
+globs: src/client/app
+---
 
-- In a Single Page Application, routing is managed at client side.
-- In this context, a page is a set of artifacts that manages what it is displayed when a route is activated
-- Pages must have a short url-friendly name in `kebab-case`
-- Pages are created at the `src/client/app/` folder in its own folder `src/client/app/page-name`
-- For each page, there will be three artifacts in the page folder:
-  - the page web component acting as a controller
-  - the presenter web component responsible for updating the view with data and handle DOM events
-  - the repository functions module responsible for data access and manipulation.
-- Follow [web.mdc](mdc:.cursor/rules/web.mdc) rules to write the page code, 
-  - avoid using any external library 
-  - avoid the creation of any custom CSS class
- 
-## Page component
+# Page Rules
 
-- The file will be created at `src/client/app/page-name/` with name `page-name.page.ts`
-- A page component will be an exported HTMLElement derived class following @web.mdc rules
-- The page will be loaded by the [navigation.utils.ts](mdc:src/client/shared/navigation.utils.ts) in the `router-outlet` of the [app.component.ts](mdc:src/client/app.component.ts)
-- The page will import and define customElements for presenter components
-- The page will import the repository module, call its functions and wait for the promises.
+## Core Concepts
+- Pages are client-side route handlers in a Single Page Application
+- Each page is a self-contained feature module with its own components and data access
+- Pages follow a clean architecture pattern with clear separation of concerns:
+  - Page Component: Route controller and state orchestrator
+  - Presenter Components: UI logic and DOM manipulation 
+  - Repository: Data access and API integration
 
-### Page repository
+## Structure
+- Pages live in `src/client/app/{page-name}/` using kebab-case
+- The page will be loaded by the [navigation.utils.ts](mdc:src/client/shared/navigation.utils.ts) in the `router-outlet` of the @app.component.ts
+- Required files:
+  - `{page-name}.page.ts` - Page controller component
+  - `{page-name}.repository.ts` - Data access module
+  - One or moreer components as needed
 
-- The file will be created at `src/client/app/page-name/` with name `page-name.repository.ts`
-- A repository is a module of exported functions that helps a page to fetch data from the server API
-- To access the server will use the utilities at [fetch.utils.ts](mdc:src/client/shared/fetch.utils.ts) to get and post requests
-- Must return promises with data or errors to the page
+## Page Component Guidelines
+- Extend HTMLElement and export as default
+- Keep minimal template logic - delegate complex UI to presenters
+- Handle route parameters and state management
+- Coordinate between presenters and repository
+- Follow lifecycle pattern:
+  1. Constructor: Set initial template
+  2. ConnectedCallback: vents
+  3. DisconnectedCallbac
 
-### Presenter components
+## Repository Guidelines
+- Export standalone async functions for API operations
+- To access the server will use the utilities at [fetch.utils.ts](mdc:src/client/shared/fetch.utils.ts)  to get and post requests
+- Return strongly typed responses or null/empty values
+- Handle API errors gracefully
+- Keep business logic in the page, repository is for data only
 
-- Depending of the view complexity can be more than one presenters, called sections.
-- For each section there will be a file created at `src/client/app/page-name/` with name `section-name.component.ts`
-- This components are just for this page and are not shared
-- Encapsulates complex html and ui logic to keep the page slim
+## Presenter Guidelines
+- Create focused components for distinct UI sections
+- Use semantic HTML and minimal styling
 - Make use of [dom.utils.ts](mdc:src/client/shared/dom.utils.ts) to manipulate and hadle the DOM
+- Communicate with page via custom events
+- Keep stateless when possible, receive data via properties
+- Follow component lifecycle for setup/cleanup
+
+## Best Practices
+- Use TypeScript types for all data structures
+- Folloe [type-script.mdc](mdc:.cursor/rules/type-script.mdc) rules for TypeScript
+- Follow [web.mdc](mdc:.cursor/rules/web.mdc) rules for html, css code
+- Leverage custom elements for component registration
+- Implement proper event handling and cleanup
+- Use early returns and null checks
+- Keep files focused and maintainable
+- Document public interfaces and events
+- Follow consiconventions

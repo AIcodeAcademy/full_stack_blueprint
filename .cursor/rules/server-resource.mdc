@@ -1,39 +1,108 @@
 ---
-description: 
-globs: 
----
----
-description: How to create a reource for the API
+description: How to create a resource for the API
 globs: src/server/api
 ---
-# Resource rules
+---
+description: How to create a resource for the API
+globs: src/server/api
+---
+# Server Resource Rules
 
-- In a RESTfull server, a resource represents an entity accessed by a route API
-- In this context, a resource is a set of artifacts that manages what it is received and responded when a route is called
-- Resources must have a short url-friendly name in `kebab-case`
-- Resources are created at the `src/server/api/` folder in its own folder `src/server/api/resource-name`
-- For each resource, create two artifacts in the resource folder:
-  - the controller exporting the methods that handle requests and responses
-  - the repository exporting the functions to read and write data
-- Follow [type-script.mdc](mdc:.cursor/rules/type-script.mdc) rules to write the controller and repository code
+## API Structure
 
-## Resource controller
+### Resource Organization
+- Resources are organized by feature in `/src/server/api/{feature-name}/`
+- Each resource follows this structure:
+```
+/feature-name/
+  ├── feature-name.controller.ts     # Request handlers and routes
+  ├── feature-name.repository.ts     # Data access
+  ├── {name}-request.type.ts        # Input DTOs
+  └── {name}-response.type.ts       # Output DTOs
+```
 
-- A controller will be a module of endpoints configured in [api.controller.ts](mdc:src/server/api/api.controller.ts)
-- Each endpoint is a function with signature `async (request: Request): Promise<Response> `
-- The file name will be `reource-name.controller.ts`
-- Each endpoint obtains input data from the request, calls the repository, and returns a response
-- Must use [request.utils.ts](mdc:src/server/shared/request.utils.ts) an [response.utils.ts](mdc:src/server/shared/response.utils.ts) to do so.
-- Must use its repository to interact with the database
-- Include error handling to manage and respond to errors gracefully.
-- Declare any types for th needed DTOS with `{{name}}-request.type.ts` or `{{name}}-response.type.ts`
+### Controllers
+- Export a routes object with HTTP methods
+- Use BunRequest type for parameterized routes
+- Handle authentication via request utils
+- Return typed responses using response utils
+- Follow REST conventions
 
-### Resource repository
+Example:
+```typescript
+export const featureRoutes = {
+  GET: () => getFeature(),
+  POST: async (request: Request) => await postFeature(request),
+  // For parameterized routes:
+  "/api/feature/:param": {
+    POST: async (request: BunRequest<"/api/feature/:param">) => 
+      await featureController(request, request.params.param)
+  }
+};
+```
 
-- A repository is a module of exported functions that helps a controller to fetch data from the database
-- The file name will be `resource-name.repository.ts`
-- Avoid to write SQL commands inside the Typescript repository module.
-  - There must be SQL commands at `src/sql/resource-name.sql.json` 
-  - If it is not the case, define the command there. 
-- Must use the sql utils from [sql.utils.ts](mdc:src/server/shared/sql.utils.ts) to interact with the database at low level
-- Must return types declared from the domain at `src/server/domain` folder
+### Repositories
+- Use readCommands for SQL queries
+- Define and use NULL values for types
+- Return domain types, not DTOs
+- Handle data transformations
+- Use SQL utils for all database operations
+
+Example:
+```typescript
+const featureSql = await readCommands("feature-name");
+
+export const selectAllFeatures = (): Feature[] => {
+  const results = selectAll<Feature>(featureSql.SELECT_ALL);
+  return results || [];
+};
+```
+
+### DTOs
+- Use request/response suffix for clarity
+- Define NULL values for response DTOs
+- Keep DTOs simple and focused
+- Validate incoming DTOs in controllers
+
+Example:
+```typescript
+export type FeatureRequest = {
+  name: string;
+  description: string;
+};
+
+export type FeatureResponse = {
+  id: number;
+  name: string;
+  description: string;
+};
+
+export const NULL_FEATURE_RESPONSE: FeatureResponse = {
+  id: 0,
+  name: "",
+  description: ""
+};
+```
+
+## Error Handling
+- Use predefined API errors from api-error.type.ts
+- Handle errors at controller level
+- Log errors appropriately
+- Return consistent error responses
+
+## Authentication
+- Validate user session in controllers when needed
+- Use validateUserId utility for protected routes
+- Handle unauthorized access consistently
+
+## SQL
+- Store SQL queries in /src/sql/{feature}.sql.json
+- Use parameterized queries
+- Follow SQL naming conventions
+- Use readCommands utility to load queries
+
+## Testing
+- Test controllers with mock requests
+- Test repositories with test database
+- Test DTOs validation
+- Test error scenarios
