@@ -1,17 +1,10 @@
-import { setUserId } from "../shared/request.utils";
-import { handleInternalError, notFound } from "../shared/response.utils";
-import { authController } from "./auth/auth.controller";
-import { toolsController } from "./tools/tools.controller";
-
-export const api = async (request: Request): Promise<Response> => {
-	try {
-		const url = new URL(request.url);
-		const path = url.pathname;
-		setUserId(request);
-		if (path.startsWith("/api/auth")) return await authController(request);
-		if (path.startsWith("/api/tools")) return await toolsController(request);
-		return notFound(request);
-	} catch (error) {
-		return handleInternalError(request, error as Error);
-	}
+import { corsPreflight } from "../shared/response.utils";
+import { authRoutes } from "./auth/auth.controller";
+import { toolsRoutes } from "./tools/tools.controller";
+export const apiRoutes = {
+	"/api/*": {
+		OPTIONS: (request: Request) => corsPreflight(request),
+	},
+	"/api/auth/:action": authRoutes,
+	"/api/tools": toolsRoutes,
 };

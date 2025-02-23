@@ -1,27 +1,19 @@
-import type { Server } from "bun";
-import { api } from "./api/api.controller";
+import { apiRoutes } from "./api/api.controller";
 import { initializeTables } from "./shared/initialize.utils";
 import { debug } from "./shared/log.utils";
-import { addCors, corsPreflight, notFound } from "./shared/response.utils";
+import { internalServerError } from "./shared/response.utils";
 
 const initializeServer = () => {
 	initializeTables();
-	debug("Database", "initialized");
 	const bunServer = Bun.serve({
 		development: true,
-		fetch: processRequest,
+		routes: apiRoutes,
+		error(error) {
+			debug("Server error", error);
+			return internalServerError(error.message);
+		},
 	});
 	debug("Server ready", bunServer.url.href);
-};
-
-const processRequest = (
-	request: Request,
-	server: Server,
-): Response | Promise<Response> => {
-	const url = new URL(request.url);
-	if (request.method === "OPTIONS") return corsPreflight();
-	if (url.pathname.startsWith("/api")) return api(request).then(addCors);
-	return addCors(notFound(request));
 };
 
 /**

@@ -1,24 +1,17 @@
 import type { Tool } from "@/server/domain/tool.type";
 import { validateTool } from "@/server/domain/validations.utils";
-import { METHOD_NOT_ALLOWED_ERROR } from "@/server/shared/api-error.type";
+import type { EntityProperties } from "@/server/shared/entity-params.type";
 import { validateUserId } from "@/server/shared/request.utils";
 import { ok } from "@server/shared/response.utils";
 import type { ToolPostRequest } from "./tool-post-request.type";
 import { insertTool, selectAllTools } from "./tools.repository";
 
-/**
- * Tools controller for /api/tools endpoints
- * @param request - The request
- * @returns The response
- */
-export const toolsController = async (request: Request): Promise<Response> => {
-	const method = request.method;
-	if (method === "GET") return getTools();
-	if (method === "POST") return postTool(request);
-	throw METHOD_NOT_ALLOWED_ERROR;
+export const toolsRoutes = {
+	GET: () => getTools(),
+	POST: async (request: Request) => await postTool(request),
 };
 
-const getTools = async (): Promise<Response> => {
+const getTools = (): Response => {
 	const tools = selectAllTools();
 	return ok<Tool[]>(tools);
 };
@@ -31,6 +24,6 @@ const postTool = async (request: Request): Promise<Response> => {
 		userOwnerId: userId,
 	};
 	validateTool(toolToInsert);
-	const tool = insertTool(toolToInsert);
+	const tool = insertTool(toolToInsert as Omit<Tool, EntityProperties>);
 	return ok<Tool>(tool);
 };

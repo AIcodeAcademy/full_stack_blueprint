@@ -8,7 +8,12 @@ import { debug } from "./log.utils";
  */
 export const ok = <T>(body: T): Response => {
 	const responseBody = JSON.stringify(body);
-	return new Response(responseBody);
+	return addCors(
+		new Response(responseBody, {
+			status: 200,
+			headers: { "Content-Type": "application/json" },
+		}),
+	);
 };
 
 /**
@@ -17,7 +22,7 @@ export const ok = <T>(body: T): Response => {
  * @returns Response object with error message
  */
 export const badRequest = (message = "Bad request"): Response => {
-	return new Response(message, { status: 400 });
+	return addCors(new Response(message, { status: 400 }));
 };
 
 /**
@@ -26,7 +31,7 @@ export const badRequest = (message = "Bad request"): Response => {
  * @returns Response object with error message
  */
 export const unauthorized = (message = "Unauthorized"): Response => {
-	return new Response(message, { status: 401 });
+	return addCors(new Response(message, { status: 401 }));
 };
 
 /**
@@ -35,7 +40,7 @@ export const unauthorized = (message = "Unauthorized"): Response => {
  * @returns Response object with error message
  */
 export const forbidden = (message = "Forbidden"): Response => {
-	return new Response(message, { status: 403 });
+	return addCors(new Response(message, { status: 403 }));
 };
 
 /**
@@ -45,7 +50,7 @@ export const forbidden = (message = "Forbidden"): Response => {
  */
 export const notFound = (request: Request, message = "Not found"): Response => {
 	debug(`API 404 ${request.url}`, message);
-	return new Response(message, { status: 404 });
+	return addCors(new Response(message, { status: 404 }));
 };
 /**
  * Creates a method not allowed response with status 405
@@ -53,7 +58,7 @@ export const notFound = (request: Request, message = "Not found"): Response => {
  * @returns Response object with error message
  */
 export const methodNotAllowed = (message = "Method not allowed"): Response => {
-	return new Response(message, { status: 405 });
+	return addCors(new Response(message, { status: 405 }));
 };
 
 /**
@@ -64,7 +69,7 @@ export const methodNotAllowed = (message = "Method not allowed"): Response => {
 export const internalServerError = (
 	message = "Internal server error",
 ): Response => {
-	return new Response(message, { status: 500 });
+	return addCors(new Response(message, { status: 500 }));
 };
 
 /**
@@ -104,7 +109,8 @@ export const handleInternalError = (
  * @param request - The request
  * @returns Response object with CORS headers
  */
-export const corsPreflight = (): Response => {
+export const corsPreflight = (request: Request): Response => {
+	debug("CORS preflight", request.url);
 	return new Response(null, {
 		headers: {
 			"Access-Control-Allow-Origin": "*",
@@ -114,12 +120,7 @@ export const corsPreflight = (): Response => {
 	});
 };
 
-/**
- * Adds CORS headers to the response
- * @param response - The response
- * @returns The response with CORS headers
- */
-export const addCors = (response: Response): Response => {
+const addCors = (response: Response): Response => {
 	response.headers.set("Access-Control-Allow-Origin", "*");
 	return response;
 };

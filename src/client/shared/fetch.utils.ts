@@ -10,11 +10,19 @@ export const post = async <T>(
 	url: string,
 	payload: unknown,
 ): Promise<ResponseBody<T>> => {
-	const body = JSON.stringify(payload);
-	const headers = createHeaders();
-	const options = { headers, method: "POST", body };
-	const response = await fetch(API_URL + url, options);
-	return createResult<T>(response);
+	try {
+		const body = JSON.stringify(payload);
+		const headers = createHeaders();
+		const options = { headers, method: "POST", body };
+		const response = await fetch(API_URL + url, options);
+		return createResult<T>(response);
+	} catch (error) {
+		console.error(`POST ${url}`, error);
+		return {
+			status: 599,
+			error: error instanceof Error ? error.message : "Unknown error",
+		};
+	}
 };
 
 /**
@@ -23,10 +31,18 @@ export const post = async <T>(
  * @returns Promise resolving to a ResponseBody containing the response data or error
  */
 export const get = async <T>(url: string): Promise<ResponseBody<T>> => {
-	const headers = createHeaders();
-	const options = { headers, method: "GET" };
-	const response = await fetch(API_URL + url, options);
-	return createResult<T>(response);
+	try {
+		const headers = createHeaders();
+		const options = { headers, method: "GET" };
+		const response = await fetch(API_URL + url, options);
+		return createResult<T>(response);
+	} catch (error) {
+		console.error(`GET ${url}`, error);
+		return {
+			status: 599,
+			error: error instanceof Error ? error.message : "Unknown error",
+		};
+	}
 };
 
 /**
@@ -43,24 +59,31 @@ export type ResponseBody<T> = {
 };
 
 async function createResult<T>(response: Response): Promise<ResponseBody<T>> {
-	if (response.status >= 400) {
+	try {
+		if (response.status >= 400) {
+			return {
+				status: response.status,
+				error: await response.text(),
+			};
+		}
 		return {
 			status: response.status,
-			error: await response.text(),
+			body: (await response.json()) as T,
+		};
+	} catch (error) {
+		return {
+			status: 503,
+			error: "Service unavailable - Please check if the server is running",
 		};
 	}
-	return {
-		status: response.status,
-		body: (await response.json()) as T,
-	};
 }
 
 const createHeaders = (): HeadersInit => {
 	const storageToken = localStorage.getItem("userToken") || "";
-	const userToken: UserToken = storageToken ? JSON.parse(storageToken) : null;
+	const userToken: UserToken = storageToken ? JSON.parse(storageToken) : "";
 	const headers = {
 		"Content-Type": "application/json",
-		Authorization: `Bearer ${userToken ? userToken.token : ""}`,
+		Authorization: `Bearer ${userToken}`,
 	};
 	return headers;
 };

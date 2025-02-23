@@ -6,28 +6,30 @@ import {
 	BAD_REQUEST_ERROR,
 	UNAUTHORIZED_ERROR,
 } from "@/server/shared/api-error.type";
+import type { EntityProperties } from "@/server/shared/entity-params.type";
 import type { JwtData } from "@/server/shared/jwt-data.type";
 import { warn } from "@/server/shared/log.utils";
 import { hashPassword, verifyPassword } from "@server/shared/hash.utils";
 import { generateJWT } from "@server/shared/jwt.utils";
-import { getBody, validatePostRequest } from "@server/shared/request.utils";
+import { getBody } from "@server/shared/request.utils";
 import { badRequest, ok } from "@server/shared/response.utils";
+import type { BunRequest } from "bun";
 import { findUserByEmail, insertUser } from "./auth.repository";
 const DEFAULT_ROLE_ID = 1;
 
-/**
- * Auth controller for /api/auth endpoints
- * @param request - The request
- * @returns The response
- */
-export const authController = async (request: Request): Promise<Response> => {
-	validatePostRequest(request);
+export const authRoutes = {
+	POST: async (request: BunRequest<"/api/auth/:action">) =>
+		await authController(request, request.params.action),
+};
+
+const authController = async (
+	request: Request,
+	action: string,
+): Promise<Response> => {
 	const credentials = (await getBody(request)) as CredentialsRequest;
-	const url = new URL(request.url);
-	const path = url.pathname;
-	if (path === "/api/auth/login") return await postLogin(credentials);
-	if (path === "/api/auth/register") return await postRegister(credentials);
-	console.warn("Invalid endpoint:", path);
+	if (action === "login") return await postLogin(credentials);
+	if (action === "register") return await postRegister(credentials);
+	console.warn("Invalid endpoint:", action);
 	return badRequest("Invalid endpoint");
 };
 
@@ -69,7 +71,7 @@ const postRegister = async (
 		roleId: DEFAULT_ROLE_ID,
 	};
 	validateUser(userToInsert);
-	const user = await insertUser(userToInsert);
+	const user = await insertUser(userToInsert as Omit<User, EntityProperties>);
 
 	const userToken = createUserToken(user.id);
 	return ok<UserTokenResponse>(userToken);
