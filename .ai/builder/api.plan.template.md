@@ -202,15 +202,15 @@ For {{resource.name}}:
 
 Go to the `/src/server/api/api.controller.ts` file
 
-1.  Add routes following the pattern:
+1.  Add routes following the pattern (prefer plural for the resource name and route):
 
     ```typescript
     export const apiRoutes = {
       "/api/*": {
         OPTIONS: (request: Request) => corsPreflight(request),
       },
-      "/api/resource": resourceRoutes, // For non-parameterized routes
-      "/api/resource/:param": resourceWithParamRoutes, // For parameterized routes
+      "/api/resources": resourcesRoutes, // For non-parameterized routes
+      "/api/resources/:param": resourcesWithParamRoutes, // For parameterized routes
     };
     ```
 
