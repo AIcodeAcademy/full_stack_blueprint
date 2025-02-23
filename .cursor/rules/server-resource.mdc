@@ -1,9 +1,9 @@
 ---
-description: How to create a resource for the API
-globs: src/server/api
+description: 
+globs: 
 ---
 ---
-description: How to create a resource for the API
+description: How to create a reource for the API
 globs: src/server/api
 ---
 # Server Resource Rules
