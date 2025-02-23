@@ -1,0 +1,39 @@
+{
+	"TABLE": "category",
+	"CREATE_TABLE": "CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, risk_level TEXT NOT NULL, liquidity TEXT NOT NULL)",
+	"SELECT_ALL": "SELECT * FROM category",
+	"SELECT_BY_ID": "SELECT * FROM category WHERE id = $id",
+	"SELECT_BY_FIELD": "SELECT * FROM category WHERE $field = $value",
+	"SELECT_BY_QUERY": "",
+	"SELECT_BY_USER_ID": "",
+	"INSERT": "INSERT INTO category (name, risk_level, liquidity) VALUES ($name, $risk_level, $liquidity)",
+	"UPDATE": "UPDATE category SET name = $name, risk_level = $risk_level, liquidity = $liquidity WHERE id = $id",
+	"DELETE": "DELETE FROM category WHERE id = $id",
+	"SEED": [
+		{
+			"name": "Stock",
+			"risk_level": "HIGH",
+			"liquidity": "HIGH"
+		},
+		{
+			"name": "Bond",
+			"risk_level": "LOW",
+			"liquidity": "MEDIUM"
+		},
+		{
+			"name": "RealEstate",
+			"risk_level": "MEDIUM",
+			"liquidity": "LOW"
+		},
+		{
+			"name": "Cryptocurrency",
+			"risk_level": "HIGH",
+			"liquidity": "HIGH"
+		},
+		{
+			"name": "Cash",
+			"risk_level": "LOW",
+			"liquidity": "HIGH"
+		}
+	]
+}

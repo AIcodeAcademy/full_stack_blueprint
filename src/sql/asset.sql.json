@@ -1,0 +1,13 @@
+{
+	"TABLE": "asset",
+	"CREATE_TABLE": "CREATE TABLE IF NOT EXISTS asset (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, category_id INTEGER NOT NULL, value REAL NOT NULL, quantity REAL NOT NULL, acquisition_date TEXT NOT NULL, FOREIGN KEY(category_id) REFERENCES category(id), FOREIGN KEY(user_id) REFERENCES user(id))",
+	"SELECT_ALL": "SELECT * FROM asset",
+	"SELECT_BY_ID": "SELECT * FROM asset WHERE id = $id",
+	"SELECT_BY_FIELD": "SELECT * FROM asset WHERE $field = $value",
+	"SELECT_BY_QUERY": "",
+	"SELECT_BY_USER_ID": "SELECT * FROM asset WHERE user_id = $user_id",
+	"INSERT": "INSERT INTO asset (user_id, category_id, value, quantity, acquisition_date) VALUES ($user_id, $category_id, $value, $quantity, $acquisition_date)",
+	"UPDATE": "UPDATE asset SET category_id = $category_id, value = $value, quantity = $quantity, acquisition_date = $acquisition_date WHERE id = $id",
+	"DELETE": "DELETE FROM asset WHERE id = $id",
+	"SEED": []
+}

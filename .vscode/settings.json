@@ -23,12 +23,22 @@
 	],
 	"material-icon-theme.activeIconPack": "none",
 	"material-icon-theme.folders.associations": {
+		"architect": "interface",
+		"builder": "interface",
+		"craftsman": "interface",
 		"domain": "interface",
 		"instructions": "rules",
+		"journals": "update",
 		".cursor": "quasar",
 		".ai": "robot"
 	},
 	"material-icon-theme.files.associations": {
+		"*.instructions.md": "architecture",
+		"*.blueprint.md": "dll",
+		"*.plan.md": "pascal",
+		"*.template.md": "ejs",
+		"*.prompt.md": "pascal",
+		"*.journal.md": "verified",
 		"*.component.ts": "templ",
 		"*.controller.ts": "c",
 		"*.page.ts": "routing",
