@@ -109,10 +109,10 @@ Go to the `/src/server/api` folder
         *   `validatePostRequest` to validate the request method.
     *   Use `response.utils.ts` functions:
         *   `ok` for successful responses (status 200).
-        *   `badRequest`, `unauthorized`, `forbidden`, `notFound`, `internalServerError` for error responses.
-        *   `handleInternalError` for unexpected errors.
-    *   Handle errors by throwing specific `api-error.type.ts` errors (e.g., `UNAUTHORIZED_ERROR`, `BAD_REQUEST_ERROR`).
-    *   Validate input data using validation functions from `src/server/domain/validations.utils.ts`.  *Explicitly call out which validation function to use for each endpoint.*
+        *   You can throw errors, but they will be caught by the global error handler.
+        *   No need to catch errors, there is a global error handler.
+    *   Don not validate input data
+    *   Valide user Id if needed
     *   Return typed responses using the DTOs defined in the plan.
     *   Follow REST conventions.
     * **Explicitly define the expected request body structure for POST/PUT requests.**
@@ -143,9 +143,7 @@ Go to the `/src/server/api` folder
         // If authentication is needed:
         const userId = validateUserId(request);
 
-        const body = await getBody<RequestType>(request); // Use the correct request DTO
-        validateResource(body); // Validate the request body
-
+        const body = await getBody<RequestType>(request); // Use the correct request DT
         // ... call repository to insert/update data, using userId if needed
         const resource = insertResource(body);
         return ok(resource); // Return appropriate response DTO
@@ -158,6 +156,7 @@ Go to the `/src/server/api` folder
     *   Use `await readCommands("resource-name")` to load SQL commands from `sql/resource-name.sql.json`.
     *   Define functions for each database operation (e.g., `selectAllResources`, `selectResourceById`, `insertResource`, `updateResource`, `deleteResource`).  *Be very specific about the function names.*
     *   Receive DTOs as parameters (where appropriate).
+    *   Validate the entities before insert or update using the validation functions from `src/server/domain/validations.utils.ts`.
     *   Return domain types (defined in `/src/server/domain`).
     *   Handle data transformations between DTOs and domain types.
     * **Explicitly define the SQL queries needed for each operation, and include them in the plan.**
