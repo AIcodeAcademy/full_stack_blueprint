@@ -44,7 +44,6 @@ Both have rules or instructions to be used as context for the AI.
 
 - [Bun](https://bun.sh/)
 - [TypeScript](https://www.typescriptlang.org/)
-- [Vite](https://vitejs.dev/)
 - [Pico CSS](https://picocss.com/)
 - [Biome](https://biomejs.dev/)
 - [Playwright](https://playwright.dev/)

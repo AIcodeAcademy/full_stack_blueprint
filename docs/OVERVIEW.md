@@ -18,7 +18,6 @@ Key technologies and frameworks used include:
 
 - **Bun**: A fast, all-in-one JavaScript runtime.
 - **TypeScript**:  A strongly typed superset of JavaScript.
-- **Vite**: A fast frontend build tool.
 - **Pico CSS**: A minimal CSS framework for styling.
 - **Biome**: A code formatter and linter.
 - **Playwright**: An end-to-end testing framework.
@@ -74,7 +73,6 @@ Authentication data flow involves:
   - **Pico CSS (CDN)**: For minimal CSS styling, included via CDN in `index.html`.
   - **Google Fonts (CDN)**: For custom fonts, also included via CDN in `index.html`.
   - **Bun Runtime**:  Essential runtime environment.
-  - **Vite**:  For frontend development server and build process.
   - **Playwright**: For end-to-end testing.
   - **Biome**: For code formatting and linting.
 
