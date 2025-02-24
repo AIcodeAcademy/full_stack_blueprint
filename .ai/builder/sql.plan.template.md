@@ -1,9 +1,6 @@
 --- 
 information: Generate a markdown file documenting the implementation plan of the sql tier for a feature.
 important: This is a template for one and only one feature.
-commands: think about the commands that are needed to implement the feature.
-preconditions: think about the tables or seeds that are needed to implement the feature.
-prompt: Follow instructions to generate the SQL plan for Feature X
 file_name: {{featureNumber}}-{{feature_short_name}}.sql.plan.md
 ---
 
@@ -11,21 +8,22 @@ file_name: {{featureNumber}}-{{feature_short_name}}.sql.plan.md
 
 ## Description
 
-Ensures SQL structure, seeds, commands and types for the `{{featureNumber}} - {{feature_short_name}}` feature.
+Ensures SQL structure, seeds, commands and entity types for the `{{featureNumber}} - {{feature_short_name}}` feature.
 
 ### Prompt after plan
 
 Recommended prompt to use this plan:
 
 ```text
-Follow the `.ai\builder\builder-implement.instructions.md` instructions to implement the sql tier plan `{{featureNumber}}-{{feature_short_name}}.sql.plan.md`
-Read the reference documentation to understand the project and the feature.
-Add the @rules to the prompt to be applied during the implementation.
+Follow 
+ the instructions at `.ai\builder\builder-implement.instructions.md` 
+ to implement the sql tier plan at `{{featureNumber}}-{{feature_short_name}}.sql.plan.md`
+Add the **rules** @rules to the prompt to be applied during the implementation.
 ```
 
 ## Preconditions
 
-### Reference documentation
+### Read the reference documentation
 
 Reference documentation to be used during implementation:
 
@@ -42,12 +40,13 @@ Reference documentation to be used during implementation:
 <!--
 Think about the tables needed to implement the feature.
 List them in camel case, with a brief description.
-No need to generate the table at this point, just list them.
+No need to generate tasks for the tables at this point, just list them.
 -->
 
 @for(table of tables) {
 - `{{table.name}}`: {{table.description}}
 }
+
 
 ### Seeds
 
@@ -55,51 +54,24 @@ No need to generate the table at this point, just list them.
 Some tables must have seed data to be able to use the feature.
 Is data that predefined in the database to be able to test the feature.
 Think about the seeds needed to implement the feature.
-List them in camel case, with a brief description.
+List tables  that needs seed data, in camel case, with a brief description.
 No need to generate the seed at this point, just list them.
 -->
 
-@for(seed of seeds) {
-- `{{seed.name}}`: {{seed.description}}
-  @for(item of seed.data) {
-  - `{{item}}`
-  }
-}
-
-### Commands
-
-<!--
-For each table, think about the commands that are needed to implement the feature.
-Will be implemented as methods in a repository.
-Will be used to generate the SQL commands.
-List them in camelCase (as it will be the method names), with a brief description.
-If the command has parameters, list them as well.
-No need to generate the command at this point, just list them.
--->
-
-@for(table of tables) {
-For {{table.name}} table:
-@for(command of table.commands) {
-- `{{command.name}}`: {{command.description}}
-  @if(command.parameters) {
-    @for(parameter of command.parameters) {
-    - `{{parameter.name}}`: {{parameter.description}}
-    }
-  }
-}
+@for(table of tablesWithSeeds) {
+- `{{table.name}}`: Needs seed data for {{reason}}
 }
 
 ## Implementation plan
 
-### SQL Commands
+### 1. Generate SQL Commands tasks
 
-Go to the `/src/sql` folder 
-
-1. Each SQL file must strictly implement the SQL type interface:
+- You must generate the SQL commands for each table.
+- Each SQL file must strictly implement the SQL type interface:
 ```typescript
 type SQL = {
-  TABLE: string;                // Table name for drop/create operations
-  CREATE_TABLE: string;         // Create table SQL command
+  TABLE: string;               // Table name for drop/create operations
+  CREATE_TABLE: string;        // Create table SQL command
   SELECT_ALL: string;          // Select all records
   SELECT_BY_ID: string;        // Select by primary key
   SELECT_BY_FIELD: string;     // Select by any field
@@ -108,73 +80,69 @@ type SQL = {
   INSERT: string;              // Insert record
   UPDATE: string;              // Update record
   DELETE: string;              // Delete record
-  SEED: unknown[];            // Initial data if needed
+  SEED: unknown[];             // Initial data if needed
 };
 ```
-
-2. Parameter naming in SQL commands:
+- Parameter naming in SQL commands:
    - Use `$field` and `$value` for dynamic field queries
    - Use `$id` for primary key
    - Use `$user_id` for user relationships
    - Prefix all parameters with `$`
+- Study `tools.sql.json` as the reference implementation
 
-3. Study `tools.sql.json` as the reference implementation
-
+- [ ] Create or update the `/src/sql` folder with the SQL commands
 @for(table of tables){
 - [ ] Create if not exists a file called `{{table.name}}.sql.json`
 - [ ] Fill it or update it with the SQL commands
 - [ ] Add the seed data as an array of objects to the `SEED` property if needed
 }
 
-### Domain types
+### 2.Generate Domain types tasks
 
-Go to the `/src/server/domain` folder 
+- You must generate the domain types for each table.
+- Import
+  - `import { AppError } from "../shared/app-error.class";`
+  - `import type { Raw } from "../shared/sql.type";`
+- Export 
+  - a type called `{{table.name}}`, 
+  - a `NULL_TABLE` value constant, 
+  - a `validate(table: Raw<{{table.name}}>)` function.
+- Study `/src/server/domain/tools.type.ts` as the reference implementation
 
+- [ ] Create or update the `/src/server/domain` folder with the domain types
 @for(table of tables){
 - [ ] Create if not exists a file called `{{table.name}}.type.ts`
-- [ ] Fill it or update it with the domain types
+- [ ] Fill it or update it with the domain types, null value and validation function
 }
 
-### Initialize utils
+### 3. Initialize table utils tasks
 
-Go to the `/src/server/shared/initialize.utils.ts` file 
+- You must generate the initialize utils for each table.
+- It is done in the `initializeTables` function at `/src/server/shared/initialize.utils.ts` file.
+- Study `initializeToolsTable` function as the reference implementation
 
-1. Each table must have:
+Example:
 ```typescript
-const initialize{Table}Table = (): number => {
-  drop({table}SQL.TABLE);
-  const result = create({table}SQL.CREATE_TABLE);
-  return result;
+const {tableName}SQL = await readCommands("{tableName}");
+const initialize{TableName}Table = (): void => {
+  drop({tableName}SQL.TABLE);
+  create({tableName}SQL.CREATE_TABLE);
+  seed{TableName}();
 };
-
 // If seeding needed:
-const seed{Table} = (): number => {
-  let results = 0;
-  for (const item of {table}SQL.SEED) {
-    results += insert({table}SQL.INSERT, item);
+const seed{TableName} = (): void => {
+  for (const item of {tableName}SQL.SEED) {
+    insert({tableName}SQL.INSERT, item);
   }
-  return results;
 };
 ```
 
-2. Add initialization to the main function:
-```typescript
-export async function initializeTables(): Promise<void> {
-  // ... existing
-  initialize{Table}Table();
-  // ... 
-}
-```
-
-3. Use only the functions from sql.utils:
-   - `drop()`
-   - `create()`
-   - `insert()`
-   - No direct SQL execution
-
+- [ ] Create or update the `/src/server/shared/initialize.utils.ts` file 
 @for(table of tables){
+- [ ] Read the sql commands for the table at `const {tableName}Sql = await readCommands("{tableName}");`
 - [ ] Create if not exists a function called `initialize{{table.name}}Table`
 - [ ] Add the seed data function call if needed
+- [ ] Add the table initialization call to the `initializeTables` function
 }
 
 _End of SQL Plan for {{featureNumber}} - {{feature_short_name}}_

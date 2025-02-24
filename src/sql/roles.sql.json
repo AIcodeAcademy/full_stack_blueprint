@@ -2,5 +2,15 @@
 	"TABLE": "roles",
 	"CREATE_TABLE": "CREATE TABLE roles (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, createdAt DATETIME, updatedAt DATETIME)",
 	"SELECT_BY_ID": "SELECT * FROM roles WHERE id = $id",
-	"INSERT": "INSERT INTO roles (name, description, createdAt, updatedAt) VALUES ($name, $description, $createdAt, $updatedAt)"
+	"INSERT": "INSERT INTO roles (name, description, createdAt, updatedAt) VALUES ($name, $description, $createdAt, $updatedAt)",
+	"SEED": [
+		{
+			"name": "Admin",
+			"description": "Admin role"
+		},
+		{
+			"name": "User",
+			"description": "User role"
+		}
+	]
 }
