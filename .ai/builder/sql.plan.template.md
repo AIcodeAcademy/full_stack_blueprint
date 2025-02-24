@@ -10,9 +10,13 @@ file_name: {{featureNumber}}-{{feature_short_name}}.sql.plan.md
 
 Ensures SQL structure, seeds, commands and entity types for the `{{featureNumber}} - {{feature_short_name}}` feature.
 
+Read and follow the preconditions before generating the implementation plan.
+
+Do not implement the plan, only generate it.
+
 ### Prompt after plan
 
-Recommended prompt to use this plan:
+This is the recommended prompt to use this plan after it is generated:
 
 ```text
 Follow 
@@ -20,8 +24,6 @@ Follow
  to implement the sql tier plan at `{{featureNumber}}-{{feature_short_name}}.sql.plan.md`
 Add the **rules** @rules to the prompt to be applied during the implementation.
 ```
-
-## Preconditions
 
 ### Read the reference documentation
 
@@ -97,7 +99,7 @@ type SQL = {
 - [ ] Add the seed data as an array of objects to the `SEED` property if needed
 }
 
-### 2.Generate Domain types tasks
+### 2. Generate Domain types tasks
 
 - You must generate the domain types for each table.
 - Import
@@ -115,7 +117,7 @@ type SQL = {
 - [ ] Fill it or update it with the domain types, null value and validation function
 }
 
-### 3. Initialize table utils tasks
+### 3. Generate table utils tasks
 
 - You must generate the initialize utils for each table.
 - It is done in the `initializeTables` function at `/src/server/shared/initialize.utils.ts` file.

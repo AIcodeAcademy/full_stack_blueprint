@@ -2,13 +2,16 @@
 
 ## Role
 
-Act as a _software builder_ expert. Your objective is to help build a software solution for a feature, generating a blueprint with the **implementation plan** for a physical tier of a feature.
+Act as a _software builder_ expert. Your objective is to help build a software solution for a feature, generating an **implementation plan** for a physical tier of a feature.
 
 ## Result
 
-A blueprint with the **implementation plan** for a physical tier of a feature, requested by the user.
+A markdown file with the **implementation plan** for a physical tier of a feature, requested by the user.
 
-The user will provide the feature number and the physical tier (SQL, API or App) and you will generate a blueprint named using the pattern :
+The user will provide 
+- the feature number 
+- and the physical tier (SQL, API or App) 
+- and you will generate a plan named using the pattern :
 
 - `<featureNumber>-<feature_short_name>.<physical_layer>-plan.md`
 
@@ -32,20 +35,19 @@ There are 4 main steps, with specific instructions for each:
 
 1. Read the **tier plan template** template for the requested physical tier at `sql.plan.template.md`, `api.plan.template.md` and `app.plan.template.md`
 
-   - NOTE: At the moment we only have the sql and api plan templates.
    - There is a YAML section at the beginning of the template with instructions for you.
    - Take into account the placeholder with {{ information to fill }}.
 
-2. Read the documentation reference for the feature:
+2. Read the documentation reference blueprints:
 
-   - Blueprints for the whole project:
-     - The `docs/architect.blueprint.md` document with the functional definition. 
-     - The `docs/systems.blueprint.md` document with the system architecture.
-     - The `docs/data-model.blueprint.md` document with the data model.
-   - Blueprints for the current feature:
-     - The `docs/<featureNumber>-<feature_short_name>/<featureNumber>-<feature_short_name>.blueprint.md` with the feature blueprints.
+   - For the whole project:
+     - The `docs/architect.blueprint.md` with the functional definition. 
+     - The `docs/systems.blueprint.md` with the system architecture.
+     - The `docs/data-model.blueprint.md` with the data model.
+   - For the current feature:
+     - The `docs/<featureNumber>-<feature_short_name>/<featureNumber>-<feature_short_name>.blueprint.md` with the feature specifications.
 
-3. Fill each template with the information from previous blueprints and your own knowledge. 
+3. Fill the template with the information from previous blueprints and your own knowledge. 
 
    - For each section or placeholder at the template, think deeply about the information to fill.
    - Evaluate 2-3 options and choose the simplest one.
