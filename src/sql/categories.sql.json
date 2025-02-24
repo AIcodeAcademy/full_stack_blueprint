@@ -1,0 +1,38 @@
+{
+	"TABLE": "categories",
+	"CREATE_TABLE": "CREATE TABLE categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, risk TEXT, liquidity TEXT, createdAt DATETIME, updatedAt DATETIME)",
+	"SELECT_ALL": "SELECT * FROM categories",
+	"SELECT_BY_ID": "SELECT * FROM categories WHERE id = $id",
+	"SELECT_BY_FIELD": "SELECT * FROM categories WHERE $field = $value",
+	"SELECT_BY_QUERY": "SELECT * FROM categories WHERE name LIKE '%' || $query || '%'",
+	"INSERT": "INSERT INTO categories (name, risk, liquidity, createdAt, updatedAt) VALUES ($name, $risk, $liquidity, $createdAt, $updatedAt)",
+	"UPDATE": "UPDATE categories SET name = $name, risk = $risk, liquidity = $liquidity, updatedAt = $updatedAt WHERE id = $id",
+	"DELETE": "DELETE FROM categories WHERE id = $id",
+	"SEED": [
+		{
+			"name": "Real Estate",
+			"risk": "Low",
+			"liquidity": "Medium"
+		},
+		{
+			"name": "Stock",
+			"risk": "Medium",
+			"liquidity": "High"
+		},
+		{
+			"name": "Bond",
+			"risk": "Medium",
+			"liquidity": "Low"
+		},
+		{
+			"name": "Raw Materials",
+			"risk": "Medium",
+			"liquidity": "Medium"
+		},
+		{
+			"name": "Crypto",
+			"risk": "High",
+			"liquidity": "High"
+		}
+	]
+}

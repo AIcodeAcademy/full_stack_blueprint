@@ -60,14 +60,14 @@ type SQL = {
 
 #### Tasks
 
-- [ ] Create or update the `/src/sql` folder with the SQL commands
-- [ ] Create if not exists a file called `users.sql.json`
-- [ ] Fill it or update it with the SQL commands
-- [ ] Create if not exists a file called `categories.sql.json`
-- [ ] Fill it or update it with the SQL commands
-- [ ] Add the seed data as an array of objects to the `SEED` property
-- [ ] Create if not exists a file called `assets.sql.json`
-- [ ] Fill it or update it with the SQL commands
+- [x] Create or update the `/src/sql` folder with the SQL commands
+- [x] Create if not exists a file called `users.sql.json`
+- [x] Fill it or update it with the SQL commands
+- [x] Create if not exists a file called `categories.sql.json`
+- [x] Fill it or update it with the SQL commands
+- [x] Add the seed data as an array of objects to the `SEED` property
+- [x] Create if not exists a file called `assets.sql.json`
+- [x] Fill it or update it with the SQL commands
 
 ### 2. Generate Domain types tasks
 
@@ -84,13 +84,13 @@ type SQL = {
 
 #### Tasks
 
-- [ ] Create or update the `/src/server/domain` folder with the domain types
-- [ ] Create if not exists a file called `users.type.ts`
-- [ ] Fill it or update it with the domain types, null value and validation function
-- [ ] Create if not exists a file called `categories.type.ts`
-- [ ] Fill it or update it with the domain types, null value and validation function
-- [ ] Create if not exists a file called `assets.type.ts`
-- [ ] Fill it or update it with the domain types, null value and validation function
+- [x] Create or update the `/src/server/domain` folder with the domain types
+- [x] Create if not exists a file called `users.type.ts`
+- [x] Fill it or update it with the domain types, null value and validation function
+- [x] Create if not exists a file called `categories.type.ts`
+- [x] Fill it or update it with the domain types, null value and validation function
+- [x] Create if not exists a file called `assets.type.ts`
+- [x] Fill it or update it with the domain types, null value and validation function
 
 ### 3. Generate table utils tasks
 
@@ -117,16 +117,16 @@ const seed{TableName} = (): void => {
 ```
 
 #### Tasks
-- [ ] Create or update the `/src/server/shared/initialize.utils.ts` file 
-- [ ] Read the sql commands for the table at `const usersSql = await readCommands("users");`
-- [ ] Create if not exists a function called `initializeUsersTable`
-- [ ] Add the table initialization call to the `initializeTables` function
-- [ ] Read the sql commands for the table at `const categoriesSql = await readCommands("categories");`
-- [ ] Create if not exists a function called `initializeCategoriesTable`
-- [ ] Add the seed data function call if needed
-- [ ] Add the table initialization call to the `initializeTables` function
-- [ ] Read the sql commands for the table at `const assetsSql = await readCommands("assets");`
-- [ ] Create if not exists a function called `initializeAssetsTable`
-- [ ] Add the table initialization call to the `initializeTables` function
+- [x] Create or update the `/src/server/shared/initialize.utils.ts` file 
+- [x] Read the sql commands for the table at `const usersSql = await readCommands("users");`
+- [x] Create if not exists a function called `initializeUsersTable`
+- [x] Add the table initialization call to the `initializeTables` function
+- [x] Read the sql commands for the table at `const categoriesSql = await readCommands("categories");`
+- [x] Create if not exists a function called `initializeCategoriesTable`
+- [x] Add the seed data function call if needed
+- [x] Add the table initialization call to the `initializeTables` function
+- [x] Read the sql commands for the table at `const assetsSql = await readCommands("assets");`
+- [x] Create if not exists a function called `initializeAssetsTable`
+- [x] Add the table initialization call to the `initializeTables` function
 
 _End of SQL Plan for 1 - Add Asset_ 

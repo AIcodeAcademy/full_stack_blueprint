@@ -1,0 +1,12 @@
+{
+	"TABLE": "assets",
+	"CREATE_TABLE": "CREATE TABLE assets (id INTEGER PRIMARY KEY AUTOINCREMENT, categoryId INTEGER, value DECIMAL(10,2), quantity INTEGER, acquisitionDate DATE, userId INTEGER, createdAt DATETIME, updatedAt DATETIME, FOREIGN KEY(categoryId) REFERENCES categories(id), FOREIGN KEY(userId) REFERENCES users(id))",
+	"SELECT_ALL": "SELECT * FROM assets",
+	"SELECT_BY_ID": "SELECT * FROM assets WHERE id = $id",
+	"SELECT_BY_FIELD": "SELECT * FROM assets WHERE $field = $value",
+	"SELECT_BY_QUERY": "SELECT a.*, c.name as categoryName FROM assets a JOIN categories c ON a.categoryId = c.id WHERE c.name LIKE '%' || $query || '%'",
+	"SELECT_BY_USER_ID": "SELECT a.*, c.name as categoryName FROM assets a JOIN categories c ON a.categoryId = c.id WHERE a.userId = $user_id",
+	"INSERT": "INSERT INTO assets (categoryId, value, quantity, acquisitionDate, userId, createdAt, updatedAt) VALUES ($categoryId, $value, $quantity, $acquisitionDate, $userId, $createdAt, $updatedAt)",
+	"UPDATE": "UPDATE assets SET categoryId = $categoryId, value = $value, quantity = $quantity, acquisitionDate = $acquisitionDate, updatedAt = $updatedAt WHERE id = $id AND userId = $userId",
+	"DELETE": "DELETE FROM assets WHERE id = $id AND userId = $userId"
+}
