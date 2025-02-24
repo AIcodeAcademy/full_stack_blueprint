@@ -1,24 +1,25 @@
-# SQL Plan for **1 - Add Asset**
+--- 
+information: Generate a markdown file documenting the implementation plan of the sql tier for a feature.
+important: This is a template for one and only one feature.
+file_name: 1-add_asset.sql.plan.md
+---
+
+# SQL Plan for **1 - add_asset**
 
 ## Description
 
-Ensures SQL structure, seeds, commands and types for the `1 - Add Asset` feature.
+Ensures SQL structure, seeds, commands, and entity types for the `1 - add_asset` feature. This plan covers the necessary SQL files, domain type definitions, and table initialization functions to support asset creation by investors.
 
 ### Prompt after plan
 
-Recommended prompt to use this plan:
+This is the recommended prompt to use this plan after it is generated:
 
 ```text
-Follow the `.ai\builder\builder-implement.instructions.md` instructions to implement the sql tier plan `1-add_asset.sql.plan.md`
-Read the reference documentation to understand the project and the feature.
-Add the @rules to the prompt to be applied during the implementation.
+Follow the instructions at ".ai\builder\builder-implement.instructions.md" to implement the sql tier plan at `1-add_asset.sql.plan.md`
+Add the **rules** @rules to the prompt to be applied during the implementation.
 ```
 
-## Preconditions
-
-### Reference documentation
-
-Reference documentation to be used during implementation:
+### Read the reference documentation
 
 - [Project System Architecture](/docs/systems.blueprint.md)
 - [Project Data model](/docs/data-model.blueprint.md)
@@ -30,125 +31,32 @@ Reference documentation to be used during implementation:
 
 ### Tables
 
-- `category`: Represents asset categories with properties like risk level and liquidity
-- `asset`: Represents investment assets with category, value, quantity and acquisition date
-- `user`: Represents system users who own assets
+- `asset`: Stores each investment asset added by a user, including fields such as category_id, value, quantity, acquisition_date, and user_id to map the asset to its owner.
+- `category`: Holds asset categories (e.g., stocks, bonds, real estate) with properties like risk and liquidity. This table is crucial for providing valid category selections during asset creation.
 
 ### Seeds
 
-- `category`: Predefined asset categories for classification
-  - `Stock`
-  - `Bond` 
-  - `RealEstate`
-  - `Cryptocurrency`
-  - `Cash`
-
-### Commands
-
-For category table:
-- `getAllCategories`: Retrieves all available asset categories
-- `getCategoryById`: Gets a specific category by its ID
-  - `id`: Unique identifier of the category
-
-For asset table:
-- `createAsset`: Creates a new asset record
-  - `userId`: ID of the asset owner
-  - `categoryId`: ID of the asset category
-  - `value`: Monetary value of the asset
-  - `quantity`: Number of units
-  - `acquisitionDate`: Date when asset was acquired
-- `getAssetsByUserId`: Retrieves all assets for a specific user
-  - `userId`: ID of the asset owner
-- `getAssetById`: Gets a specific asset by its ID
-  - `id`: Unique identifier of the asset
+- `category`: Needs seed data for default asset categories to ensure valid selections for asset creation.
 
 ## Implementation plan
 
-### SQL Commands
+### 1. Generate SQL Commands tasks
 
-Go to the `/src/sql` folder 
+- [ ] Create or update `/src/sql/asset.sql.json` with SQL commands following the SQL type interface. This should include commands for dropping/creating the table, as well as SELECT_ALL, SELECT_BY_ID, SELECT_BY_FIELD, SELECT_BY_QUERY, SELECT_BY_USER_ID, INSERT, UPDATE, DELETE. No seed data is required for `asset`.
+- [ ] Create or update `/src/sql/category.sql.json` with similar SQL commands and include seed data in the `SEED` property for default asset categories.
+- Ensure parameter naming conventions use `$field`, `$value`, `$id`, and `$user_id` for dynamic queries.
 
-1. Each SQL file must strictly implement the SQL type interface:
-```typescript
-type SQL = {
-  TABLE: string;                // Table name for drop/create operations
-  CREATE_TABLE: string;         // Create table SQL command
-  SELECT_ALL: string;          // Select all records
-  SELECT_BY_ID: string;        // Select by primary key
-  SELECT_BY_FIELD: string;     // Select by any field
-  SELECT_BY_QUERY: string;     // Select by custom query
-  SELECT_BY_USER_ID: string;   // Select by user relationship
-  INSERT: string;              // Insert record
-  UPDATE: string;              // Update record
-  DELETE: string;              // Delete record
-  SEED: unknown[];            // Initial data if needed
-};
-```
+### 2. Generate Domain types tasks
 
-2. Parameter naming in SQL commands:
-   - Use `$field` and `$value` for dynamic field queries
-   - Use `$id` for primary key
-   - Use `$user_id` for user relationships
-   - Prefix all parameters with `$`
+- [ ] Create or update `/src/server/domain/asset.type.ts` to export a type `asset`, a `NULL_TABLE` value constant, and a `validate` function for asset records. Import necessary utilities such as `AppError` and `Raw` from shared modules.
+- [ ] Create or update `/src/server/domain/category.type.ts` for the `category` domain type with similar structure.
+- Follow the reference implementation in `/src/server/domain/tools.type.ts` for guidance on formatting and validation.
 
-3. Study `tools.sql.json` as the reference implementation
+### 3. Generate table utils tasks
 
-- [ ] Create if not exists a file called `category.sql.json`
-- [ ] Fill it or update it with the SQL commands
-- [ ] Add the seed data as an array of objects to the `SEED` property
+- [ ] Update `/src/server/shared/initialize.utils.ts` to include initialization functions for the new tables:
+  - Implement an `initializeAssetTable` function that drops and creates the `asset` table, and performs any necessary operations (seeding is not needed for asset).
+  - Implement an `initializeCategoryTable` function that drops, creates, and seeds the `category` table.
+- [ ] Ensure these functions are called in the overall `initializeTables` function to guarantee proper table setup during application initialization.
 
-- [ ] Create if not exists a file called `asset.sql.json`
-- [ ] Fill it or update it with the SQL commands
-
-### Domain types
-
-Go to the `/src/server/domain` folder 
-
-- [ ] Create if not exists a file called `category.type.ts`
-- [ ] Fill it or update it with the domain types
-
-- [ ] Create if not exists a file called `asset.type.ts`
-- [ ] Fill it or update it with the domain types
-
-### Initialize utils
-
-Go to the `/src/server/shared/initialize.utils.ts` file 
-
-1. Each table must have:
-```typescript
-const initializeCategoryTable = (): number => {
-  drop(categorySQL.TABLE);
-  const result = create(categorySQL.CREATE_TABLE);
-  return result;
-};
-
-const seedCategory = (): number => {
-  let results = 0;
-  for (const item of categorySQL.SEED) {
-    results += insert(categorySQL.INSERT, item);
-  }
-  return results;
-};
-```
-
-2. Add initialization to the main function:
-```typescript
-export async function initializeTables(): Promise<void> {
-  // ... existing
-  initializeCategoryTable();
-  initializeAssetTable();
-  // ... 
-}
-```
-
-3. Use only the functions from sql.utils:
-   - `drop()`
-   - `create()`
-   - `insert()`
-   - No direct SQL execution
-
-- [ ] Create if not exists a function called `initializeCategoryTable`
-- [ ] Add the seed data function call
-- [ ] Create if not exists a function called `initializeAssetTable`
-
-_End of SQL Plan for 1 - Add Asset_ 
+_End of SQL Plan for 1 - add_asset_ 
