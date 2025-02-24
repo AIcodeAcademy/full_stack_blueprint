@@ -1,0 +1,39 @@
+{
+	"TABLE": "categories",
+	"CREATE_TABLE": "CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL UNIQUE, risk_level TEXT NOT NULL, liquidity_level TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)",
+	"SELECT_ALL": "SELECT * FROM categories",
+	"SELECT_BY_ID": "SELECT * FROM categories WHERE id = ?",
+	"SELECT_BY_FIELD": "SELECT * FROM categories WHERE ? = ?",
+	"SELECT_BY_QUERY": "SELECT * FROM categories WHERE ?",
+	"SELECT_BY_USER_ID": "SELECT * FROM categories",
+	"INSERT": "INSERT INTO categories (name, risk_level, liquidity_level) VALUES (?, ?, ?)",
+	"UPDATE": "UPDATE categories SET name = ?, risk_level = ?, liquidity_level = ? WHERE id = ?",
+	"DELETE": "DELETE FROM categories WHERE id = ?",
+	"SEED": [
+		{
+			"name": "Stocks",
+			"risk_level": "HIGH",
+			"liquidity_level": "HIGH"
+		},
+		{
+			"name": "Bonds",
+			"risk_level": "LOW",
+			"liquidity_level": "MEDIUM"
+		},
+		{
+			"name": "Real Estate",
+			"risk_level": "MEDIUM",
+			"liquidity_level": "LOW"
+		},
+		{
+			"name": "Cash",
+			"risk_level": "LOW",
+			"liquidity_level": "HIGH"
+		},
+		{
+			"name": "Cryptocurrency",
+			"risk_level": "HIGH",
+			"liquidity_level": "HIGH"
+		}
+	]
+}

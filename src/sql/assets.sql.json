@@ -1,0 +1,13 @@
+{
+	"TABLE": "assets",
+	"CREATE_TABLE": "CREATE TABLE IF NOT EXISTS assets (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, category_id INTEGER NOT NULL, name TEXT NOT NULL, value DECIMAL(15,2) NOT NULL, quantity DECIMAL(15,2) NOT NULL, acquisition_date DATE NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(category_id) REFERENCES categories(id), FOREIGN KEY(user_id) REFERENCES users(id))",
+	"SELECT_ALL": "SELECT * FROM assets",
+	"SELECT_BY_ID": "SELECT * FROM assets WHERE id = ?",
+	"SELECT_BY_FIELD": "SELECT * FROM assets WHERE ? = ?",
+	"SELECT_BY_QUERY": "SELECT * FROM assets WHERE ?",
+	"SELECT_BY_USER_ID": "SELECT * FROM assets WHERE user_id = ?",
+	"INSERT": "INSERT INTO assets (user_id, category_id, name, value, quantity, acquisition_date) VALUES (?, ?, ?, ?, ?, ?)",
+	"UPDATE": "UPDATE assets SET category_id = ?, name = ?, value = ?, quantity = ?, acquisition_date = ? WHERE id = ? AND user_id = ?",
+	"DELETE": "DELETE FROM assets WHERE id = ? AND user_id = ?",
+	"SEED": []
+}

@@ -1,4 +1,4 @@
-import type { Category } from "../domain/category.type";
+import type { Category } from "../domain/categories.type";
 import type { Role } from "../domain/role.type";
 import type { Tool } from "../domain/tool.type";
 import { create, drop, insert, readCommands } from "./sql.utils";
@@ -56,8 +56,8 @@ const initializeCategoriesTable = (): void => {
 };
 
 const seedCategories = (): void => {
-	for (const category of categoriesSql.SEED) {
-		insert<Category>(categoriesSql.INSERT, category as Category);
+	for (const item of categoriesSql.SEED) {
+		insert<Category>(categoriesSql.INSERT, item as Category);
 	}
 };
 
