@@ -82,9 +82,9 @@ Each resource must follow this structure:
 
 #### Tasks
 
-- [ ] Create or update the `/src/server/api` folder with the API resources
-- [ ] Create folder `assets`
-- [ ] Create folder `categories`
+- [x] Create or update the `/src/server/api` folder with the API resources
+- [x] Create folder `assets`
+- [x] Create folder `categories`
 
 ### 2. Generate API Repository files
 
@@ -120,19 +120,19 @@ export const insertAsset = (assetToInsert: Raw<Asset>): Asset => {
 
 #### Tasks
 
-- [ ] Create repository `assets.repository.ts`
-  - [ ] Add SQL commands import and read commands
-  - [ ] Import domain types and validation
-  - [ ] Define NULL value constant
-  - [ ] Implement data access functions with Raw type
-  - [ ] Add domain validation calls
+- [x] Create repository `assets.repository.ts`
+  - [x] Add SQL commands import and read commands
+  - [x] Import domain types and validation
+  - [x] Define NULL value constant
+  - [x] Implement data access functions with Raw type
+  - [x] Add domain validation calls
 
-- [ ] Create repository `categories.repository.ts`
-  - [ ] Add SQL commands import and read commands
-  - [ ] Import domain types and validation
-  - [ ] Define NULL value constant
-  - [ ] Implement data access functions with Raw type
-  - [ ] Add domain validation calls
+- [x] Create repository `categories.repository.ts`
+  - [x] Add SQL commands import and read commands
+  - [x] Import domain types and validation
+  - [x] Define NULL value constant
+  - [x] Implement data access functions with Raw type
+  - [x] Add domain validation calls
 
 ### 3. Generate API DTOs
 
@@ -170,12 +170,12 @@ export type AssetResponse = {
 
 #### Tasks
 
-- [ ] Go to `/src/server/api/assets/` folder
-  - [ ] Create DTO `asset-post-request.type.ts`
-  - [ ] Create DTO `asset-response.type.ts`
+- [x] Go to `/src/server/api/assets/` folder
+  - [x] Create DTO `asset-post-request.type.ts`
+  - [x] Create DTO `asset-response.type.ts`
 
-- [ ] Go to `/src/server/api/categories/` folder
-  - [ ] Create DTO `category-response.type.ts`
+- [x] Go to `/src/server/api/categories/` folder
+  - [x] Create DTO `category-response.type.ts`
 
 ### 4. Generate API Controllers
 
@@ -202,57 +202,55 @@ import type { AssetResponse } from "./asset-response.type";
 import { insertAsset } from "./asset.repository";
 
 export const assetRoutes = {
-  POST: async (request: Request) => await postAsset(request),
-};
-
-const postAsset = async (request: Request): Promise<Response> => {
-  // Extract and validate request data
-  const userId = validateUserId(request);
-  const body: AssetPostRequest = await getBody<AssetPostRequest>(request);
-  
-  // Map request to domain type
-  const rawAsset: Raw<Asset> = {
-    ...body,
-    userId,
-    acquisitionDate: new Date(body.acquisitionDate),
-  };
-  
-  // Call repository
-  const asset: Asset = insertAsset(rawAsset);
-  
-  // Map domain to response type
-  const assetResponse: AssetResponse = {
-    id: asset.id,
-    categoryId: asset.categoryId,
-    value: asset.value,
-    quantity: asset.quantity,
-    userId: asset.userId,
-    acquisitionDate: asset.acquisitionDate.toISOString(),
-    createdAt: asset.createdAt.toISOString(),
-    updatedAt: asset.updatedAt.toISOString(),
-  };
-  
-  return ok<AssetResponse>(assetResponse);
+  POST: async (request: Request) => {
+    // Extract and validate request data
+    const userId = validateUserId(request);
+    const body = await getBody<AssetPostRequest>(request);
+    
+    // Map request to domain type
+    const rawAsset: Raw<Asset> = {
+      ...body,
+      userId,
+      acquisitionDate: new Date(body.acquisitionDate),
+    };
+    
+    // Call repository
+    const asset = await insertAsset(rawAsset);
+    
+    // Map domain to response type
+    const assetResponse: AssetResponse = {
+      id: asset.id,
+      categoryId: asset.categoryId,
+      value: asset.value,
+      quantity: asset.quantity,
+      userId: asset.userId,
+      acquisitionDate: asset.acquisitionDate.toISOString(),
+      createdAt: asset.createdAt.toISOString(),
+      updatedAt: asset.updatedAt.toISOString(),
+    };
+    
+    return ok<AssetResponse>(assetResponse);
+  },
 };
 ```
 
 #### Tasks
 
-- [ ] Go to `/src/server/api/assets/` folder
-- [ ] Create controller `assets.controller.ts`
-  - [ ] Import request/response utils
-  - [ ] Import domain and DTO types
-  - [ ] Import repository functions
-  - [ ] Implement type-safe controllers
-  - [ ] Add proper type mappings
+- [x] Go to `/src/server/api/assets/` folder
+- [x] Create controller `assets.controller.ts`
+  - [x] Import request/response utils
+  - [x] Import domain and DTO types
+  - [x] Import repository functions
+  - [x] Implement type-safe controllers
+  - [x] Add proper type mappings
 
-- [ ] Go to `/src/server/api/categories/` folder
-- [ ] Create controller `categories.controller.ts`
-  - [ ] Import request/response utils
-  - [ ] Import domain and DTO types
-  - [ ] Import repository functions
-  - [ ] Implement type-safe controllers
-  - [ ] Add proper type mappings
+- [x] Go to `/src/server/api/categories/` folder
+- [x] Create controller `categories.controller.ts`
+  - [x] Import request/response utils
+  - [x] Import domain and DTO types
+  - [x] Import repository functions
+  - [x] Implement type-safe controllers
+  - [x] Add proper type mappings
 
 ### 5. Update API Configuration
 
@@ -280,9 +278,9 @@ export const apiRoutes = {
 
 #### Tasks
 
-- [ ] Update `/src/server/api/api.controller.ts`
-- [ ] Import `assetRoutes` from controller
-- [ ] Import `categoryRoutes` from controller
-- [ ] Add routes to `apiRoutes` object
+- [x] Update `/src/server/api/api.controller.ts`
+- [x] Import `assetRoutes` from controller
+- [x] Import `categoryRoutes` from controller
+- [x] Add routes to `apiRoutes` object
 
 _End of API Plan for 1 - Add Asset_ 
