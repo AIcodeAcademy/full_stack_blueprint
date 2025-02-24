@@ -138,42 +138,31 @@ Each resource must follow this structure:
 
 #### Instructions and references
 
-- Uses domain types and validation from `@server/domain` folder
+- Uses domain types, null values and validation from `@server/domain` folder
 - Uses the SQL commands from the `{{resource.name}}.sql.json` files
 - Calls the SQL commands using the `sql.utils.ts` file
-- Validates the data using domain validation functions
-- Defines NULL values for safe fallbacks
-- Uses Raw type for database operations
+- Uses Raw utility type for incoming data
 - Returns domain types from repository functions
+- No api DTOs or api related knowledge in the repository files
 
 Repository example with domain types and validation:
 ```typescript
-import type { Asset, validateAsset } from "@/server/domain/asset.type";
+import type { {{name}}, validate{{name}}, NULL_{{name}} } from "@/server/domain/{{name}}.type";
 import type { Raw } from "@/server/shared/sql.type";
 import { insert, readCommands, selectAll, selectById } from "@server/shared/sql.utils";
-import type { AssetResponse } from "./asset-response.type";
 
-// Define NULL value for safe fallback
-const NULL_ASSET: AssetResponse = {
-  id: 0,
-  categoryId: 0,
-  categoryName: "",
-  value: 0,
-  quantity: 0,
-  acquisitionDate: "",
-  createdAt: "",
-  updatedAt: ""
+const {{name}}Sql = await readCommands("{{name}}");
+
+export const selectAll{{name}} = (): {{name}}[] => {
+  const results = selectAll<{{name}}>({{name}}Sql.SELECT_ALL);
+  return results || [];
 };
 
-// Load SQL commands from file
-const assetsSql = await readCommands("assets");
-
-// Repository functions with domain validation
-export const insertAsset = (assetToInsert: Raw<Asset>): Asset => {
-  validateAsset(assetToInsert); // Domain validation
-  const assetId = insert<Raw<Asset>>(assetsSql.INSERT, assetToInsert);
-  const asset = selectById<Asset>(assetsSql.SELECT_BY_ID, assetId);
-  return asset || NULL_ASSET;
+export const insert{{name}} = ({{name}}ToInsert: Raw<{{name}}>): {{name}} => {
+  validate{{name}}({{name}}ToInsert); // Domain validation
+  const {{name}}Id = insert<Raw<{{name}}>>({{name}}Sql.INSERT, {{name}}ToInsert);
+  const {{name}} = selectById<{{name}}>({{name}}Sql.SELECT_BY_ID, {{name}}Id);
+  return {{name}} || NULL_{{name}};
 };
 ```
 
@@ -202,21 +191,17 @@ export const insertAsset = (assetToInsert: Raw<Asset>): Asset => {
 Example DTO with date handling:
 ```typescript
 // Request DTO - matches client input
-export type AssetPostRequest = {
-  categoryId: number;
-  value: number;
-  quantity: number;
-  acquisitionDate: string; // ISO date string
+export type {{name}}PostRequest = {
+  @for(field of dto.fields) {
+  {{field.name}}: {{field.type}};
+  }
 };
 
 // Response DTO - includes all needed fields
-export type AssetResponse = {
-  id: number;
-  categoryId: number;
-  categoryName: string;
-  value: number;
-  quantity: number;
-  acquisitionDate: string; // ISO date string
+export type {{name}}Response = {
+  @for(field of dto.fields) {
+  {{field.name}}: {{field.type}};
+  }
   createdAt: string;      // ISO datetime
   updatedAt: string;      // ISO datetime
 };
@@ -229,7 +214,7 @@ export type AssetResponse = {
 @for(dto of resource.dtos) {
   - [ ] Create DTO `{{dto.name}}.type.ts`
 }
-}
+} 
 
 ### 4. Generate API Controllers
 
@@ -247,46 +232,43 @@ export type AssetResponse = {
 
 Example controller with type mapping:
 ```typescript
-import type { Asset } from "@/server/domain/asset.type";
+import type { {{name}} } from "@/server/domain/{{name}}.type";
 import type { Raw } from "@/server/shared/sql.type";
 import { getBody, validateUserId } from "@server/shared/request.utils";
 import { ok } from "@server/shared/response.utils";
-import type { AssetPostRequest } from "./asset-post-request.type";
-import type { AssetResponse } from "./asset-response.type";
-import { insertAsset } from "./assets.repository";
+import type { {{name}}PostRequest } from "./{{name}}-post-request.type";
+import type { {{name}}Response } from "./{{name}}-response.type";
+import { insert{{name}} } from "./{{name}}.repository";
 
-export const assetsRoutes = {
-  POST: async (request: Request) => await postAsset(request),
+export const {{name}}Routes = {
+  POST: async (request: Request) => await post{{name}}(request),
 };
 
-const postAsset = async (request: Request): Promise<Response> => {
+const post{{name}} = async (request: Request): Promise<Response> => {
   // Extract and validate request data
   const userId = validateUserId(request);
-  const body: AssetPostRequest = await getBody<AssetPostRequest>(request);
+  const body: {{name}}PostRequest = await getBody<{{name}}PostRequest>(request);
   
   // Map request to domain type
-  const rawAsset: Raw<Asset> = {
+  const raw{{name}}: Raw<{{name}}> = {
     ...body,
     userId,
     acquisitionDate: new Date(body.acquisitionDate),
   };
   
   // Call repository
-  const asset: Asset = insertAsset(rawAsset);
+  const {{name}}: {{name}} = insert{{name}}(raw{{name}});
   
   // Map domain to response type
-  const assetResponse: AssetResponse = {
-    id: asset.id,
-    categoryId: asset.categoryId,
-    categoryName: asset.categoryName || "",
-    value: asset.value,
-    quantity: asset.quantity,
-    acquisitionDate: asset.acquisitionDate.toISOString(),
-    createdAt: asset.createdAt.toISOString(),
-    updatedAt: asset.updatedAt.toISOString(),
+  const {{name}}Response: {{name}}Response = {
+    @for(field of dto.fields) {
+    {{field.name}}: {{name}}.{{field.name}},
+    }
+    createdAt: {{name}}.createdAt.toISOString(),
+    updatedAt: {{name}}.updatedAt.toISOString(),
   };
   
-  return ok<AssetResponse>(assetResponse);
+  return ok<{{name}}Response>({{name}}Response);
 };
 ```
 
@@ -314,15 +296,13 @@ const postAsset = async (request: Request): Promise<Response> => {
 Example configuration:
 ```typescript
 import { corsPreflight } from "../shared/response.utils";
-import { assetsRoutes } from "./assets/assets.controller";
-import { categoriesRoutes } from "./categories/categories.controller";
+import { {{resource.name}}Routes } from "./{{resource.name}}/{{resource.name}}.controller";
 
 export const apiRoutes = {
   "/api/*": {
     OPTIONS: (request: Request) => corsPreflight(request),
   },
-  "/api/assets": assetsRoutes,
-  "/api/categories": categoriesRoutes,
+  "/api/{{resource.name}}": {{resource.name}}Routes,
 };
 ```
 
