@@ -14,6 +14,7 @@ export class Header extends HTMLElement {
 		{ href: "#home", text: "Home" },
 		{ href: "#about", text: "About" },
 		{ href: "#auth", text: "Auth" },
+		{ href: "#/assets/add", text: "Add Asset" },
 	];
 	#template = html`
     <header id="main-header">
