@@ -33,6 +33,7 @@ Reference documentation to be used during implementation:
 <!--
 Think about the domain types needed for the feature.
 List them in PascalCase, with a brief description.
+Fields are in snake_case, with a brief description.
 Include validation rules and default values.
 -->
 
@@ -146,7 +147,7 @@ Include parameters, return types and error handling.
 - They must include error handling and return Result types, without throwing errors
 - Study `/src/client/repository/tools.repository.ts` as reference
 
-Repository example:
+This is an example of a repository function:
 ```typescript
 @for(function of repository.functions) {
 export const {{function.name}} = async ({{function.params}}): Promise<{{function.return}}> => {
@@ -184,7 +185,7 @@ export const {{function.name}} = async ({{function.params}}): Promise<{{function
 - They use attributes for configuration
 - Study existing components in the `src/client/app/tools` folder as reference
 
-Component example:
+This is an example of a presentational component:
 ```typescript
 const html = String.raw;
 
@@ -236,7 +237,6 @@ export class {{component.className}}Component extends HTMLElement {
   }
 }
 ```
-}
 
 #### Tasks  
 
@@ -257,7 +257,7 @@ export class {{component.className}}Component extends HTMLElement {
 - They coordinate child components
 - Study `/src/client/app/home/home.page.ts` as reference
 
-Page example:
+This is an example of a page:
 ```typescript
 const html = String.raw;
 

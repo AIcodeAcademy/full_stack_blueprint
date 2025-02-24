@@ -31,5 +31,6 @@ Feature: Add Asset
 - **Dependencies**: JWT authentication must be enabled. Backend validations should be in place to ensure the asset record is created successfully.
 - **Preconditions**: The user must be authenticated, and the asset creation page must be accessible with a valid asset category available for selection.
 - **Notes**: Ensure proper error handling for invalid or incomplete submissions and verify that the asset data is persistently stored in the SQLite database.
+- **UI**: The asset creation page will at route `/assets/add` with anchor links from home page and nav bar.
 
 _End of Feature Documentation for Add Asset_
