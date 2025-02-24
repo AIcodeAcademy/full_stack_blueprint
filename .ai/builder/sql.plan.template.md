@@ -1,29 +1,17 @@
 --- 
 information: Generate a markdown file documenting the implementation plan of the sql tier for a feature.
 important: This is a template for one and only one feature.
+guide: Include all this template content in the result, fill the placeholders with the actual values.
 file_name: {{featureNumber}}-{{feature_short_name}}.sql.plan.md
 ---
 
 # SQL Plan for **{{featureNumber}} - {{feature_short_name}}**
 
-## Description
+## Plan preparation
 
-Ensures SQL structure, seeds, commands and entity types for the `{{featureNumber}} - {{feature_short_name}}` feature.
+This plan ensures SQL structure, seeds, commands and entity types for the `{{featureNumber}} - {{feature_short_name}}` feature.
 
-Read and follow the preconditions before generating the implementation plan.
-
-Do not implement the plan, only generate it.
-
-### Prompt after plan
-
-This is the recommended prompt to use this plan after it is generated:
-
-```text
-Follow 
- the instructions at `.ai\builder\builder-implement.instructions.md` 
- to implement the sql tier plan at `{{featureNumber}}-{{feature_short_name}}.sql.plan.md`
-Add the **rules** @rules to the prompt to be applied during the implementation.
-```
+Before implementing the plan, read the preconditions below.
 
 ### Read the reference documentation
 
@@ -68,6 +56,8 @@ No need to generate the seed at this point, just list them.
 
 ### 1. Generate SQL Commands tasks
 
+#### Instructions and references
+
 - You must generate the SQL commands for each table.
 - Each SQL file must strictly implement the SQL type interface:
 ```typescript
@@ -92,6 +82,8 @@ type SQL = {
    - Prefix all parameters with `$`
 - Study `tools.sql.json` as the reference implementation
 
+#### Tasks
+
 - [ ] Create or update the `/src/sql` folder with the SQL commands
 @for(table of tables){
 - [ ] Create if not exists a file called `{{table.name}}.sql.json`
@@ -101,6 +93,7 @@ type SQL = {
 
 ### 2. Generate Domain types tasks
 
+#### Instructions and references
 - You must generate the domain types for each table.
 - Import
   - `import { AppError } from "../shared/app-error.class";`
@@ -111,6 +104,8 @@ type SQL = {
   - a `validate(table: Raw<{{table.name}}>)` function.
 - Study `/src/server/domain/tools.type.ts` as the reference implementation
 
+#### Tasks
+
 - [ ] Create or update the `/src/server/domain` folder with the domain types
 @for(table of tables){
 - [ ] Create if not exists a file called `{{table.name}}.type.ts`
@@ -118,6 +113,8 @@ type SQL = {
 }
 
 ### 3. Generate table utils tasks
+
+#### Instructions and references
 
 - You must generate the initialize utils for each table.
 - It is done in the `initializeTables` function at `/src/server/shared/initialize.utils.ts` file.
@@ -139,6 +136,7 @@ const seed{TableName} = (): void => {
 };
 ```
 
+#### Tasks
 - [ ] Create or update the `/src/server/shared/initialize.utils.ts` file 
 @for(table of tables){
 - [ ] Read the sql commands for the table at `const {tableName}Sql = await readCommands("{tableName}");`
