@@ -1,37 +1,28 @@
 ---
 information: Generate a markdown file documenting the implementation plan of the api tier for a feature.
 important: This is a template for one and only one feature.
+guide: Include all this template content in the result, fill the placeholders with the actual values.
 file_name: {{featureNumber}}-{{feature_short_name}}.api.plan.md
 ---
 
 # API Plan for **{{featureNumber}} - {{feature_short_name}}**
 
-## Description
+## Plan preparation
 
-Ensures API structure, endpoints, and types for the `{{featureNumber}} - {{feature_short_name}}` feature.
+This plan ensures API structure, endpoints, and types for the `{{featureNumber}} - {{feature_short_name}}` feature.
 
-### Prompt after plan
+Before implementing the plan, read the preconditions below.
 
-Recommended prompt to use this plan:
-
-```text
-Follow the `.ai\builder\builder-implement.instructions.md` instructions to implement the api tier plan `{{featureNumber}}-{{feature_short_name}}.api.plan.md`
-Read the reference documentation to understand the project and the feature.
-Add the @rules to the prompt to be applied during the implementation.
-```
-
-## Preconditions
-
-### Reference documentation
+### Read the reference documentation
 
 Reference documentation to be used during implementation:
 
 - [Project System Architecture](/docs/systems.blueprint.md)
 - [Project Data model](/docs/data-model.blueprint.md)
 - [Feature](/docs/{{featureNumber}}-{{feature_short_name}}/{{featureNumber}}-{{feature_short_name}}.blueprint.md)
-- [Request Utils to get params, body and UserIdt](/src/server/shared/request.utils.ts)
-- [SQL Utils to interact with the database](/src/server/shared/sql.utils.ts)
-- [Response Utils to send responses](/src/server/shared/response.utils.ts)
+- [Request Utils](/src/server/shared/request.utils.ts)
+- [SQL Utils](/src/server/shared/sql.utils.ts)
+- [Response Utils](/src/server/shared/response.utils.ts)
 - [API Error Types](/src/server/shared/api-error.type.ts)
 - [TS Rules](/.cursor/rules/type-script.mdc)
 - [Server Resource Rules](/.cursor/rules/server-resource.mdc)
@@ -40,8 +31,8 @@ Reference documentation to be used during implementation:
 
 <!--
 Think about the resources needed to implement the feature.
-Think about read only resources useful for a client app.
 List them in kebab-case, with a brief description.
+No need to generate tasks for the resources at this point, just list them.
 -->
 
 @for(resource of resources) {
@@ -51,13 +42,14 @@ List them in kebab-case, with a brief description.
 ### DTOs
 
 <!--
-Think about the Data Transfer Objects needed.
+Think about the Data Transfer Objects needed for each resource.
 List them in PascalCase, with a brief description.
 Follow the pattern: request-name-request.type.ts and response-name-response.type.ts
+No need to generate tasks for the DTOs at this point, just list them.
 -->
 
 @for(resource of resources) {
-For {{resource.name}}:
+For `{{resource.name}}`:
 @for(dto of resource.dtos) {
 - `{{dto.name}}`: {{dto.description}}
   @for(field of dto.fields) {
@@ -72,10 +64,11 @@ For {{resource.name}}:
 For each resource, think about the endpoints needed.
 List them with their HTTP method, path, and description.
 Include request/response types and error cases.
+No need to generate tasks for the endpoints at this point, just list them.
 -->
 
 @for(resource of resources) {
-For {{resource.name}}:
+For `{{resource.name}}`:
 @for(endpoint of resource.endpoints) {
 - `{{endpoint.method}} {{endpoint.path}}`: {{endpoint.description}}
   - Request: `{{endpoint.request}}`
@@ -86,181 +79,165 @@ For {{resource.name}}:
 
 ## Implementation plan
 
-### API Resources
+### 1. Generate API Resources folder structure
 
-Go to the `/src/server/api` folder
+#### Instructions and references
 
-1.  Each resource must follow the structure:
+Each resource must follow this structure:
+```
+/src/server/api/resource-name/
+  ├── resource-name.controller.ts     # Request handlers
+  ├── resource-name.repository.ts     # Data access
+  ├── request-name-request.type.ts    # Input DTOs
+  └── response-name-response.type.ts  # Output DTOs
+```
 
-    ```
-    /src/server/api/resource-name/
-      ├── resource-name.controller.ts     # Request handlers
-      ├── resource-name.repository.ts     # Data access
-      ├── request-name-request.type.ts    # Input DTOs (one or more)
-      └── response-name-response.type.ts  # Output DTOs (one or more)
-    ```
 
-2.  **Controllers** must:
+#### Tasks
 
-    *   Export a `resourceRoutes` object with HTTP methods (GET, POST, PUT, DELETE, OPTIONS) as keys and handler functions as values.
-    *   Use `request.utils.ts` functions:
-        *   `getParams`, `getSearchParam`, `getBody` to extract data from the request.
-        *   `validateUserId` to authenticate and authorize requests (where applicable).  Explicitly state when this is needed.
-        *   `validatePostRequest` to validate the request method.
-    *   Use `response.utils.ts` functions:
-        *   `ok` for successful responses (status 200).
-        *   You can throw errors, but they will be caught by the global error handler.
-        *   No need to catch errors, there is a global error handler.
-    *   Don not validate input data
-    *   Valide user Id if needed
-    *   Return typed responses using the DTOs defined in the plan.
-    *   Follow REST conventions.
-    * **Explicitly define the expected request body structure for POST/PUT requests.**
+- [ ] Create or update the `/src/server/api` folder with the API resources
+@for(resource of resources) {
+- [ ] Create folder `{{resource.name}}`
 
-    Example controller structure:
+}
 
-    ```typescript
-    import { /* ... */ } from "../../shared/response.utils";
-    import { /* ... */ } from "./resource-name.repository";
-    import type { /* ... */ } from "./request-name-request.type";
-    import type { /* ... */ } from "./response-name-response.type";
-    import { validateUserId } from "@server/shared/request.utils"; // If authentication is needed
-    import { validateResource } from "@/server/domain/validations.utils"; // Import validation function
+### 2. Generate API Repository files
 
-    export const resourceRoutes = {
-      GET: (request: Request): Promise<Response> => await getResource(request),
-      POST: (request: Request): Promise<Response> => await postResource(request),
-    };
+#### Instructions and references
 
-    async getResource(request: Request): Promise<Response> {
-        // If authentication is needed:
-        const userId = validateUserId(request);
-        // ... get data from repository, using userId if needed
-        const resource = await getResourceFromRepository(userId);
-        return ok(resource);
-    }
-    async postResource(request: Request): Promise<Response> {
-        // If authentication is needed:
-        const userId = validateUserId(request);
+- Uses the SQL commands from the `{{resource.name}}.sql.json` file.
+- Calls the SQL commands using the `sql.utils.ts` file.
+- Validates the data using the `validateResource` function.
+- Throws an AppError if the logic or validation fails.
 
-        const body = await getBody<RequestType>(request); // Use the correct request DT
-        // ... call repository to insert/update data, using userId if needed
-        const resource = insertResource(body);
-        return ok(resource); // Return appropriate response DTO
-    }
-    ```
+Repository example:
+```typescript
+import type { Raw } from "@/server/shared/sql.type";
+import { NULL_RESOURCE, validateResource } from "@server/domain/resource.type";
+import { insert, readCommands, selectAll } from "@server/shared/sql.utils";
 
-3.  **Repositories** must:
+const resourceSql = await readCommands("resource-name");
 
-    *   Use `sql.utils.ts` functions (`readCommands`, `selectAll`, `selectById`, `selectByUserId`, `insert`, `update`, `create`, `drop`) to interact with the database.
-    *   Use `await readCommands("resource-name")` to load SQL commands from `sql/resource-name.sql.json`.
-    *   Define functions for each database operation (e.g., `selectAllResources`, `selectResourceById`, `insertResource`, `updateResource`, `deleteResource`).  *Be very specific about the function names.*
-    *   Receive DTOs as parameters (where appropriate).
-    *   Validate the entities before insert or update using the validation functions from `src/server/domain/validations.utils.ts`.
-    *   Return domain types (defined in `/src/server/domain`).
-    *   Handle data transformations between DTOs and domain types.
-    * **Explicitly define the SQL queries needed for each operation, and include them in the plan.**
+export const selectAllResources = (): Resource[] => {
+  const results = selectAll<Resource>(resourceSql.SELECT_ALL);
+  return results || [];
+};
 
-    Example repository structure:
-
-    ```typescript
-    import type { Resource } from "../../domain/resource.type"; // Import domain type
-    import { readCommands, selectAll, selectByUserId, insert } from "../../shared/sql.utils";
-    import type { CreateResourceRequest } from "./create-resource-request.type"; // Import DTO
-
-    const resourceSql = await readCommands("resource-name");
-
-    export const selectAllResources = (): Resource[] => {
-      const results = selectAll<Resource>(resourceSql.SELECT_ALL);
-      return results || []; // Return empty array if null
-    };
-
-    export const selectResourcesByUserId = (userId: number): Resource[] => {
-      const results = selectByUserId<Resource>(resourceSql.SELECT_BY_USER_ID, userId);
-      return results || []; // Return empty array if null
-    };
-
-    export const insertResource = (resource: CreateResourceRequest & {user_id: number}): Resource => { // Example with user_id
-        const id = insert<CreateResourceRequest & {user_id: number}>(resourceSql.INSERT, resource);
-        return {...resource, id}
-    };
-
-    // ... other functions
-    ```
+export const insertResource = (resourceToInsert: Raw<Resource>): Resource => {
+  validateResource(resourceToInsert);
+  const resourceId = insert<Raw<Resource>>(resourceSql.INSERT, resourceToInsert);
+  const resource = selectById<Resource>(resourceSql.SELECT_BY_ID, resourceId);
+  return resource || NULL_RESOURCE;
+};
+```
 
 @for(resource of resources) {
-For {{resource.name}}:
+- [ ] Create repository `{{resource.name}}.repository.ts`
+  - [ ] Add SQL commands import and read commands
+  - [ ] Import entity types and Raw utils
+  - [ ] Implement data access functions
+  - [ ] Add validation calls
+  - [ ] Throw AppError if logic or validation fails
+} 
 
-- [ ] Create resource folder at `src/server/api/{{resource.name}}`
-- [ ] Create controller (`{{resource.name}}.controller.ts`) with endpoints, following the guidelines above.  *Specify which endpoints, which validation functions, and which repository functions to use.*
-- [ ] Create repository (`{{resource.name}}.repository.ts`) with data access functions, following the guidelines above. *Specify the function names and the SQL queries.*
-- [ ] Create request/response types (`request-name-request.type.ts`, `response-name-response.type.ts`) in the resource folder.
-- [ ] Create SQL file (`sql/{{resource.name}}.sql.json`) with the necessary SQL queries. *List the required queries in the plan.*
+### 3. Generate API DTOs
+
+#### Instructions and references
+
+- DTOs are simple types that represent the data of the resource.
+- We do not validate the data at the DTO level, only at the repository level.
+- No need to null values nor validate types at the DTO level.
+
+Each DTO must follow this structure:
+```typescript 
+export type {{resource.name}}{{HttpMethod}}{{ Request | Response }} = {
+  // fields
+};
+```
+
+#### Tasks
+
+@for(resource of resources) {
+  - [ ] Go to `/src/server/api/{{resource.name}}/` folder
+@for(dto of resource.dtos) {
+- [ ] Create DTO `{{dto.name}}.type.ts`
+}
 }
 
-### API Configuration
+### 4. Generate API Controllers
 
-Go to the `/src/server/api/api.controller.ts` file
+#### Instructions and references
 
-1.  Add routes following the pattern (prefer plural for the resource name and route):
+- Controllers are the main files that handle the requests and responses.
+- They are functions attached to the routes object.
+- They extract information from the request and return the response.
+- They only validate request data presence, not data correctness.
+- They call the repository functions to read or write data.
+- They return the response using the response utils.
+- The do not handle errors, this is done at the route level.
 
-    ```typescript
-    export const apiRoutes = {
-      "/api/*": {
-        OPTIONS: (request: Request) => corsPreflight(request),
-      },
-      "/api/resources": resourcesRoutes, // For non-parameterized routes
-      "/api/resources/:param": resourcesWithParamRoutes, // For parameterized routes
-    };
-    ```
+Controller example:
+```typescript
+import { validateUserId } from "@server/shared/request.utils";
+import { ok } from "@server/shared/response.utils";
+import type { ResourcePostRequest } from "./resource-post-request.type";
+import { insertResource, selectAllResources } from "./resource.repository";
 
-2.  Import and configure:
+export const resourceRoutes = {
+  GET: async (request: Request) => await getResources(request),
+  POST: async (request: Request) => await postResource(request),
+};
 
-    *   New controllers.
-    *   Error handlers (if needed).
-    *   Authentication (if needed).  *Be explicit about where authentication is required.*
+const getResources = async (request: Request): Promise<Response> => {
+  const userId = validateUserId(request); // If auth needed
+  const resources = selectAllResources();
+  return ok<Resource[]>(resources);
+};
 
-- [ ] Add routes for new resources in `apiRoutes`.
-- [ ] Update error handling if needed.
-- [ ] Configure authentication if required.
+const postResource = async (request: Request): Promise<Response> => {
+  const userId = validateUserId(request); // If auth needed
+  const body = await getBody<ResourcePostRequest>(request);
+  const resource = await insertResource(body);
+  return ok<Resource>(resource);
+};
+```
 
-### Domain Types
+#### Tasks
 
-Go to the `/src/server/domain` folder
-
-1.  Each type must have:
-
-    ```typescript
-    export type EntityType = {
-      id: number;
-      // ... other fields
-    };
-
-    export const NULL_ENTITY: EntityType = {
-      id: 0,
-      // ... default values for ALL fields.  Be EXPLICIT.
-    };
-    ```
-
-2.  Add validation functions to `validations.utils.ts`:
-
-  Validate the entities before insert or update. No validation of DTs, only entities.
-    ```typescript
-    import { BAD_REQUEST_ERROR } from "@/server/shared/api-error.type"; // Import error types
-
-    export const validateEntity = (entity: Partial<EntityType>): void => {
-      if (!entity.requiredField) { // Example validation
-        throw BAD_REQUEST_ERROR;
-      }
-      // ... other validations
-    };
-    ```
-     *Be specific about the validations needed for each field.*
-
-@for(type of types) {
-- [ ] Create if not exists `{{type.name}}.type.ts`
-- [ ] Add `NULL_{{type.name}}` constant, initializing *all* fields to appropriate default values (e.g., 0, "", false, etc.).
-- [ ] Add validation function to `validations.utils.ts` if needed. *Specify the exact validations required.*
+@for(resource of resources) {
+- [ ] Go to `/src/server/api/{{resource.name}}/` folder
+- [ ] Create controller `{{resource.name}}.controller.ts`
+  - [ ] Import request utils and response utils
+  - [ ] Import DTOs
+  - [ ] Import repository
+  - [ ] Implement controller functions
 }
+
+### 5. Update API Configuration
+
+#### Instructions and references
+
+- The API configuration is done in `/src/server/api/api.controller.ts`.
+- The routes are attached to the routes object.
+  
+Example:
+```typescript
+export const apiRoutes = {
+  "/api/*": {
+    OPTIONS: (request: Request) => corsPreflight(request),
+  },
+  "/api/resources": resourceRoutes,
+  "/api/resources/:param": resourceWithParamRoutes,
+};
+```
+
+#### Tasks
+
+- [ ] Update `/src/server/api/api.controller.ts`
+@for(resource of resources) {
+- [ ] Import `{{resource.name}}Routes` from controller
+- [ ] Add routes to `apiRoutes` object
+}
+
 
 _End of API Plan for {{featureNumber}} - {{feature_short_name}}_
