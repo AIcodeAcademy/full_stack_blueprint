@@ -88,6 +88,8 @@ export const handleInternalError = (error: Error): Response => {
 	}
 	debug(`API error ${code} ${message}`, stack);
 	switch (code) {
+		case 400:
+			return badRequest(message);
 		case 401:
 			return unauthorized(message);
 		case 403:
