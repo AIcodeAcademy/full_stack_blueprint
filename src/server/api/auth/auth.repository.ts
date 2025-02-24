@@ -1,4 +1,4 @@
-import { validateUser } from "@/server/domain/validations.utils";
+import { validateUser } from "@/server/domain/user.type";
 import { AppError } from "@/server/shared/app-error.class";
 import { hashPassword, verifyPassword } from "@/server/shared/hash.utils";
 import type { Raw } from "@/server/shared/sql.type";

@@ -1,6 +1,5 @@
-import { validateTool } from "@/server/domain/validations.utils";
 import type { Raw } from "@/server/shared/sql.type";
-import { NULL_TOOL, type Tool } from "@server/domain/tool.type";
+import { NULL_TOOL, type Tool, validateTool } from "@server/domain/tool.type";
 import {
 	insert,
 	readCommands,

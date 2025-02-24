@@ -1,3 +1,5 @@
+import { AppError } from "../shared/app-error.class";
+
 /**
  * User in the database.
  */
@@ -20,4 +22,15 @@ export const NULL_USER: User = {
 	roleId: 0,
 	createdAt: new Date(),
 	updatedAt: new Date(),
+};
+
+/**
+ * Validates a user
+ * @param user - The user to validate
+ * @throws BAD_REQUEST_ERROR if the user is invalid
+ */
+export const validateUser = (user: Partial<User>): void => {
+	if (!user.email || !user.password) {
+		throw new AppError("Invalid user", "LOGIC");
+	}
 };
