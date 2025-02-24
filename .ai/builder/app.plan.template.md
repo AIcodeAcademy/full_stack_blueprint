@@ -149,21 +149,15 @@ Include parameters, return types and error handling.
 
 This is an example of a repository function:
 ```typescript
-@for(function of repository.functions) {
-export const {{function.name}} = async ({{function.params}}): Promise<{{function.return}}> => {
-  try {
-    const response = await {{function.method}}<{{function.return}}>(
-      "{{function.endpoint}}"{{#if function.body}},
-      {{function.body}}
-      {{/if}}
-    );
-    return response.body || {{function.default}};
-  } catch (error) {
-    console.error(`Error in {{function.name}}:`, error);
-    return {{function.default}};
-  }
+export const getItems = async (): Promise<Item[]> => {
+  const response = await get<Item[]>("/api/items");
+  return response.body || [];
 };
-}
+
+export const postItem = async (item: Item): Promise<Item | null> => {
+  const response = await post<Item>("/api/items", item);
+  return response.body || NULL_ITEM;
+};
 ```
 
 

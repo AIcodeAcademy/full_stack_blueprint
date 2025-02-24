@@ -26,32 +26,32 @@ Reference documentation to be used during implementation:
 #### Asset.type.ts
 ```typescript
 export type Asset = {
-  id: string; // Unique identifier for the asset
-  category_id: string; // Reference to the category
-  value: number; // Monetary value of the asset
-  quantity: number; // Number of units
+  id: string; // Unique identifier
+  category_id: string; // Reference to category
+  value: number; // Asset monetary value
+  quantity: number; // Asset quantity/units
   acquisition_date: string; // ISO date string
   user_id: string; // Owner of the asset
 };
 
 export const NULL_ASSET = {
-  id: '',
-  category_id: '',
+  id: "",
+  category_id: "",
   value: 0,
   quantity: 0,
-  acquisition_date: new Date().toISOString(),
-  user_id: ''
+  acquisition_date: "",
+  user_id: ""
 };
 
 export const validateAsset = (data: Partial<Asset>): boolean => {
   // Category must be selected
-  if (!data.category_id?.trim()) return false;
+  if (!data.category_id) return false;
   // Value must be positive number
-  if (typeof data.value !== 'number' || data.value <= 0) return false;
-  // Quantity must be positive integer
-  if (typeof data.quantity !== 'number' || data.quantity <= 0 || !Number.isInteger(data.quantity)) return false;
-  // Acquisition date must be valid ISO date
-  if (!data.acquisition_date?.trim() || isNaN(Date.parse(data.acquisition_date))) return false;
+  if (!data.value || data.value <= 0) return false;
+  // Quantity must be positive number
+  if (!data.quantity || data.quantity <= 0) return false;
+  // Date must be valid ISO string
+  if (!data.acquisition_date || isNaN(Date.parse(data.acquisition_date))) return false;
   return true;
 };
 ```
@@ -59,204 +59,35 @@ export const validateAsset = (data: Partial<Asset>): boolean => {
 #### Category.type.ts
 ```typescript
 export type Category = {
-  id: string; // Unique identifier for the category
+  id: string; // Unique identifier
   name: string; // Display name
-  risk_level: 'LOW' | 'MEDIUM' | 'HIGH'; // Risk classification
-  liquidity: 'LOW' | 'MEDIUM' | 'HIGH'; // Liquidity classification
+  risk_level: string; // Risk classification
+  liquidity: string; // Liquidity classification
 };
 
 export const NULL_CATEGORY = {
-  id: '',
-  name: '',
-  risk_level: 'LOW' as const,
-  liquidity: 'LOW' as const
+  id: "",
+  name: "",
+  risk_level: "",
+  liquidity: ""
 };
 ```
 
 ### Pages
 
-- add-asset-page: Main page component for asset creation at route `/assets/add`, manages form state and handles asset submission
-
-Example of the page implementation:
-```typescript
-const html = String.raw;
-
-export class AddAssetPage extends HTMLElement {
-  // Route: #/assets/add
-  // Parent: router-outlet
-  
-  #state = {
-    asset: NULL_ASSET, // Current asset form data
-    categories: [] as Category[], // Available categories
-    loading: false, // Loading state for API calls
-    error: null as string | null // Error message if any
-  };
-
-  #template = html`
-    <div class="add-asset-page">
-      <h1>Add New Asset</h1>
-      <asset-form-component
-        .categories="${this.#state.categories}"
-        @submit="${this.#handleSubmit}"
-      ></asset-form-component>
-      ${this.#state.error ? html`<div class="error">${this.#state.error}</div>` : ''}
-    </div>
-  `;
-
-  constructor() {
-    super();
-    this.innerHTML = this.#template;
-  }
-
-  async connectedCallback() {
-    this.#state.loading = true;
-    const result = await getCategories();
-    if (result.ok) {
-      this.#state.categories = result.data;
-    } else {
-      this.#state.error = result.error;
-    }
-    this.#state.loading = false;
-    this.#render();
-  }
-
-  #handleSubmit = async (event: CustomEvent<Asset>) => {
-    this.#state.loading = true;
-    const result = await createAsset(event.detail);
-    if (result.ok) {
-      navigate('/assets');
-    } else {
-      this.#state.error = result.error;
-      this.#render();
-    }
-    this.#state.loading = false;
-  };
-
-  #render() {
-    this.innerHTML = this.#template;
-  }
-}
-```
+- add-asset: Page component for creating a new asset, handles form state and submission at route /assets/add
 
 ### Components
 
-- asset-form-component: Form component that coordinates all inputs and handles validation
-- category-selector-component: Dropdown component for selecting asset categories with risk and liquidity indicators
-- value-input-component: Numeric input with currency formatting and validation
-- quantity-input-component: Integer input with validation and increment/decrement controls
-- date-picker-component: Date input with calendar popup and ISO date handling
-
-Example of a component implementation:
-```typescript
-const html = String.raw;
-
-export class AssetFormComponent extends HTMLElement {
-  // Parent: add-asset-page
-  
-  static get observedAttributes() {
-    return ['categories'];
-  }
-  
-  #categories: Category[] = []; // List of available categories
-  #currentAsset = NULL_ASSET; // Current form data
-  #errors: Partial<Record<keyof Asset, string>> = {}; // Validation errors
-
-  #submitEvent = new CustomEvent('submit', {
-    bubbles: true,
-    composed: true,
-    detail: this.#currentAsset
-  });
-
-  #template = html`
-    <form class="asset-form" @submit="${this.#handleSubmit}">
-      <category-selector-component
-        .categories="${this.#categories}"
-        @change="${this.#handleCategoryChange}"
-        error="${this.#errors.category_id}"
-      ></category-selector-component>
-
-      <value-input-component
-        .value="${this.#currentAsset.value}"
-        @change="${this.#handleValueChange}"
-        error="${this.#errors.value}"
-      ></value-input-component>
-
-      <quantity-input-component
-        .value="${this.#currentAsset.quantity}"
-        @change="${this.#handleQuantityChange}"
-        error="${this.#errors.quantity}"
-      ></quantity-input-component>
-
-      <date-picker-component
-        .value="${this.#currentAsset.acquisition_date}"
-        @change="${this.#handleDateChange}"
-        error="${this.#errors.acquisition_date}"
-      ></date-picker-component>
-
-      <button type="submit" ?disabled="${!this.#isValid()}">Add Asset</button>
-    </form>
-  `;
-
-  constructor() {
-    super();
-    this.innerHTML = this.#template;
-  }
-
-  attributeChangedCallback(name: string, _: string, newValue: string) {
-    if (name === 'categories') {
-      this.#categories = JSON.parse(newValue);
-      this.#render();
-    }
-  }
-
-  #handleSubmit = (event: Event) => {
-    event.preventDefault();
-    if (this.#isValid()) {
-      this.dispatchEvent(this.#submitEvent);
-    }
-  };
-
-  #isValid(): boolean {
-    return validateAsset(this.#currentAsset);
-  }
-
-  #render() {
-    this.innerHTML = this.#template;
-  }
-}
+- asset-form: Form component for asset data input with validation and submission
+- category-selector: Dropdown component for selecting asset category
+- date-picker: Custom date input component with validation
 
 ### Repository Functions
 
-- assetRepository: 
-```typescript
-export const createAsset = async (asset: Omit<Asset, 'id'>): Promise<Result<Asset>> => {
-  try {
-    const response = await post<Asset>(
-      "/api/assets",
-      asset
-    );
-    return { ok: true, data: response.body };
-  } catch (error) {
-    console.error(`Error in createAsset:`, error);
-    return { ok: false, error: 'Failed to create asset' };
-  }
-};
-```
-
-- categoryRepository:
-```typescript
-export const getCategories = async (): Promise<Result<Category[]>> => {
-  try {
-    const response = await get<Category[]>(
-      "/api/categories"
-    );
-    return { ok: true, data: response.body || [] };
-  } catch (error) {
-    console.error(`Error in getCategories:`, error);
-    return { ok: false, error: 'Failed to fetch categories' };
-  }
-};
-```
+- assetRepository: Functions for creating assets and fetching categories
+  - createAsset: Creates new asset record
+  - getCategories: Fetches available asset categories
 
 ## Implementation Steps
 
@@ -270,13 +101,13 @@ export const getCategories = async (): Promise<Result<Category[]>> => {
 
 #### Tasks
 
-- [x] Create `src/client/domain/asset.type.ts`
-  - [x] Define Asset interface with snake_case fields
-  - [x] Add NULL_ASSET constant
-  - [x] Implement comprehensive validation
-- [x] Create `src/client/domain/category.type.ts`
-  - [x] Define Category interface with snake_case fields
-  - [x] Add NULL_CATEGORY constant
+- [ ] Create `src/client/domain/asset.type.ts`
+  - [ ] Define Asset interface
+  - [ ] Add NULL_ASSET constant
+  - [ ] Implement validation
+- [ ] Create `src/client/domain/category.type.ts`
+  - [ ] Define Category interface
+  - [ ] Add NULL_CATEGORY constant
 
 ### 2. Generate Page folder 
 
@@ -284,31 +115,35 @@ export const getCategories = async (): Promise<Result<Category[]>> => {
 - Page folder contains the page component and its dependencies
 - It should be named after the page
 - It should be located in the `src/client/app` folder
-- Study `/src/client/app/tools/` as reference
+- Study `/src/client/app/about/` as reference
 
 #### Tasks
 
-- [x] Create `src/client/app/add-asset/` folder
+- [ ] Create `src/client/app/add-asset/` folder
 
 ### 3. Generate Repository Functions
 
 #### Instructions and references
 - Repository are modules of functions that handle API requests
 - They use the `fetch.utils.ts` to make requests
-- They must include error handling and return Result types
+- They must include error handling and return Result types, without throwing errors
 - Study `/src/client/repository/tools.repository.ts` as reference
 
 #### Tasks
 
-- [x] Go to the `src/client/app/add-asset/` folder
-- [x] Create `asset.repository.ts`
-  - [x] Define createAsset function with proper typing
-  - [x] Implement error handling with Result type
-  - [x] Add logging for errors
-- [x] Create `category.repository.ts`
-  - [x] Define getCategories function with proper typing
-  - [x] Implement error handling with Result type
-  - [x] Add logging for errors
+- [ ] Go to the `src/client/app/add-asset/` folder
+- [ ] Create `asset.repository.ts`
+  ```typescript
+  export const postAsset = async (asset: Asset): Promise<Asset | null> => {
+    const response = await post<Asset>("/api/assets", asset);
+    return response.body || NULL_ASSET;
+  };
+
+  export const getCategories = async (): Promise<Category[]> => {
+    const response = await get<Category[]>("/api/categories");
+    return response.body || [];
+  };
+  ```
 
 ### 4. Generate Presentational Components
 
@@ -320,27 +155,253 @@ export const getCategories = async (): Promise<Result<Category[]>> => {
 
 #### Tasks
 
-- [x] Go to the `src/client/app/add-asset/` folder
-- [x] Create `asset-form.component.ts`
-  - [x] Define form structure with all inputs
-  - [x] Add form validation logic
-  - [x] Implement submit event handling
-- [x] Create `category-selector.component.ts`
-  - [x] Add dropdown with category options
-  - [x] Display risk and liquidity indicators
-  - [x] Emit selection events
-- [x] Create `value-input.component.ts`
-  - [x] Add numeric input with validation
-  - [x] Implement currency formatting
-  - [x] Emit value change events
-- [x] Create `quantity-input.component.ts`
-  - [x] Add integer input with validation
-  - [x] Add increment/decrement controls
-  - [x] Emit quantity change events
-- [x] Create `date-picker.component.ts`
-  - [x] Add date input with calendar
-  - [x] Handle ISO date formatting
-  - [x] Emit date selection events
+- [ ] Go to the `src/client/app/add-asset/` folder
+- [ ] Create `category-selector.component.ts`
+  ```typescript
+  const html = String.raw;
+
+  export class CategorySelectorComponent extends HTMLElement {
+    #categories: Category[] = [];
+    #selected = "";
+    #select: HTMLSelectElement | null = null;
+
+    static get observedAttributes() {
+      return ["categories", "selected"];
+    }
+
+    #template = html`
+      <select name="category" required>
+        <option value="">Select a category</option>
+        ${this.#categories.map(category => html`
+          <option value="${category.id}" ${category.id === this.#selected ? "selected" : ""}>
+            ${category.name} (Risk: ${category.risk_level}, Liquidity: ${category.liquidity})
+          </option>
+        `)}
+      </select>
+    `;
+
+    constructor() {
+      super();
+      this.innerHTML = this.#template;
+    }
+
+    connectedCallback() {
+      this.#select = this.querySelector("select");
+      this.#select?.addEventListener("change", this.#handleChange);
+    }
+
+    disconnectedCallback() {
+      this.#select?.removeEventListener("change", this.#handleChange);
+    }
+
+    attributeChangedCallback(name: string, _: string, newValue: string) {
+      if (name === "categories") {
+        this.#categories = JSON.parse(newValue);
+        this.#render();
+      } else if (name === "selected") {
+        this.#selected = newValue;
+        this.#render();
+      }
+    }
+
+    #handleChange = (event: Event) => {
+      const select = event.target as HTMLSelectElement;
+      this.dispatchEvent(new CustomEvent("category-change", {
+        detail: select.value,
+        bubbles: true
+      }));
+    };
+
+    #render() {
+      this.innerHTML = this.#template;
+      // Reattach event listener after render
+      this.#select = this.querySelector("select");
+      this.#select?.addEventListener("change", this.#handleChange);
+    }
+  }
+  ```
+
+- [ ] Create `date-picker.component.ts`
+  ```typescript
+  const html = String.raw;
+
+  export class DatePickerComponent extends HTMLElement {
+    #value = "";
+    #input: HTMLInputElement | null = null;
+
+    static get observedAttributes() {
+      return ["value"];
+    }
+
+    #template = html`
+      <input 
+        type="date" 
+        name="acquisition_date" 
+        required
+        value="${this.#value}"
+        max="${new Date().toISOString().split("T")[0]}"
+      />
+    `;
+
+    constructor() {
+      super();
+      this.innerHTML = this.#template;
+    }
+
+    connectedCallback() {
+      this.#input = this.querySelector("input");
+      this.#input?.addEventListener("change", this.#handleChange);
+    }
+
+    disconnectedCallback() {
+      this.#input?.removeEventListener("change", this.#handleChange);
+    }
+
+    attributeChangedCallback(name: string, _: string, newValue: string) {
+      if (name === "value") {
+        this.#value = newValue;
+        this.#render();
+      }
+    }
+
+    #handleChange = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      this.dispatchEvent(new CustomEvent("date-change", {
+        detail: input.value,
+        bubbles: true
+      }));
+    };
+
+    #render() {
+      this.innerHTML = this.#template;
+      // Reattach event listener after render
+      this.#input = this.querySelector("input");
+      this.#input?.addEventListener("change", this.#handleChange);
+    }
+  }
+  ```
+
+- [ ] Create `asset-form.component.ts`
+  ```typescript
+  const html = String.raw;
+
+  export class AssetFormComponent extends HTMLElement {
+    #asset: Asset = NULL_ASSET;
+    #categories: Category[] = [];
+    #error: string | null = null;
+    #form: HTMLFormElement | null = null;
+    #valueInput: HTMLInputElement | null = null;
+    #quantityInput: HTMLInputElement | null = null;
+
+    static get observedAttributes() {
+      return ["categories", "error"];
+    }
+
+    #template = html`
+      <form>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <category-selector-component
+            categories="${JSON.stringify(this.#categories)}"
+            selected="${this.#asset.category_id}"
+          ></category-selector-component>
+        </div>
+
+        <div class="form-group">
+          <label for="value">Value</label>
+          <input 
+            type="number" 
+            name="value" 
+            required 
+            min="0.01" 
+            step="0.01"
+            value="${this.#asset.value}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="quantity">Quantity</label>
+          <input 
+            type="number" 
+            name="quantity" 
+            required 
+            min="1" 
+            step="1"
+            value="${this.#asset.quantity}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="acquisition_date">Acquisition Date</label>
+          <date-picker-component
+            value="${this.#asset.acquisition_date}"
+          ></date-picker-component>
+        </div>
+
+        ${this.#error ? html`<div class="error">${this.#error}</div>` : ""}
+
+        <button type="submit">Add Asset</button>
+      </form>
+    `;
+
+    constructor() {
+      super();
+      this.innerHTML = this.#template;
+    }
+
+    connectedCallback() {
+      this.#form = this.querySelector("form");
+      this.#valueInput = this.querySelector('input[name="value"]');
+      this.#quantityInput = this.querySelector('input[name="quantity"]');
+
+      this.#form?.addEventListener("submit", this.#handleSubmit);
+      this.#valueInput?.addEventListener("change", this.#handleValueChange);
+      this.#quantityInput?.addEventListener("change", this.#handleQuantityChange);
+      this.addEventListener("category-change", this.#handleCategoryChange);
+      this.addEventListener("date-change", this.#handleDateChange);
+    }
+
+    disconnectedCallback() {
+      this.#form?.removeEventListener("submit", this.#handleSubmit);
+      this.#valueInput?.removeEventListener("change", this.#handleValueChange);
+      this.#quantityInput?.removeEventListener("change", this.#handleQuantityChange);
+      this.removeEventListener("category-change", this.#handleCategoryChange);
+      this.removeEventListener("date-change", this.#handleDateChange);
+    }
+
+    #handleCategoryChange = (event: CustomEvent<string>) => {
+      this.#asset = { ...this.#asset, category_id: event.detail };
+    };
+
+    #handleValueChange = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      this.#asset = { ...this.#asset, value: Number(input.value) };
+    };
+
+    #handleQuantityChange = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      this.#asset = { ...this.#asset, quantity: Number(input.value) };
+    };
+
+    #handleDateChange = (event: CustomEvent<string>) => {
+      this.#asset = { ...this.#asset, acquisition_date: event.detail };
+    };
+
+    #handleSubmit = (event: Event) => {
+      event.preventDefault();
+      if (validateAsset(this.#asset)) {
+        this.dispatchEvent(new CustomEvent("asset-submit", {
+          detail: this.#asset,
+          bubbles: true
+        }));
+      }
+    };
+
+    #render() {
+      this.innerHTML = this.#template;
+    }
+  }
+  ```
 
 ### 5. Generate Page Structure
 
@@ -352,14 +413,90 @@ export const getCategories = async (): Promise<Result<Category[]>> => {
 
 #### Tasks
 
-- [x] Go to the `src/client/app/add-asset/` folder
-- [x] Create `add-asset.page.ts`
-  - [x] Define AddAssetPage class
-  - [x] Register all custom elements
-  - [x] Add state management for form data
-  - [x] Implement repository function calls
-  - [x] Add success/error notifications
-  - [x] Handle navigation after submission
+- [ ] Go to the `src/client/app/add-asset/` folder
+- [ ] Create `add-asset.page.ts`
+  ```typescript
+  const html = String.raw;
+
+  // Define custom elements
+  customElements.define("category-selector-component", CategorySelectorComponent);
+  customElements.define("date-picker-component", DatePickerComponent);
+  customElements.define("asset-form-component", AssetFormComponent);
+
+  export class AddAssetPage extends HTMLElement {
+    // Route: #/assets/add
+    #route = "/assets/add";
+
+    #state = {
+      categories: [] as Category[],
+      error: null as string | null,
+      loading: false
+    };
+
+    #template = html`
+      <article class="add-asset-page">
+        <header>
+          <h1>Add New Asset</h1>
+        </header>
+
+        <main>
+          ${this.#state.loading 
+            ? html`<div class="loading">Loading...</div>`
+            : html`
+              <asset-form-component
+                categories="${JSON.stringify(this.#state.categories)}"
+                error="${this.#state.error}"
+              ></asset-form-component>
+            `}
+        </main>
+      </article>
+    `;
+
+    constructor() {
+      super();
+      this.innerHTML = this.#template;
+    }
+
+    async connectedCallback() {
+      this.addEventListener("asset-submit", this.#handleSubmit);
+      await this.#loadCategories();
+    }
+
+    disconnectedCallback() {
+      this.removeEventListener("asset-submit", this.#handleSubmit);
+    }
+
+    async #loadCategories() {
+      this.#state.loading = true;
+      this.#render();
+
+      const categories = await getCategories();
+      this.#state.categories = categories;
+      this.#state.loading = false;
+      this.#render();
+    }
+
+    #handleSubmit = async (event: CustomEvent<Asset>) => {
+      this.#state.loading = true;
+      this.#render();
+
+      const asset = await postAsset(event.detail);
+      
+      if (asset) {
+        // Navigate to assets list on success
+        window.location.hash = "#/assets";
+      } else {
+        this.#state.error = "Failed to create asset. Please try again.";
+        this.#state.loading = false;
+        this.#render();
+      }
+    };
+
+    #render() {
+      this.innerHTML = this.#template;
+    }
+  }
+  ```
 
 ### 6. Update Navigation
 
@@ -371,9 +508,9 @@ export const getCategories = async (): Promise<Result<Category[]>> => {
 
 #### Tasks
 
-- [x] Go to `/src/client/shared/navigation.utils.ts`
-  - [x] Add route for `/assets/add`
-  - [x] Register AddAssetPage component
-  - [x] Add navigation links in layout
+- [ ] Go to `/src/client/shared/navigation.utils.ts`
+  - [ ] Add route for `add-asset` at path `/assets/add`
+  - [ ] Register `AddAssetPage` component
+  - [ ] Add navigation link in home page
 
 _End of App Plan for 1 - Add Asset_ 
