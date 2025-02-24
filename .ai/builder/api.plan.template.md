@@ -1,7 +1,7 @@
 ---
 information: Generate a markdown file documenting the implementation plan of the api tier for a feature.
 important: This is a template for one and only one feature.
-guide: Include all this template content in the result, fill the placeholders with the actual values.
+guide: Include all this template content, instrunctions and samples in the result, fill the placeholders with the actual values.
 file_name: {{featureNumber}}-{{feature_short_name}}.api.plan.md
 ---
 
