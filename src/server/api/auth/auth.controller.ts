@@ -1,18 +1,11 @@
 import type { User } from "@/server/domain/user.type";
-import { validateUser } from "@/server/domain/validations.utils";
-import {
-	BAD_REQUEST_ERROR,
-	UNAUTHORIZED_ERROR,
-} from "@/server/shared/api-error.type";
 import type { JwtData } from "@/server/shared/jwt-data.type";
-import { warn } from "@/server/shared/log.utils";
-import type { EntityProperties } from "@/server/shared/sql.type";
-import { hashPassword, verifyPassword } from "@server/shared/hash.utils";
+import type { Raw } from "@/server/shared/sql.type";
 import { generateJWT } from "@server/shared/jwt.utils";
 import { getBody } from "@server/shared/request.utils";
 import { badRequest, ok } from "@server/shared/response.utils";
 import type { BunRequest } from "bun";
-import { findUserByEmail, insertUser } from "./auth.repository";
+import { insertUser, selectUserByEmailAndPassword } from "./auth.repository";
 import type { CredentialsRequest } from "./credentials-request.type";
 import type { UserTokenResponse } from "./user-token-response.type";
 const DEFAULT_ROLE_ID = 1;
@@ -35,44 +28,23 @@ const authController = async (
 const postLogin = async (
 	credentials: CredentialsRequest,
 ): Promise<Response> => {
-	const user = await findUserByEmail(credentials.email);
-	if (!user) {
-		warn("User not found:", credentials.email);
-		throw UNAUTHORIZED_ERROR;
-	}
-
-	const isValidPassword = await verifyPassword(
+	const userId = await selectUserByEmailAndPassword(
+		credentials.email,
 		credentials.password,
-		user.password,
 	);
-	if (!isValidPassword) {
-		warn("Invalid password for user:", credentials.email);
-		throw UNAUTHORIZED_ERROR;
-	}
-
-	const userToken = createUserToken(user.id);
+	const userToken = createUserToken(userId);
 	return ok(userToken);
 };
 
 const postRegister = async (
 	credentials: CredentialsRequest,
 ): Promise<Response> => {
-	const existingUser = await findUserByEmail(credentials.email);
-	if (existingUser) {
-		warn("Email already registered:", credentials.email);
-		throw BAD_REQUEST_ERROR;
-	}
-
-	const hashedPassword = await hashPassword(credentials.password);
-	const userToInsert: Partial<User> = {
-		email: credentials.email,
-		password: hashedPassword,
+	const userToInsert: Raw<User> = {
+		...credentials,
 		roleId: DEFAULT_ROLE_ID,
 	};
-	validateUser(userToInsert);
-	const user = await insertUser(userToInsert as Omit<User, EntityProperties>);
-
-	const userToken = createUserToken(user.id);
+	const userId = await insertUser(userToInsert);
+	const userToken = createUserToken(userId);
 	return ok<UserTokenResponse>(userToken);
 };
 

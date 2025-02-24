@@ -6,9 +6,3 @@ export type ToolPostRequest = {
 	description: string;
 	url: string;
 };
-
-export const NULL_TOOL_POST_DTO: ToolPostRequest = {
-	name: "",
-	description: "",
-	url: "",
-};

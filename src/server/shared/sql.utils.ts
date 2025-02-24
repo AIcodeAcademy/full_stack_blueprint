@@ -1,5 +1,6 @@
-import { Database, type SQLQueryBindings } from "bun:sqlite";
-import type { EntityProperties, SQL } from "./sql.type";
+import { type Changes, Database, type SQLQueryBindings } from "bun:sqlite";
+import { AppError } from "./app-error.class";
+import type { Raw, SQL } from "./sql.type";
 
 const db = new Database(":memory:", { safeIntegers: false, strict: true });
 const sqlFolder = process.env.SQL_FOLDER || "sql";
@@ -59,22 +60,19 @@ export const select = <P, R>(query: string, params?: P): R => {
  * Executes an INSERT query with parameters
  * @template P - The type of the parameters
  * @param query - SQL query string
- * @param params - Query parameters
+ * @param entity - Query parameters
  * @returns Number of affected rows
  */
-export const insert = <R>(
-	query: string,
-	params: Omit<R, EntityProperties>,
-): number => {
-	if (!params) throw Error("Params are required");
+export const insert = <E>(query: string, entity: Raw<E>): number => {
+	if (!entity) throw Error("Params are required");
 	const q = db.query(query);
 	const queryBindings: SQLQueryBindings = {
-		...params,
+		...entity,
 		createdAt: new Date().toISOString(),
 		updatedAt: new Date().toISOString(),
 	};
-	const r = q.run(queryBindings);
-	if (!r.lastInsertRowid) throw new Error("Failed to insert");
+	const r: Changes = q.run(queryBindings);
+	if (r.changes === 0) throw new AppError("Failed to insert", "DATABASE");
 	return Number(r.lastInsertRowid);
 };
 
@@ -86,13 +84,13 @@ export const insert = <R>(
  * @returns Number of affected rows
  */
 export const update = <P>(query: string, params: P): number => {
-	if (!params) throw Error("Params are required");
+	if (!params) throw new AppError("Params are required", "LOGIC");
 	const q = db.query(query);
 	const queryBindings: SQLQueryBindings = {
 		...params,
 		updatedAt: new Date().toISOString(),
 	};
-	const r = q.run(queryBindings);
+	const r: Changes = q.run(queryBindings);
 	return r.changes;
 };
 

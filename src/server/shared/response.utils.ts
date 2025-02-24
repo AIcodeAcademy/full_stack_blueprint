@@ -1,4 +1,5 @@
 import type { ApiError } from "./api-error.type";
+import { AppError } from "./app-error.class";
 import { debug } from "./log.utils";
 
 /**
@@ -48,8 +49,8 @@ export const forbidden = (message = "Forbidden"): Response => {
  * @param message - Optional error message
  * @returns Response object with error message
  */
-export const notFound = (request: Request, message = "Not found"): Response => {
-	return addCors(new Response(`${request.url} ${message}`, { status: 404 }));
+export const notFound = (message = "Not found"): Response => {
+	return addCors(new Response(message, { status: 404 }));
 };
 /**
  * Creates a method not allowed response with status 405
@@ -76,30 +77,27 @@ export const internalServerError = (
  * @param error - The error to handle
  * @returns Response object with error message
  */
-export const handleInternalError = (
-	request: Request,
-	error: Error,
-): Response => {
-	const errorData = {
-		message: error.message || "Unknown error",
-		stack: error.stack || error.name || "unknown stack",
-		code: (error as ApiError).code || 500,
-	};
-	debug(
-		`API error ${errorData.code} for ${request.url}`,
-		`${errorData.message} ${errorData.stack}`,
-	);
-	switch (errorData.code) {
+export const handleInternalError = (error: Error): Response => {
+	const message = error.message || "Unknown error";
+	const stack = error.stack || "unknown stack";
+	let code = 500;
+	if (error instanceof AppError) {
+		code = error.kind === "DATABASE" ? 500 : 400;
+	} else if (error as ApiError) {
+		code = (error as ApiError).code;
+	}
+	debug(`API error ${code} ${message}`, stack);
+	switch (code) {
 		case 401:
-			return unauthorized(errorData.message);
+			return unauthorized(message);
 		case 403:
-			return forbidden(errorData.message);
+			return forbidden(message);
 		case 404:
-			return notFound(request, errorData.message);
+			return notFound(message);
 		case 405:
-			return methodNotAllowed(errorData.message);
+			return methodNotAllowed(message);
 		default:
-			return internalServerError(errorData.message);
+			return internalServerError(message);
 	}
 };
 

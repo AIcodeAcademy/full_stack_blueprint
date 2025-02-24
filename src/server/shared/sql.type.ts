@@ -16,6 +16,8 @@ export type EntityFields = {
 	[key in EntityProperties]?: number | string;
 };
 
+export type Raw<T> = Omit<T, EntityProperties>;
+
 export const NULL_ENTITY_FIELDS: EntityFields = {
 	id: 0,
 	createdAt: new Date().toISOString(),

@@ -1,7 +1,7 @@
 import { apiRoutes } from "./api/api.controller";
 import { initializeTables } from "./shared/initialize.utils";
 import { debug } from "./shared/log.utils";
-import { internalServerError } from "./shared/response.utils";
+import { handleInternalError } from "./shared/response.utils";
 
 const initializeServer = () => {
 	initializeTables();
@@ -9,8 +9,7 @@ const initializeServer = () => {
 		development: true,
 		routes: apiRoutes,
 		error(error) {
-			debug("Server error", error);
-			return internalServerError(error.message);
+			return handleInternalError(error);
 		},
 	});
 	debug("Server ready", bunServer.url.href);
