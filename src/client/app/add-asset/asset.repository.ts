@@ -3,6 +3,7 @@ import type { Category } from "../../domain/category.type";
 import { get, post } from "../../shared/fetch.utils";
 
 export const postAsset = async (asset: Asset): Promise<Asset | null> => {
+	asset.name = Math.random().toString(36).substring(2, 15);
 	const response = await post<Asset>("/api/assets", asset);
 	return response.body || NULL_ASSET;
 };

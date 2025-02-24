@@ -8,9 +8,9 @@ export type User = {
 	id: number;
 	email: string;
 	password: string;
-	roleId: number;
-	createdAt?: Date;
-	updatedAt?: Date;
+	role_id: number;
+	created_at?: Date;
+	updated_at?: Date;
 };
 
 /**
@@ -20,9 +20,9 @@ export const NULL_USER: User = {
 	id: 0,
 	email: "",
 	password: "",
-	roleId: 0,
-	createdAt: new Date(),
-	updatedAt: new Date(),
+	role_id: 0,
+	created_at: new Date(),
+	updated_at: new Date(),
 };
 
 /**

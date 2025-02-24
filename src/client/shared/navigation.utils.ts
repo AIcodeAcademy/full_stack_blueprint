@@ -4,7 +4,7 @@ import { AuthPage } from "../app/auth/auth.page";
 import { HomePage } from "../app/home/home.page";
 
 customElements.define("app-about-page", AboutPage);
-customElements.define("app-add-asset-page", AddAssetPage);
+customElements.define("app-assets-add-page", AddAssetPage);
 customElements.define("app-home-page", HomePage);
 customElements.define("app-auth-page", AuthPage);
 

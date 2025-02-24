@@ -41,7 +41,7 @@ const postRegister = async (
 ): Promise<Response> => {
 	const userToInsert: Raw<User> = {
 		...credentials,
-		roleId: DEFAULT_ROLE_ID,
+		role_id: DEFAULT_ROLE_ID,
 	};
 	const userId = await insertUser(userToInsert);
 	const userToken = createUserToken(userId);

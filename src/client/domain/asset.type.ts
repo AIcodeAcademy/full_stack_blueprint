@@ -1,6 +1,7 @@
 export type Asset = {
 	id: string; // Unique identifier
 	category_id: string; // Reference to category
+	name: string; // Asset name
 	value: number; // Asset monetary value
 	quantity: number; // Asset quantity/units
 	acquisition_date: string; // ISO date string
@@ -10,6 +11,7 @@ export type Asset = {
 export const NULL_ASSET = {
 	id: "",
 	category_id: "",
+	name: "",
 	value: 0,
 	quantity: 0,
 	acquisition_date: "",
@@ -24,7 +26,7 @@ export const validateAsset = (data: Partial<Asset>): boolean => {
 	// Quantity must be positive number
 	if (!data.quantity || data.quantity <= 0) return false;
 	// Date must be valid ISO string
-	if (!data.acquisition_date || isNaN(Date.parse(data.acquisition_date)))
+	if (!data.acquisition_date || Number.isNaN(Date.parse(data.acquisition_date)))
 		return false;
 	return true;
 };

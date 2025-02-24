@@ -8,9 +8,9 @@ export type Tool = {
 	name: string;
 	description: string;
 	url: string;
-	userOwnerId: number;
-	createdAt: Date;
-	updatedAt: Date;
+	user_id: number;
+	created_at: Date;
+	updated_at: Date;
 };
 
 /**
@@ -21,9 +21,9 @@ export const NULL_TOOL: Tool = {
 	name: "",
 	description: "",
 	url: "",
-	userOwnerId: 0,
-	createdAt: new Date(),
-	updatedAt: new Date(),
+	user_id: 0,
+	created_at: new Date(),
+	updated_at: new Date(),
 };
 
 /**

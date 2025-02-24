@@ -7,8 +7,14 @@ export class CategorySelectorComponent extends HTMLElement {
 	#selected = "";
 	#select: HTMLSelectElement | null = null;
 
-	static get observedAttributes() {
-		return ["categories", "selected"];
+	set categories(value: Category[]) {
+		this.#categories = value;
+		this.#render();
+	}
+
+	set selected(value: string) {
+		this.#selected = value;
+		this.#render();
 	}
 
 	#template = () => html`
@@ -18,7 +24,7 @@ export class CategorySelectorComponent extends HTMLElement {
 				.map(
 					(category) => html`
         <option value="${category.id}" ${category.id === this.#selected ? "selected" : ""}>
-          ${category.name} (Risk: ${category.risk_level}, Liquidity: ${category.liquidity})
+          ${category.name} (Risk: ${category.risk_level}, Liquidity: ${category.liquidity_level})
         </option>
       `,
 				)
@@ -38,16 +44,6 @@ export class CategorySelectorComponent extends HTMLElement {
 
 	disconnectedCallback() {
 		this.#select?.removeEventListener("change", this.#handleChange);
-	}
-
-	attributeChangedCallback(name: string, _: string, newValue: string) {
-		if (name === "categories") {
-			this.#categories = JSON.parse(newValue);
-			this.#render();
-		} else if (name === "selected") {
-			this.#selected = newValue;
-			this.#render();
-		}
 	}
 
 	#handleChange = (event: Event) => {

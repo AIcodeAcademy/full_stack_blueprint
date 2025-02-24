@@ -1,3 +1,5 @@
+import { navigate } from "@/client/shared/navigation.utils";
+
 const html = String.raw;
 
 /**
@@ -8,9 +10,19 @@ export class HomePage extends HTMLElement {
 	#template = html`
     <h1>Welcome</h1>
     <p>This is the home page of the ${this.#appName} application.</p>
+    <p>
+      <a href="#assets/add">Add Asset</a>
+    </p>
   `;
 	constructor() {
 		super();
 		this.innerHTML = this.#template;
+		// Add event listener to the add asset link
+		this.querySelector("a")?.addEventListener("click", (event) => {
+			event.preventDefault();
+			const target = event.target as HTMLAnchorElement;
+			const href = target.getAttribute("href");
+			navigate(href);
+		});
 	}
 }

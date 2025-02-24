@@ -11,10 +11,9 @@ customElements.define("app-theme-toggle", ThemeToggle);
 export class Header extends HTMLElement {
 	#appName = "Full stack Blueprint";
 	#links = [
-		{ href: "#home", text: "Home" },
 		{ href: "#about", text: "About" },
 		{ href: "#auth", text: "Auth" },
-		{ href: "#/assets/add", text: "Add Asset" },
+		{ href: "#assets/add", text: "Add Asset" },
 	];
 	#template = html`
     <header id="main-header">

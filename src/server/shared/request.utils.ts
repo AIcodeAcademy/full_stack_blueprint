@@ -98,7 +98,7 @@ export const getUserId = (request: Request): number => {
  * @throws UNAUTHORIZED_ERROR if the user ID is not found
  */
 export const validateUserId = (request: Request): number => {
-	const userId = getUserId(request);
+	const userId = extractUserId(request);
 	if (userId === 0) throw UNAUTHORIZED_ERROR;
 	return userId;
 };

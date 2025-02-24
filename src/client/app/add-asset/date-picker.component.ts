@@ -4,8 +4,9 @@ export class DatePickerComponent extends HTMLElement {
 	#value = "";
 	#input: HTMLInputElement | null = null;
 
-	static get observedAttributes() {
-		return ["value"];
+	set value(val: string) {
+		this.#value = val;
+		this.#render();
 	}
 
 	#template = () => html`
@@ -30,13 +31,6 @@ export class DatePickerComponent extends HTMLElement {
 
 	disconnectedCallback() {
 		this.#input?.removeEventListener("change", this.#handleChange);
-	}
-
-	attributeChangedCallback(name: string, _: string, newValue: string) {
-		if (name === "value") {
-			this.#value = newValue;
-			this.#render();
-		}
 	}
 
 	#handleChange = (event: Event) => {

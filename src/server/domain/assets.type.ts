@@ -32,7 +32,7 @@ export function validate(asset: Raw<Asset>): void {
 		throw new AppError("Invalid user id", "LOGIC");
 	}
 
-	if (!asset.category_id || typeof asset.category_id !== "number") {
+	if (!asset.category_id) {
 		throw new AppError("Invalid category id", "LOGIC");
 	}
 

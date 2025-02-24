@@ -83,7 +83,7 @@ const createHeaders = (): HeadersInit => {
 	const userToken: UserToken = storageToken ? JSON.parse(storageToken) : "";
 	const headers = {
 		"Content-Type": "application/json",
-		Authorization: `Bearer ${userToken}`,
+		Authorization: `Bearer ${userToken.token}`,
 	};
 	return headers;
 };
