@@ -1,4 +1,5 @@
 import { AppError } from "../shared/app-error.class";
+import type { Raw } from "../shared/sql.type";
 
 /**
  * Represents a category with its properties
@@ -29,7 +30,7 @@ export const NULL_CATEGORY: Category = {
  * @param category - The category to validate
  * @throws BAD_REQUEST_ERROR if the category is invalid
  */
-export const validateCategory = (category: Partial<Category>): void => {
+export const validateCategory = (category: Raw<Category>): void => {
 	if (!category.name || !category.risk || !category.liquidity) {
 		throw new AppError(
 			"Invalid category: name, risk and liquidity are required",

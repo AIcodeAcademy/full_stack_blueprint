@@ -1,4 +1,5 @@
 import { AppError } from "../shared/app-error.class";
+import type { Raw } from "../shared/sql.type";
 
 /**
  * Represents an asset with its properties
@@ -35,7 +36,7 @@ export const NULL_ASSET: Asset = {
  * @param asset - The asset to validate
  * @throws BAD_REQUEST_ERROR if the asset is invalid
  */
-export const validateAsset = (asset: Partial<Asset>): void => {
+export const validateAsset = (asset: Raw<Asset>): void => {
 	if (
 		!asset.categoryId ||
 		!asset.value ||
