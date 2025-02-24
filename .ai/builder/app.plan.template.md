@@ -130,7 +130,7 @@ Include parameters, return types and error handling.
 - Page folder contains the page component and its dependencies
 - It should be named after the page
 - It should be located in the `src/client/app` folder
-- Study `/src/client/app/tools/` as reference
+- Study `/src/client/app/about/` as reference
  
 
 #### Tasks
@@ -191,49 +191,48 @@ const html = String.raw;
 
 export class {{component.className}}Component extends HTMLElement {
   // Parent: {{component.parent}}
-  
-  @for(prop of component.properties) {
-  @if(prop.attribute) {
-  static get observedAttributes() {
-    return ['{{prop.attribute}}'];
-  }
-  }
-  #{{prop.name}} = {{prop.default}}; // {{prop.description}}
-  }
+  parent: {{component.parent}}Component;
+   
+  // Component state
+  #state = {
+   
+  };
 
-  @for(event of component.events) {
-  #{{event.name}}Event = new CustomEvent('{{event.name}}', {
-    bubbles: true,
-    composed: true,
-    detail: {{event.detail}}
-  });
-  }
-
+  // Component template
   #template = html`
-    {{component.template}}
+    // Component template
   `;
+
+  // Selectors to easily access the component template elements
+  #selectorOne = select("selector-one") as Something;
+
+  // Render when the state changes
+  set state(value: {{component.state}}) {
+    this.#state = value;
+    this.#render();
+  }
+
+  get state(): {{component.state}} {
+    return this.#state;
+  }
 
   constructor() {
     super();
     this.innerHTML = this.#template;
   }
 
-  @if(component.connected) {
   connectedCallback() {
-    {{component.connected}}
-  }
+    // Fill selectors with the component template elements
+    this.#selectorOne = select("selector-one") as Something;
+    // Add event listeners
   }
 
-  @if(component.disconnected) {
   disconnectedCallback() {
-    {{component.disconnected}}
-  }
+    // Remove event listeners
   }
 
-  @if(component.attributeChanged) {
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    {{component.attributeChanged}}
-  }
+  #render() {
+    this.innerHTML = this.#template;
   }
 }
 ```
@@ -260,36 +259,56 @@ export class {{component.className}}Component extends HTMLElement {
 This is an example of a page:
 ```typescript
 const html = String.raw;
-
+// Define Presenter Components
+const {{page.presenterComponents}} = [
+  {{#each page.presenterComponents}}
+  {{this}},
+  {{/each}}
+];
+  
 export class {{page.className}}Page extends HTMLElement {
   // Route: #{{page.route}}
-  // Parent: router-outlet
-  
+  #route = "{{page.route}}";
+
+  // Page state
   #state = {
-    @for(state of page.state) {
-    {{state.name}}: {{state.default}}, // {{state.description}}
-    }
+   
   };
 
+  // Page template
   #template = html`
-    {{page.template}}
+    {{Presenter Components}}
   `;
+
+  // Selectors to easily access the page template presenter components
+  #presenterComponentOne = select("presenter-component-one") as PresenterComponentOne;
 
   constructor() {
     super();
     this.innerHTML = this.#template;
   }
 
-  @if(page.connected) {
+  
   connectedCallback() {
-    {{page.connected}}
-  }
+   // Fill selectors with the component template elements
+    this.#presenterComponentOne = select("presenter-component-one") as PresenterComponentOne;
+    // Add event listeners
+  }  
+  
+  disconnectedCallback() {
+    // Remove event listeners
   }
 
-  @if(page.disconnected) {
-  disconnectedCallback() {
-    {{page.disconnected}}
+  #load() {
+    // Load data from the repository
   }
+
+  #handleEvent(event: Event) {
+    // Handle events (to persist or reload state)
+  }
+
+  #render() {
+    this.innerHTML = this.#template;
   }
 }
 ```
