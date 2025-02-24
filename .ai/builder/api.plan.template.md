@@ -61,16 +61,16 @@ For each DTO:
 Example:
 For `assets`:
 - `AssetPostRequest`: Request DTO for creating a new asset
-  - `categoryId: number` - ID of the selected asset category
+  - `category_id: number` - ID of the selected asset category
   - `value: number` - Monetary value of the asset
   - `quantity: number` - Number of units of the asset
-  - `acquisitionDate: string` - ISO date string when the asset was acquired
+  - `acquisition_date: string` - ISO date string when the asset was acquired
 - `AssetResponse`: Response DTO for asset data
   - `id: number` - Unique identifier of the asset
-  - `categoryId: number` - ID of the asset category
+  - `category_id: number` - ID of the asset category
   - `value: number` - Monetary value of the asset
-  - `createdAt: string` - ISO datetime of record creation
-  - `updatedAt: string` - ISO datetime of last update
+  - `created_at: string` - ISO datetime of record creation
+  - `updated_at: string` - ISO datetime of last update
 -->
 
 @for(resource of resources) {
@@ -202,8 +202,8 @@ export type {{name}}Response = {
   @for(field of dto.fields) {
   {{field.name}}: {{field.type}};
   }
-  createdAt: string;      // ISO datetime
-  updatedAt: string;      // ISO datetime
+  created_at: string;      // ISO datetime
+  updated_at: string;      // ISO datetime
 };
 ```
 
@@ -264,8 +264,8 @@ const post{{name}} = async (request: Request): Promise<Response> => {
     @for(field of dto.fields) {
     {{field.name}}: {{name}}.{{field.name}},
     }
-    createdAt: {{name}}.createdAt.toISOString(),
-    updatedAt: {{name}}.updatedAt.toISOString(),
+    created_at: {{name}}.created_at.toISOString(),
+    updated_at: {{name}}.updated_at.toISOString(),
   };
   
   return ok<{{name}}Response>({{name}}Response);

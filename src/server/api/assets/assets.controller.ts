@@ -14,21 +14,11 @@ export const assetRoutes = {
 		const rawAsset: Raw<Asset> = {
 			...body,
 			user_id: userId,
-			created_at: new Date().toISOString(),
 		};
 
 		const asset = await insertAsset(rawAsset);
 
-		const response: AssetResponse = {
-			id: asset.id,
-			user_id: asset.user_id,
-			category_id: asset.category_id,
-			name: asset.name,
-			value: asset.value,
-			quantity: asset.quantity,
-			acquisition_date: asset.acquisition_date,
-			created_at: asset.created_at,
-		};
+		const response: AssetResponse = asset as AssetResponse;
 
 		return ok<AssetResponse>(response);
 	},

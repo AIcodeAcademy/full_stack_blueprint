@@ -11,7 +11,7 @@ export type SQL = {
 	DELETE: string;
 	SEED: unknown[];
 };
-export type EntityProperties = "id" | "createdAt" | "updatedAt";
+export type EntityProperties = "id" | "created_at" | "updated_at";
 export type EntityFields = {
 	[key in EntityProperties]?: number | string;
 };
@@ -20,6 +20,6 @@ export type Raw<T> = Omit<T, EntityProperties>;
 
 export const NULL_ENTITY_FIELDS: EntityFields = {
 	id: 0,
-	createdAt: new Date().toISOString(),
-	updatedAt: new Date().toISOString(),
+	created_at: new Date().toISOString(),
+	updated_at: new Date().toISOString(),
 };

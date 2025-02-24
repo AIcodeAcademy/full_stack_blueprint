@@ -1,10 +1,10 @@
 {
 	"TABLE": "tools",
-	"CREATE_TABLE": "CREATE TABLE tools (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, url TEXT, createdAt DATETIME, updatedAt DATETIME)",
+	"CREATE_TABLE": "CREATE TABLE tools (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, url TEXT, created_at DATETIME, updated_at DATETIME)",
 	"SELECT_ALL": "SELECT * FROM tools",
 	"SELECT_BY_ID": "SELECT * FROM tools WHERE id = $id",
-	"INSERT": "INSERT INTO tools (name, description, url, createdAt, updatedAt) VALUES ($name, $description, $url, $createdAt, $updatedAt)",
-	"UPDATE": "UPDATE tools SET name = $name, description = $description, url = $url, updatedAt = $updatedAt WHERE id = $id",
+	"INSERT": "INSERT INTO tools (name, description, url, created_at, updated_at) VALUES ($name, $description, $url, $created_at, $updated_at)",
+	"UPDATE": "UPDATE tools SET name = $name, description = $description, url = $url, updated_at = $updated_at WHERE id = $id",
 	"DELETE": "DELETE FROM tools WHERE id = $id",
 	"SEED": [
 		{

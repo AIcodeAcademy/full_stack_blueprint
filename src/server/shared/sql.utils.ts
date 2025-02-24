@@ -68,8 +68,8 @@ export const insert = <E>(query: string, entity: Raw<E>): number => {
 	const q = db.query(query);
 	const queryBindings: SQLQueryBindings = {
 		...entity,
-		createdAt: new Date().toISOString(),
-		updatedAt: new Date().toISOString(),
+		created_at: new Date().toISOString(),
+		updated_at: new Date().toISOString(),
 	};
 	const r: Changes = q.run(queryBindings);
 	if (r.changes === 0) throw new AppError("Failed to insert", "DATABASE");
@@ -88,7 +88,7 @@ export const update = <P>(query: string, params: P): number => {
 	const q = db.query(query);
 	const queryBindings: SQLQueryBindings = {
 		...params,
-		updatedAt: new Date().toISOString(),
+		updated_at: new Date().toISOString(),
 	};
 	const r: Changes = q.run(queryBindings);
 	return r.changes;

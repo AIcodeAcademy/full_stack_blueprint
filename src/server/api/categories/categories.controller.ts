@@ -1,11 +1,9 @@
-import { validateUserId } from "@/server/shared/request.utils";
 import { ok } from "@/server/shared/response.utils";
 import { selectAllCategories } from "./categories.repository";
 import type { CategoryResponse } from "./category-response.type";
 
 export const categoryRoutes = {
 	GET: async (request: Request): Promise<Response> => {
-		await validateUserId(request);
 		const categories = await selectAllCategories();
 
 		const response: CategoryResponse[] = categories.map((category) => ({

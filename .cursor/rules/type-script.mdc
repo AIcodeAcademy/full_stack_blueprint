@@ -28,7 +28,6 @@ tests/
 - Name functions with a verb
 - Prefer functions over classes
 - Prefer `#` over `_` for private members
-- Prefer `type` over `interface`
 - Avoid `null` and `undefined` , define a `NULL_VALUE` as a const for our types
 - Avoid long functions
 - Avoid deep nested anonymous functions by assigning named functions
@@ -36,3 +35,9 @@ tests/
 - Validate data using plain TS functions no ValueObjects needed
 - Avoid external libraries
 - Make use or create utilities at shared folder. Example: `fetch.utils.ts`
+
+# Type definition rules
+
+- Prefer `type` over `interface`
+- For API DTOs or DB entities name fields in `snake_case`
+- For any other types use `camelCase`
