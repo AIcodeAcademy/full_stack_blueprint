@@ -5,9 +5,9 @@
 	"SELECT_BY_ID": "SELECT * FROM assets WHERE id = ?",
 	"SELECT_BY_FIELD": "SELECT * FROM assets WHERE ? = ?",
 	"SELECT_BY_QUERY": "SELECT * FROM assets WHERE ?",
-	"SELECT_BY_USER_ID": "SELECT * FROM assets WHERE user_id = ?",
-	"INSERT": "INSERT INTO assets (user_id, category_id, name, value, quantity, acquisition_date) VALUES (?, ?, ?, ?, ?, ?)",
-	"UPDATE": "UPDATE assets SET category_id = ?, name = ?, value = ?, quantity = ?, acquisition_date = ? WHERE id = ? AND user_id = ?",
-	"DELETE": "DELETE FROM assets WHERE id = ? AND user_id = ?",
+	"SELECT_BY_USER_ID": "SELECT * FROM assets WHERE user_id = $user_id",
+	"INSERT": "INSERT INTO assets (user_id, category_id, name, value, quantity, acquisition_date) VALUES ($user_id, $category_id, $name, $value, $quantity, $acquisition_date)",
+	"UPDATE": "UPDATE assets SET category_id = $category_id, name = $name, value = $value, quantity = $quantity, acquisition_date = $acquisition_date WHERE id = $id AND user_id = $user_id",
+	"DELETE": "DELETE FROM assets WHERE id = $id AND user_id = $user_id",
 	"SEED": []
 }

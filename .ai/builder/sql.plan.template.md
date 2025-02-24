@@ -80,6 +80,7 @@ type SQL = {
    - Use `$id` for primary key
    - Use `$user_id` for user relationships
    - Prefix all parameters with `$`
+   - Name them in `snake_case`
 - Study `tools.sql.json` as the reference implementation
 
 #### Tasks
@@ -87,7 +88,7 @@ type SQL = {
 - [ ] Create or update the `/src/sql` folder with the SQL commands
 @for(table of tables){
 - [ ] Create if not exists a file called `{{table.name}}.sql.json`
-- [ ] Fill it or update it with the SQL commands
+- [ ] Fill it or update it with the SQL commands, respecting naming conventions
 - [ ] Add the seed data as an array of objects to the `SEED` property if needed
 }
 

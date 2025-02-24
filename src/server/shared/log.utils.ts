@@ -6,6 +6,6 @@ export const warn = (source: string, target: unknown) => {
 	console.warn(`☣️  : ${source}`, target);
 };
 
-export const error = (source: string, target: unknown) => {
+export const exception = (source: string, target: unknown) => {
 	console.error(`🚨  : ${source}`, target);
 };

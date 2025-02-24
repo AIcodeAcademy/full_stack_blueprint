@@ -1,5 +1,6 @@
 import { type Changes, Database, type SQLQueryBindings } from "bun:sqlite";
 import { AppError } from "./app-error.class";
+import { debug, exception } from "./log.utils";
 import type { Raw, SQL } from "./sql.type";
 
 const db = new Database(":memory:", { safeIntegers: false, strict: true });
@@ -71,9 +72,16 @@ export const insert = <E>(query: string, entity: Raw<E>): number => {
 		created_at: new Date().toISOString(),
 		updated_at: new Date().toISOString(),
 	};
-	const r: Changes = q.run(queryBindings);
-	if (r.changes === 0) throw new AppError("Failed to insert", "DATABASE");
-	return Number(r.lastInsertRowid);
+	try {
+		const r: Changes = q.run(queryBindings);
+		if (r.changes === 0) throw new AppError("Failed to insert", "DATABASE");
+		return Number(r.lastInsertRowid);
+	} catch (error) {
+		exception("Failed to insert", error);
+		debug("Query", query);
+		debug("Bindings", queryBindings);
+		throw error;
+	}
 };
 
 /**
