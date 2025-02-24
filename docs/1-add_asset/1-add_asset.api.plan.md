@@ -28,12 +28,12 @@ Reference documentation to be used during implementation:
 ### DTOs
 
 For `assets`:
-- `AssetPostRequest`: Request DTO for creating a new asset
+- ✅ `AssetPostRequest`: Request DTO for creating a new asset
   - `categoryId: number` - ID of the selected asset category
   - `value: number` - Monetary value of the asset
   - `quantity: number` - Number of units of the asset
   - `acquisitionDate: string` - ISO date string when the asset was acquired
-- `AssetResponse`: Response DTO for asset data
+- ✅ `AssetResponse`: Response DTO for asset data
   - `id: number` - Unique identifier of the asset
   - `categoryId: number` - ID of the asset category
   - `categoryName: string` - Name of the asset category
@@ -44,7 +44,7 @@ For `assets`:
   - `updatedAt: string` - ISO datetime of last update
 
 For `categories`:
-- `CategoryResponse`: Response DTO for category data
+- ✅ `CategoryResponse`: Response DTO for category data
   - `id: number` - Unique identifier of the category
   - `name: string` - Name of the category
   - `risk: string` - Risk level of the category
@@ -53,13 +53,13 @@ For `categories`:
 ### Endpoints
 
 For `assets`:
-- `POST /api/assets`: Creates a new asset in the investor's portfolio
+- ✅ `POST /api/assets`: Creates a new asset in the investor's portfolio
   - Request: `AssetPostRequest`
   - Response: `AssetResponse`
   - Errors: UNAUTHORIZED, BAD_REQUEST, INTERNAL_SERVER_ERROR
 
 For `categories`:
-- `GET /api/categories`: Retrieves all available asset categories
+- ✅ `GET /api/categories`: Retrieves all available asset categories
   - Request: None
   - Response: `CategoryResponse[]`
   - Errors: UNAUTHORIZED, INTERNAL_SERVER_ERROR
@@ -128,9 +128,9 @@ const postResource = async (request: Request): Promise<Response> => {
 
 #### Tasks
 
-- [ ] Create or update the `/src/server/api` folder with the API resources
-- [ ] Create folder `assets`
-- [ ] Create folder `categories`
+- ✅ Create or update the `/src/server/api` folder with the API resources
+- ✅ Create folder `assets`
+- ✅ Create folder `categories`
 
 ### 2. Generate API Repository files
 
@@ -143,18 +143,18 @@ const postResource = async (request: Request): Promise<Response> => {
 
 #### Tasks
 
-- [ ] Create repository `assets.repository.ts`
-  - [ ] Add SQL commands import and read commands
-  - [ ] Import entity types and Raw utils
-  - [ ] Implement data access functions
-  - [ ] Add validation calls
-  - [ ] Throw AppError if logic or validation fails
-- [ ] Create repository `categories.repository.ts`
-  - [ ] Add SQL commands import and read commands
-  - [ ] Import entity types and Raw utils
-  - [ ] Implement data access functions
-  - [ ] Add validation calls
-  - [ ] Throw AppError if logic or validation fails
+- ✅ Create repository `assets.repository.ts`
+  - ✅ Add SQL commands import and read commands
+  - ✅ Import entity types and Raw utils
+  - ✅ Implement data access functions
+  - ✅ Add validation calls
+  - ✅ Throw AppError if logic or validation fails
+- ✅ Create repository `categories.repository.ts`
+  - ✅ Add SQL commands import and read commands
+  - ✅ Import entity types and Raw utils
+  - ✅ Implement data access functions
+  - ✅ Add validation calls
+  - ✅ Throw AppError if logic or validation fails
 
 ### 3. Generate API DTOs
 
@@ -184,11 +184,11 @@ export type ResourceResponse = {
 
 #### Tasks
 
-- [ ] Go to `/src/server/api/assets/` folder
-  - [ ] Create DTO `asset-post-request.type.ts`
-  - [ ] Create DTO `asset-response.type.ts`
-- [ ] Go to `/src/server/api/categories/` folder
-  - [ ] Create DTO `category-response.type.ts`
+- ✅ Go to `/src/server/api/assets/` folder
+  - ✅ Create DTO `asset-post-request.type.ts`
+  - ✅ Create DTO `asset-response.type.ts`
+- ✅ Go to `/src/server/api/categories/` folder
+  - ✅ Create DTO `category-response.type.ts`
 
 ### 4. Generate API Controllers
 
@@ -204,18 +204,18 @@ export type ResourceResponse = {
 
 #### Tasks
 
-- [ ] Go to `/src/server/api/assets/` folder
-- [ ] Create controller `assets.controller.ts`
-  - [ ] Import request utils and response utils
-  - [ ] Import DTOs
-  - [ ] Import repository
-  - [ ] Implement controller functions
-- [ ] Go to `/src/server/api/categories/` folder
-- [ ] Create controller `categories.controller.ts`
-  - [ ] Import request utils and response utils
-  - [ ] Import DTOs
-  - [ ] Import repository
-  - [ ] Implement controller functions
+- ✅ Go to `/src/server/api/assets/` folder
+- ✅ Create controller `assets.controller.ts`
+  - ✅ Import request utils and response utils
+  - ✅ Import DTOs
+  - ✅ Import repository
+  - ✅ Implement controller functions
+- ✅ Go to `/src/server/api/categories/` folder
+- ✅ Create controller `categories.controller.ts`
+  - ✅ Import request utils and response utils
+  - ✅ Import DTOs
+  - ✅ Import repository
+  - ✅ Implement controller functions
 
 ### 5. Update API Configuration
 
@@ -237,9 +237,9 @@ export const apiRoutes = {
 
 #### Tasks
 
-- [ ] Update `/src/server/api/api.controller.ts`
-- [ ] Import `assetsRoutes` from controller
-- [ ] Import `categoriesRoutes` from controller
-- [ ] Add routes to `apiRoutes` object
+- ✅ Update `/src/server/api/api.controller.ts`
+- ✅ Import `assetsRoutes` from controller
+- ✅ Import `categoriesRoutes` from controller
+- ✅ Add routes to `apiRoutes` object
 
 _End of API Plan for 1 - Add Asset_
