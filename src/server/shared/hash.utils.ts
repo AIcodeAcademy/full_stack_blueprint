@@ -3,8 +3,8 @@
  * @param password - The password to hash
  * @returns The hashed password
  */
-export function hashPassword(password: string): Promise<string> {
-	return Bun.password.hash(password);
+export async function hashPassword(password: string): Promise<string> {
+	return await Bun.password.hash(password);
 }
 
 /**
@@ -13,9 +13,9 @@ export function hashPassword(password: string): Promise<string> {
  * @param hash - The hashed password
  * @returns True if the password is correct, false otherwise
  */
-export function verifyPassword(
+export async function verifyPassword(
 	password: string,
 	hash: string,
 ): Promise<boolean> {
-	return Bun.password.verify(password, hash);
+	return await Bun.password.verify(password, hash);
 }

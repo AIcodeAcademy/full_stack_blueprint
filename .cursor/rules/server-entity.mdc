@@ -1,6 +1,6 @@
 ---
-description: Generate a server domain entity
-globs: /src/server/domain/*.type.ts
+description: 
+globs: 
 alwaysApply: false
 ---
 ---
@@ -8,16 +8,75 @@ description: Generate a server domain entity
 globs: /src/server/domain/*.type.ts
 alwaysApply: false
 ---
-This rule is for generating or updating server side entities.
+# Server Entity Rules
 
-- Work at the `/src/server/domain` folder
-- Create file with `{{entity-name}}.type.ts` 
-  - Define and export an entity as a type, not interfaces nor clases
-    - Named in `PascalCase` like `UserOrder`
-    - Fields are declared in `kebab_case` like `user_id`
-    - Add the `id` PK field
-    - Add auditing fields `created_at` and `updated_at` 
-  - Declare and export a null value constant with name `NULL_ENTITY_NAME`
-  - If needed define and export a validation function `validateEntityName(entity: EntityName)` 
-    - Import the `@server/shared/app-error.class`to throw `new AppError("Reason", "LOGIC")` when invalid.
-- Study `tools.sql.json` as a reference implementation
+## Naming Conventions
+- File naming: Use `{entity-name}.type.ts` in kebab-case
+- Type names: Use PascalCase for type definitions (e.g., `Tool`)
+- Constants: Use UPPER_SNAKE_CASE for null/default objects (e.g., `NULL_TOOL`)
+- Functions: Use camelCase for validation functions (e.g., `validateTool`)
+- Fields: Use snake_case for all entity properties (e.g., `user_id`)
+
+## Required Exports
+1. **Main Entity Type**:
+   - Define as TypeScript `type` (not interface or class)
+   - Include `id` as primary key
+   - Include audit fields: `created_at` and `updated_at`
+
+2. **NULL/Default Object**:
+   - Export a constant with default values for all fields 
+   - Name as `NULL_{ENTITY_NAME}`
+
+3. **Validation Function**:
+   - Export a function named `validate{EntityName}`
+   - Accept a partial entity as parameter
+   - Throw `AppError` with type "LOGIC" when validation fails
+
+## Imports
+- Import `AppError` from `@server/shared/app-error.class`
+- Import related entity types if needed
+
+## Documentation
+- Add JSDoc comments to all exported types, constants, and functions
+- Document parameters and thrown exceptions
+
+## Example Structure
+```typescript
+import { AppError } from "../shared/app-error.class";
+
+/**
+ * Represents an entity with its properties
+ */
+export type EntityName = {
+  id: number;
+  name: string;
+  // other properties...
+  user_id: number;
+  created_at: Date;
+  updated_at: Date;
+};
+
+/**
+ * Default empty entity object
+ */
+export const NULL_ENTITY_NAME: EntityName = {
+  id: 0,
+  name: "",
+  // default values...
+  user_id: 0,
+  created_at: new Date(),
+  updated_at: new Date(),
+};
+
+/**
+ * Validates an entity
+ * @param entity - The entity to validate
+ * @throws AppError if the entity is invalid
+ */
+export const validateEntityName = (entity: Partial<EntityName>): void => {
+  if (!entity.name /* other validations */) {
+    throw new AppError("Invalid entity", "LOGIC");
+  }
+};
+```
+```

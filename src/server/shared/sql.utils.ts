@@ -1,6 +1,5 @@
 import { type Changes, Database, type SQLQueryBindings } from "bun:sqlite";
 import { AppError } from "./app-error.class";
-import { debug, exception } from "./log.utils";
 import type { Raw, SQL } from "./sql.type";
 
 const db = new Database(":memory:", { safeIntegers: false, strict: true });
@@ -23,10 +22,12 @@ export const selectAll = <R>(query: string): R[] => {
  * @param query - SQL query with $id parameter
  * @param id - The ID to search for
  * @returns The matching record cast to type R
+ * @throws AppError if the record is not found
  */
 export const selectById = <R>(query: string, id: number): R => {
 	const q = db.query(query);
 	const r = q.get({ id });
+	if (!r) throw new AppError("Record not found", "DATABASE");
 	return r as R;
 };
 
@@ -44,16 +45,36 @@ export const selectByUserId = <R>(query: string, userId: number): R[] => {
 };
 
 /**
+ * Executes a SELECT query with a user ID parameter
+ * @template R - The type of the result
+ * @param query - SQL query string
+ * @param field - The field to filter by
+ * @param value - The value to filter by
+ * @returns Query results cast to type R
+ */
+export const selectByField = <R>(
+	query: string,
+	field: string,
+	value: unknown,
+): R[] => {
+	const q = db.query(query);
+	const queryBindings: SQLQueryBindings = {
+		[field]: value,
+	} as SQLQueryBindings;
+	const r = q.all(queryBindings);
+	return r as R[];
+};
+
+/**
  * Executes a SELECT query with optional parameters
- * @template P - The type of the parameters
  * @template R - The type of the result
  * @param query - SQL query string
  * @param params - Optional query parameters
  * @returns Query results cast to type R
  */
-export const select = <P, R>(query: string, params?: P): R => {
+export const select = <R>(query: string, params?: unknown): R => {
 	const q = db.query(query);
-	const r = params ? q.all(params) : q.all();
+	const r = params ? q.all(params as SQLQueryBindings) : q.all();
 	return r as R;
 };
 
@@ -65,34 +86,27 @@ export const select = <P, R>(query: string, params?: P): R => {
  * @returns Number of affected rows
  */
 export const insert = <E>(query: string, entity: Raw<E>): number => {
-	if (!entity) throw Error("Params are required");
+	if (!entity) throw new AppError("Entity to insert is required", "DATABASE");
 	const q = db.query(query);
 	const queryBindings: SQLQueryBindings = {
 		...entity,
 		created_at: new Date().toISOString(),
 		updated_at: new Date().toISOString(),
 	};
-	try {
-		const r: Changes = q.run(queryBindings);
-		if (r.changes === 0) throw new AppError("Failed to insert", "DATABASE");
-		return Number(r.lastInsertRowid);
-	} catch (error) {
-		exception("Failed to insert", error);
-		debug("Query", query);
-		debug("Bindings", queryBindings);
-		throw error;
-	}
+	const r: Changes = q.run(queryBindings);
+	if (r.changes === 0) throw new AppError("Failed to insert", "DATABASE");
+	return Number(r.lastInsertRowid);
 };
 
 /**
  * Executes an UPDATE query with parameters
  * @template P - The type of the parameters
  * @param query - SQL query string
- * @param params - Query parameters
+ * @param params - The parameters to update
  * @returns Number of affected rows
  */
 export const update = <P>(query: string, params: P): number => {
-	if (!params) throw new AppError("Params are required", "LOGIC");
+	if (!params) throw new AppError("Params to update are required", "DATABASE");
 	const q = db.query(query);
 	const queryBindings: SQLQueryBindings = {
 		...params,
@@ -105,7 +119,7 @@ export const update = <P>(query: string, params: P): number => {
 /**
  * Creates a table in the database
  * @param tableCreationCommand - SQL command to create a table
- * @returns Number of affected rows
+ * @returns Number of affected items
  */
 export const create = (tableCreationCommand: string): number => {
 	const q = db.query(tableCreationCommand);
@@ -116,7 +130,7 @@ export const create = (tableCreationCommand: string): number => {
 /**
  * Drops a table if it exists
  * @param tableName - Name of the table to drop
- * @returns Number of affected rows
+ * @returns Number of affected items
  */
 export const drop = (tableName: string): number => {
 	const q = db.query(`DROP TABLE IF EXISTS ${tableName}`);

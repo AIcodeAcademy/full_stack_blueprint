@@ -4,6 +4,7 @@ import { hashPassword, verifyPassword } from "@/server/shared/hash.utils";
 import type { Raw } from "@/server/shared/sql.type";
 import type { User } from "@server/domain/user.type";
 import { insert, readCommands, select } from "@server/shared/sql.utils";
+import type { CredentialsRequest } from "./credentials-request.type";
 
 const usersSql = await readCommands("users");
 
@@ -12,36 +13,41 @@ const usersSql = await readCommands("users");
  * @param email - The email of the user
  * @returns The user or undefined if not found
  */
-export const selectUserByEmail = async (
-	email: string,
-): Promise<User | undefined> => {
-	const users = select<{ email: string }, User[]>(usersSql.SELECT_BY_FIELD, {
-		email,
-	});
+export const selectUserByEmail = (email: string): User | undefined => {
+	const users = select<User[]>(usersSql.SELECT_BY_FIELD, { email });
 	return users[0];
 };
 
 /**
  * Creates a user
  * @param userToInsert - The user to insert
- * @returns The user
+ * @returns The user id
+ * @throws AppError if the user email already exists
  */
 export const insertUser = async (userToInsert: Raw<User>): Promise<number> => {
 	validateUser(userToInsert);
-	const user = await selectUserByEmail(userToInsert.email);
+	const user = selectUserByEmail(userToInsert.email);
 	if (user) throw new AppError("User already exists", "LOGIC");
 	userToInsert.password = await hashPassword(userToInsert.password);
 	const newUserId = insert<Raw<User>>(usersSql.INSERT, userToInsert);
 	return newUserId;
 };
 
-export const selectUserByEmailAndPassword = async (
-	email: string,
-	password: string,
+/**
+ * Selects a user by email and password
+ * @param credentials - The credentials of the user
+ * @returns The user id
+ * @throws AppError if the user is not found or the password is invalid
+ */
+export const selectUserByCredentials = async (
+	credentials: CredentialsRequest,
 ): Promise<number> => {
-	const user = await selectUserByEmail(email);
-	if (!user) throw new AppError("User not found", "LOGIC");
-	const isValidPassword = await verifyPassword(password, user.password);
-	if (!isValidPassword) throw new AppError("Invalid password", "LOGIC");
+	const user = await selectUserByEmail(credentials.email);
+	if (!user) throw new AppError("Invalid credentials", "LOGIC");
+	const isValidPassword = await verifyPassword(
+		credentials.password,
+		user.password,
+	);
+	if (!isValidPassword) throw new AppError("Invalid credentials", "LOGIC");
 	return user.id;
 };
