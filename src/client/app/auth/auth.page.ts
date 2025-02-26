@@ -118,6 +118,13 @@ export class AuthPage extends BasePageComponent {
 		this.removeEventListener("authenticate", this.#authenticateListener);
 	}
 
+	// Update presenters with current state
+	protected override updatePresenters(): void {
+		if (this.presenterComponents.authForm) {
+			this.presenterComponents.authForm.mode = this.state.mode;
+		}
+	}
+
 	// Handle authentication event
 	#authenticateListener = ((e: CustomEvent<AuthenticateEventDetail>) => {
 		this.#handleAuth(e.detail.credentials);
