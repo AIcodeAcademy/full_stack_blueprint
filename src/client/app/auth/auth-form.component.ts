@@ -84,7 +84,10 @@ export class AuthFormComponent extends BasePresenterComponent {
 
 	// Override render to update element references
 	protected override render(): void {
-		super.render();
+		// Update the innerHTML first
+		this.innerHTML = this.template();
+
+		// Then select the elements
 		this.#form = this.selectElement<HTMLFormElement>("form");
 		this.#error = this.selectElement<HTMLElement>("[role='alert']");
 	}
