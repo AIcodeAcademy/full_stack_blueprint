@@ -24,19 +24,23 @@ There are three main agents you should use:
 
 Those agents generate markdown documents at the `./docs` folder with instructions to be used by the AI Code Editor.
 
-Look for inspiration in the [prompts](./ai/prompts.md) file. You may have to adapt them to your project and agents.
+Look for inspiration in the [.ai folder](./ai/) and adapt them to your project and agents.
 
 Other agents works as aides to the main agents.
 
 ### AI Code Editor
 
-You can use **Cursor Composer** or **GitHub Copilot** to generate code and documentation.
+You can use **Cursor Composer**, **GitHub Copilot** or **Windsurf** to generate code and documentation.
 
 Both have rules or instructions to be used as context for the AI.
 
 - `.cursor/rules/`: Rules for Cursor Composer.
 - `.vscode/instructions/`: Instructions for GitHub Copilot.
 - `.windsurfrules`: Rules for Windsurf.
+
+#### AI Models
+
+Works with any LLM model. Recommended models: Claude 3.7 Sonnet, GPT-o3, or Gemini 2 Pro.
 
 ---
 
@@ -56,14 +60,14 @@ This project was created using `bun init` in bun v1.2.0.
 To install **bun**:
 
 ```bash
+# With npm (if you have node installed)
+npm install -g bun
+
 # Linux or MacOS
 curl -fsSL https://bun.sh/install | bash
 
 # Windows
 powershell -c "irm https://bun.sh/install.ps1 | iex"
-
-# Or with npm
-npm install -g bun
 ```
 
 ### Development Workflow:
@@ -80,13 +84,13 @@ To run the client and server in parallel:
 bun start
 ```
 
-To run the client:
+To run only the client:
 
 ```bash
 bun client
 ```
 
-To run the server:
+To run only the server:
 
 ```bash
 bun server
