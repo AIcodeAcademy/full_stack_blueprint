@@ -1,12 +1,14 @@
-import { login, register } from "./auth.repository";
-
 import type { Credentials } from "../../domain/credentials.type";
+import { BasePageComponent } from "../../shared/base-page.component";
 import { navigate } from "../../shared/navigation.utils";
 import {
 	AuthFormComponent,
 	type AuthenticateEventDetail,
 	type Mode,
 } from "./auth-form.component";
+import { authRepository } from "./auth.repository";
+
+// Define custom elements
 customElements.define("auth-form", AuthFormComponent);
 
 const html = String.raw;
@@ -16,96 +18,136 @@ const html = String.raw;
  * It displays an auth form and a navigation tab to switch between login and register
  * Calls the auth repository to login or register the user
  */
-export class AuthPage extends HTMLElement {
-	#authForm: AuthFormComponent;
-	#loginTab: HTMLButtonElement;
-	#registerTab: HTMLButtonElement;
-	#mode: Mode = "login";
-	#template = html`
+export class AuthPage extends BasePageComponent {
+	// Extended state properties for this page
+	protected override state = {
+		loading: false,
+		error: null as string | null,
+		data: null as unknown,
+		mode: "login" as Mode,
+	};
+
+	// References to child components
+	protected override presenterComponents: {
+		authForm: AuthFormComponent | null;
+		loginTab: HTMLButtonElement | null;
+		registerTab: HTMLButtonElement | null;
+	} = {
+		authForm: null,
+		loginTab: null,
+		registerTab: null,
+	};
+
+	// Auth page template using state for rendering
+	protected override template(): string {
+		return html`
 		<main class="container">
 			<nav>
 				<ul>
 					<li>
-						<button class="outline" data-tab="login" aria-current="true">Login</button>
+						<button 
+							class="outline" 
+							data-tab="login" 
+							aria-current="${this.state.mode === "login"}"
+						>
+							Login
+						</button>
 					</li>
 					<li>
-						<button class="outline" data-tab="register" aria-current="false">Register</button>
+						<button 
+							class="outline" 
+							data-tab="register" 
+							aria-current="${this.state.mode === "register"}"
+						>
+							Register
+						</button>
 					</li>
 				</ul>
 			</nav>
 			<section>
-				<auth-form mode="login"></auth-form>
+				${
+					this.state.loading
+						? html`<div class="loading">Loading...</div>`
+						: html`<auth-form mode="${this.state.mode}"></auth-form>`
+				}
+				${
+					this.state.error
+						? html`<div class="error">${this.state.error}</div>`
+						: ""
+				}
 			</section>
 		</main>
-	`;
-
-	constructor() {
-		super();
-		this.innerHTML = this.#template;
-		this.#authForm = this.#selectAuthForm();
-		this.#loginTab = this.#selectTab("login");
-		this.#registerTab = this.#selectTab("register");
-		this.#mode = "login";
+		`;
 	}
 
-	connectedCallback() {
-		this.#loginTab.addEventListener("click", () => this.#showLogin());
-		this.#registerTab.addEventListener("click", () => this.#showRegister());
+	// Initialize presenter components after render
+	protected override initializePresenters(): void {
+		this.presenterComponents.authForm = this.querySelector(
+			"auth-form",
+		) as AuthFormComponent;
+		this.presenterComponents.loginTab = this.querySelector(
+			'button[data-tab="login"]',
+		) as HTMLButtonElement;
+		this.presenterComponents.registerTab = this.querySelector(
+			'button[data-tab="register"]',
+		) as HTMLButtonElement;
+	}
+
+	// Setup event listeners
+	protected override setupEventListeners(): void {
+		this.presenterComponents.loginTab?.addEventListener("click", () =>
+			this.#showTab("login"),
+		);
+		this.presenterComponents.registerTab?.addEventListener("click", () =>
+			this.#showTab("register"),
+		);
 		this.addEventListener("authenticate", this.#authenticateListener);
 	}
 
-	disconnectedCallback() {
-		this.#loginTab.removeEventListener("click", () => this.#showLogin());
-		this.#registerTab.removeEventListener("click", () => this.#showRegister());
+	// Remove event listeners
+	protected override removeEventListeners(): void {
+		this.presenterComponents.loginTab?.removeEventListener("click", () =>
+			this.#showTab("login"),
+		);
+		this.presenterComponents.registerTab?.removeEventListener("click", () =>
+			this.#showTab("register"),
+		);
 		this.removeEventListener("authenticate", this.#authenticateListener);
 	}
 
-	#selectAuthForm(): AuthFormComponent {
-		return this.querySelector("auth-form") as AuthFormComponent;
+	// Show login or register tab
+	#showTab(tab: Mode): void {
+		this.state.mode = tab;
+		this.render();
 	}
 
-	#selectTab(tab: string): HTMLButtonElement {
-		return this.querySelector(`button[data-tab="${tab}"]`) as HTMLButtonElement;
-	}
-
-	#showLogin() {
-		this.#showTab("login");
-	}
-
-	#showRegister() {
-		this.#showTab("register");
-	}
-
-	#showTab(tab: Mode) {
-		this.#mode = tab;
-		if (tab === "login") {
-			this.#loginTab.setAttribute("aria-current", "true");
-			this.#registerTab.setAttribute("aria-current", "false");
-		} else {
-			this.#loginTab.setAttribute("aria-current", "false");
-			this.#registerTab.setAttribute("aria-current", "true");
-		}
-		this.#authForm.setAttribute("mode", tab);
-	}
-
+	// Handle authentication event
 	#authenticateListener = ((e: CustomEvent<AuthenticateEventDetail>) => {
 		this.#handleAuth(e.detail.credentials);
 	}) as EventListener;
 
-	async #handleAuth(credentials: Credentials) {
-		const userToken =
-			this.#mode === "login"
-				? await login(credentials)
-				: await register(credentials);
-		if (userToken.token) {
-			localStorage.setItem("userToken", JSON.stringify(userToken));
-			navigate("#home");
-		} else {
-			this.#authForm.showError(
-				this.#mode === "login"
-					? "Invalid credentials"
-					: "Registration failed. Please try again.",
-			);
-		}
+	// Handle authentication with repository
+	async #handleAuth(credentials: Credentials): Promise<void> {
+		await this.handleApiRequest(async () => {
+			const userToken =
+				this.state.mode === "login"
+					? await authRepository.login(credentials)
+					: await authRepository.register(credentials);
+
+			if (userToken.token) {
+				localStorage.setItem("userToken", JSON.stringify(userToken));
+				navigate("#home");
+			} else {
+				const errorMessage =
+					this.state.mode === "login"
+						? "Invalid credentials"
+						: "Registration failed. Please try again.";
+
+				this.presenterComponents.authForm?.showError(errorMessage);
+				throw new Error(errorMessage);
+			}
+
+			return userToken;
+		});
 	}
 }

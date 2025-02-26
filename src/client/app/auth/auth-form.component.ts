@@ -1,6 +1,7 @@
-export type Mode = "login" | "register";
-
 import type { Credentials } from "../../domain/credentials.type";
+import { BasePresenterComponent } from "../../shared/base-presenter.component";
+
+export type Mode = "login" | "register";
 
 export type AuthenticateEventDetail = {
 	credentials: Credentials;
@@ -13,49 +14,29 @@ const html = String.raw;
  * It displays a login or register form depending on the mode attribute
  * @fires authenticate - Dispatched when the form is submitted
  */
-export class AuthFormComponent extends HTMLElement {
-	#mode: Mode;
+export class AuthFormComponent extends BasePresenterComponent {
+	// Private properties
 	#form: HTMLFormElement | null = null;
 	#error: HTMLElement | null = null;
-	#handleSubmitBound = this.#handleSubmit.bind(this);
+	#submitHandler: (e: SubmitEvent) => void = () => {};
 
-	constructor() {
-		super();
-		this.#mode = (this.getAttribute("mode") as Mode) || "login";
-		this.render();
+	// Getters/setters to expose mode as a property
+	get mode(): Mode {
+		return this.getAttributeOrDefault("mode", "login") as Mode;
 	}
 
-	static get observedAttributes() {
+	set mode(value: Mode) {
+		this.setAttribute("mode", value);
+	}
+
+	// Override observed attributes to react to mode changes
+	static override get observedAttributes() {
 		return ["mode"];
 	}
 
-	attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-		if (name === "mode" && oldValue !== newValue) {
-			this.#mode = newValue as Mode;
-			this.render();
-		}
-	}
-
-	connectedCallback() {
-		this.#attachListeners();
-	}
-
-	disconnectedCallback() {
-		this.#detachListeners();
-	}
-
-	render() {
-		this.innerHTML = this.template();
-		// Update references to the form and error element
-		this.#form = this.querySelector("form");
-		this.#error = this.querySelector("[role='alert']");
-		if (this.isConnected) {
-			this.#attachListeners();
-		}
-	}
-
-	template(): string {
-		if (this.#mode === "register") {
+	// Template method implementation
+	protected override template(): string {
+		if (this.mode === "register") {
 			return html`
         <article>
           <header>
@@ -101,49 +82,60 @@ export class AuthFormComponent extends HTMLElement {
     `;
 	}
 
-	#handleSubmit(e: SubmitEvent) {
-		e.preventDefault();
-		if (!this.#form) return;
-		const formData = new FormData(this.#form);
+	// Override render to update element references
+	protected override render(): void {
+		super.render();
+		this.#form = this.selectElement<HTMLFormElement>("form");
+		this.#error = this.selectElement<HTMLElement>("[role='alert']");
+	}
+
+	// Override setup event listeners
+	protected override setupEventListeners(): void {
+		if (this.#form) {
+			// Create form submit handler using the helper method
+			this.#submitHandler = this.handleFormSubmit(
+				this.#form,
+				this.#processFormData.bind(this),
+			);
+			this.#form.addEventListener("submit", this.#submitHandler);
+		}
+	}
+
+	// Override remove event listeners
+	protected override removeEventListeners(): void {
+		if (this.#form) {
+			this.#form.removeEventListener("submit", this.#submitHandler);
+		}
+	}
+
+	// Process form data and dispatch event
+	#processFormData(formData: FormData): void {
 		const email = formData.get("email") as string;
 		const password = formData.get("password") as string;
-		if (this.#mode === "register") {
+
+		if (this.mode === "register") {
 			const confirmPassword = formData.get("confirm-password") as string;
 			if (password !== confirmPassword) {
 				this.showError("Passwords do not match");
 				return;
 			}
 		}
+
 		this.clearError();
 		const credentials: Credentials = { email, password };
-		// Dispatch a single custom event "authenticate" containing only credentials
-		const customEvent = new CustomEvent("authenticate", {
-			detail: { credentials },
-			bubbles: true,
-			composed: true,
+		this.dispatchCustomEvent<AuthenticateEventDetail>("authenticate", {
+			credentials,
 		});
-		this.dispatchEvent(customEvent);
 	}
 
-	#attachListeners() {
-		if (this.#form) {
-			this.#form.addEventListener("submit", this.#handleSubmitBound);
-		}
-	}
-
-	#detachListeners() {
-		if (this.#form) {
-			this.#form.removeEventListener("submit", this.#handleSubmitBound);
-		}
-	}
-
-	showError(message: string) {
+	// Public methods
+	showError(message: string): void {
 		if (this.#error) {
 			this.#error.textContent = message;
 		}
 	}
 
-	clearError() {
+	clearError(): void {
 		if (this.#error) {
 			this.#error.textContent = "";
 		}
