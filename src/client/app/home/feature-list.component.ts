@@ -6,13 +6,13 @@ const html = String.raw;
  * Feature list component to display application features
  */
 export class FeatureListComponent extends BasePresenterComponent {
-	#features: string[] = [];
+	_features: string[] = [];
 
 	/**
 	 * Set features to display
 	 */
 	set features(value: string[]) {
-		this.#features = value;
+		this._features = value;
 		this.render();
 	}
 
@@ -20,11 +20,11 @@ export class FeatureListComponent extends BasePresenterComponent {
 	 * Get features
 	 */
 	get features(): string[] {
-		return this.#features;
+		return this._features;
 	}
 
 	protected override template(): string {
-		if (!this.#features.length) {
+		if (!this._features?.length) {
 			return html`<p>No features available</p>`;
 		}
 
@@ -32,7 +32,7 @@ export class FeatureListComponent extends BasePresenterComponent {
       <div class="feature-list">
         <h3>Features</h3>
         <ul>
-          ${this.#features
+          ${this._features
 						.map(
 							(feature) => html`
             <li>${feature}</li>
