@@ -1,0 +1,27 @@
+---
+description: Generate a server controller module
+globs: /src/server/api/**/*.controller.ts
+alwaysApply: false
+---
+---
+description: Generate a server controller module
+globs: /src/server/api/**/*.controller.ts
+alwaysApply: false
+---
+This rule is for generating or updating server controller modules.
+
+- Work at the `/src/server/api/resource-name` folder
+- Create file with `{{resource-name}}.controller.ts` 
+  - Import dependencies:
+    - API DTO types from curent folder `{dto.type.ts}`
+    - Entities definition from `/src/server/domain` folder
+    - Request utils from `/src/server/shared/request.utils.ts` file
+    - Response utils from `/src/server/shared/response.utils.ts` file
+    - Repository from from curent folder `{dto.repository.ts}`
+  - Define and export functions attached to API end points
+    - Named in `camelCase` with SQL friendly names like `selectUser` or `insertUser`
+    - Parameters can be primitives, or DTOs
+    - Extract typed body and parameters from the request
+    - Responses are always a DTO, an entity, an array of entities or a number of affected rows
+  - If needed call the auth validation function `validateUserId(request)` 
+- Study `tools.controller.json` as a reference implementation

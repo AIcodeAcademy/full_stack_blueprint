@@ -1,0 +1,24 @@
+---
+description: Generate the SQL commands
+globs: /src/sql/*.sql.json
+alwaysApply: false
+---
+---
+description: Generate a server domain entity
+globs: /src/server/domain/*.type.ts
+alwaysApply: false
+---
+This rule is for generating JSON files with the SQL queries and command for an entity
+
+- Work at the `/src/sql/` folder
+- Create a file with name `{{entity-name}}.sql.json` 
+- Fill it with a JSON object that 
+ - strictly implement the following type `SQL` from `/src/server/shared/sql.type.ts`
+- Name tables in plural `snake_case` like `user_orders`
+- Generate parametric commands
+   - Prefix all parameters with `$`
+   - Name them in `snake_case`
+   - Use `$id` for primary key
+   - Use `$user_id` for user relationships
+   - Use `$field` and `$value` for dynamic field queries
+- Study `tools.sql.json` as a reference implementation

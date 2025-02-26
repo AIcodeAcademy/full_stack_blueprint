@@ -1,12 +1,6 @@
 ---
-description: Generate a server resource folder
-globs: /src/server/api/**/
-alwaysApply: false
----
----
 description: Generate server API resources
-globs: /src/server/api/**/*.repository.ts
-alwaysApply: false
+globs: /src/server/api/*
 ---
 
 # Server Resource Rules

@@ -20,7 +20,7 @@ const postTool = async (request: Request): Promise<Response> => {
 	const toolDto = (await request.json()) as ToolPostRequest;
 	const toolToInsert: Raw<Tool> = {
 		...toolDto,
-		userOwnerId: userId,
+		user_id: userId,
 	};
 	const tool = insertTool(toolToInsert);
 	return ok<Tool>(tool);

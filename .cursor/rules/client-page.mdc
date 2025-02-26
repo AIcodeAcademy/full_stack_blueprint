@@ -1,10 +1,11 @@
 ---
-description: How to create a page componente
-globs: src/client/app
+description: Generate client pages
+globs: /src/client/app/*
+alwaysApply: false
 ---
 ---
-description: How to create a page componment
-globs: src/client/app
+description: Generate client pages 
+globs: /src/client/app/*
 ---
 
 # Page Rules
@@ -16,6 +17,7 @@ globs: src/client/app
   - Page Component: Route controller and state orchestrator
   - Presenter Components: UI logic and DOM manipulation 
   - Repository: Data access and API integration
+  - 
 
 ## Structure
 - Pages live in `src/client/app/{page-name}/` using kebab-case
@@ -23,17 +25,19 @@ globs: src/client/app
 - Required files:
   - `{page-name}.page.ts` - Page controller component
   - `{page-name}.repository.ts` - Data access module
-  - One or moreer components as needed
+  - One or more presentational components as needed
 
 ## Page Component Guidelines
 - Extend HTMLElement and export as default
 - Keep minimal template logic - delegate complex UI to presenters
 - Handle route parameters and state management
-- Coordinate between presenters and repository
+- Coordinate between presenters and repository 
+- Sets presenters state via properties not attributes
 - Follow lifecycle pattern:
   1. Constructor: Set initial template
-  2. ConnectedCallback: vents
-  3. DisconnectedCallbac
+  2. ConnectedCallback: select nodes and attach listeners
+  3. DisconnectedCallbac: remove listeners
+- See current @tools.page.ts as an example
 
 ## Repository Guidelines
 - Export standalone async functions for API operations
@@ -41,22 +45,18 @@ globs: src/client/app
 - Return strongly typed responses or null/empty values
 - Handle API errors gracefully
 - Keep business logic in the page, repository is for data only
+- See current [tools.repository.ts](mdc:src/client/app/about/tools.repository.ts) as an example
 
 ## Presenter Guidelines
 - Create focused components for distinct UI sections
 - Use semantic HTML and minimal styling
 - Make use of [dom.utils.ts](mdc:src/client/shared/dom.utils.ts) to manipulate and hadle the DOM
+- Gets state from parent via properties not attributes
 - Communicate with page via custom events
-- Keep stateless when possible, receive data via properties
 - Follow component lifecycle for setup/cleanup
+- See current [tools-table.component.ts](mdc:src/client/app/about/tools-table.component.ts) as an example
 
 ## Best Practices
-- Use TypeScript types for all data structures
-- Folloe [type-script.mdc](mdc:.cursor/rules/type-script.mdc) rules for TypeScript
-- Follow [web.mdc](mdc:.cursor/rules/web.mdc) rules for html, css code
-- Leverage custom elements for component registration
-- Implement proper event handling and cleanup
-- Use early returns and null checks
-- Keep files focused and maintainable
-- Document public interfaces and events
-- Follow consiconventions
+- Define TypeScript types for all data structures
+- Follow @type-script.mdc rules for TypeScript
+- Follow @web.mdc rules for html, css code

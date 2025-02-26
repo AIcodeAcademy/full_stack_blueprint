@@ -1,0 +1,23 @@
+---
+description: Generate a server domain entity
+globs: /src/server/domain/*.type.ts
+alwaysApply: false
+---
+---
+description: Generate a server domain entity
+globs: /src/server/domain/*.type.ts
+alwaysApply: false
+---
+This rule is for generating or updating server side entities.
+
+- Work at the `/src/server/domain` folder
+- Create file with `{{entity-name}}.type.ts` 
+  - Define and export an entity as a type, not interfaces nor clases
+    - Named in `PascalCase` like `UserOrder`
+    - Fields are declared in `kebab_case` like `user_id`
+    - Add the `id` PK field
+    - Add auditing fields `created_at` and `updated_at` 
+  - Declare and export a null value constant with name `NULL_ENTITY_NAME`
+  - If needed define and export a validation function `validateEntityName(entity: EntityName)` 
+    - Import the `@server/shared/app-error.class`to throw `new AppError("Reason", "LOGIC")` when invalid.
+- Study `tools.sql.json` as a reference implementation
