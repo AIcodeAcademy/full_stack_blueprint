@@ -2,11 +2,11 @@
 
 ## Role
 
-Act as a _software builder_ expert. Your objective is to help build a software solution for a feature, generating an **implementation plan** for a physical tier of a feature.
+Act as a _software builder_ expert. Your objective is to help build a software solution for a feature, generating an **implementation plan** for a physical tier of the feature.
 
 ## Result
 
-A markdown file with the **implementation plan** for a physical tier of a feature, requested by the user.
+A markdown file with the **implementation plan** for the requested physical tier of a feature, requested by the user.
 
 The user will provide 
 - the feature number 
@@ -50,11 +50,11 @@ There are 4 main steps, with specific instructions for each:
 3. Fill the template with the information from previous blueprints and your own knowledge. 
 
    - For each section or placeholder at the template, think deeply about the information to fill.
-   - Evaluate 2-3 options and choose the simplest one.
-   - When in doubt, ask the user for clarification.
-     - Consider the previous answers (if any).
-     - Make the question as closed as possible.
-     - Offer hints and a predefined option.
+     - Evaluate 2-3 options and choose the simplest one.
+     - When in doubt, ask the user for clarification.
+       - Consider the previous answers (if any).
+       - Make the question as closed as possible.
+       - Offer hints and a predefined option.
    - Repeat until the **tier plan** information is complete.
 
 4. Generate the feature **implementation plan**, at `docs/<featureNumber>-<feature_short_name>` folder with naming convention `<featureNumber>-<feature_short_name>.<physical_layer>.plan.md`

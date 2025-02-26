@@ -1,7 +1,7 @@
 --- 
 information: Generate a markdown file documenting the implementation plan of the sql tier for a feature.
 important: This is a template for one and only one feature.
-guide: Include all this template content in the result, fill the placeholders with the actual values.
+guide: Include all this template content in the result file, fill the placeholders with the actual values.
 file_name: {{featureNumber}}-{{feature_short_name}}.sql.plan.md
 ---
 
@@ -23,7 +23,8 @@ Reference documentation to be used during implementation:
 - [SQL Commands Type](/src/server/shared/sql.type.ts)
 - [Initialize Utils](/src/server/shared/initialize.utils.ts)
 - [SQL utils](/src/server/shared/sql.utils.ts)
-- [TS Rules](/.cursor/rules/type-script.mdc)
+- [SQL-JSON rule](/.cursor/rules/sql-json.mdc)
+- [Server entity rule](/.cursor/rules/server-entity.mdc)
 
 ### Tables
 
@@ -52,92 +53,51 @@ No need to generate the seed at this point, just list them.
 - `{{table.name}}`: Needs seed data for {{reason}}
 }
 
-## Implementation plan
+## Plan implementation tasks
 
-### 1. Generate SQL Commands tasks
-
-#### Instructions and references
-
-- You must generate the SQL commands for each table.
-- Each SQL file must strictly implement the SQL type interface:
-```typescript
-type SQL = {
-  TABLE: string;               // Table name for drop/create operations
-  CREATE_TABLE: string;        // Create table SQL command
-  SELECT_ALL: string;          // Select all records
-  SELECT_BY_ID: string;        // Select by primary key
-  SELECT_BY_FIELD: string;     // Select by any field
-  SELECT_BY_QUERY: string;     // Select by custom query
-  SELECT_BY_USER_ID: string;   // Select by user relationship
-  INSERT: string;              // Insert record
-  UPDATE: string;              // Update record
-  DELETE: string;              // Delete record
-  SEED: unknown[];             // Initial data if needed
-};
-```
-- Parameter naming in SQL commands:
-   - Use `$field` and `$value` for dynamic field queries
-   - Use `$id` for primary key
-   - Use `$user_id` for user relationships
-   - Prefix all parameters with `$`
-   - Name them in `snake_case`
-- Study `tools.sql.json` as the reference implementation
-
-#### Tasks
+### 1. Tasks to generate SQL Commands 
 
 - [ ] Create or update the `/src/sql` folder with the SQL commands
+  
 @for(table of tables){
 - [ ] Create if not exists a file called `{{table.name}}.sql.json`
-- [ ] Fill it or update it with the SQL commands, respecting naming conventions
+- [ ] Fill it or update it with the SQL commands, respecting the [SQL-JSON rule](/.cursor/rules/sql-json.mdc)
 - [ ] Add the seed data as an array of objects to the `SEED` property if needed
 }
 
-### 2. Generate Domain types tasks
-
-#### Instructions and references
-- You must generate the domain types for each table.
-- Import
-  - `import { AppError } from "../shared/app-error.class";`
-  - `import type { Raw } from "../shared/sql.type";`
-- Export 
-  - a type called `{{table.name}}`, 
-  - a `NULL_TABLE` value constant, 
-  - a `validate(table: Raw<{{table.name}}>)` function.
-- Study `/src/server/domain/tools.type.ts` as the reference implementation
-
-#### Tasks
+### 2. Tasks to generate Domain Entity types
 
 - [ ] Create or update the `/src/server/domain` folder with the domain types
+  
 @for(table of tables){
 - [ ] Create if not exists a file called `{{table.name}}.type.ts`
-- [ ] Fill it or update it with the domain types, null value and validation function
-}
+- [ ] Fill it or update it with the domain types, null value and validation function respecting the [Server entity rule](/.cursor/rules/server-entity.mdc)
+} 
 
-### 3. Generate table utils tasks
+### 3. Tasks to generate table utils
 
-#### Instructions and references
-
-- You must generate the initialize utils for each table.
-- It is done in the `initializeTables` function at `/src/server/shared/initialize.utils.ts` file.
-- Study `initializeToolsTable` function as the reference implementation
-
-Example:
+Example of desired result:
 ```typescript
-const {tableName}SQL = await readCommands("{tableName}");
-const initialize{TableName}Table = (): void => {
-  drop({tableName}SQL.TABLE);
-  create({tableName}SQL.CREATE_TABLE);
-  seed{TableName}();
+const toolsSql = await readCommands("tools");
+
+export const initializeTables = async (): Promise<void> => {
+  // other tables initialization...
+  initializeToolsTable();
 };
-// If seeding needed:
-const seed{TableName} = (): void => {
-  for (const item of {tableName}SQL.SEED) {
-    insert({tableName}SQL.INSERT, item);
-  }
+
+const initializeToolsTable = (): void => {
+	drop(toolsSql.TABLE);
+	create(toolsSql.CREATE_TABLE);
+	seedTools();
+};
+
+const seedTools = (): void => {
+	for (const tool of toolsSql.SEED) {
+		insert<Tool>(toolsSql.INSERT, tool as Raw<Tool>);
+	}
 };
 ```
 
-#### Tasks
 - [ ] Create or update the `/src/server/shared/initialize.utils.ts` file 
 @for(table of tables){
 - [ ] Read the sql commands for the table at `const {tableName}Sql = await readCommands("{tableName}");`

@@ -1,20 +1,21 @@
 ---
-description: Generate a server domain entity
+description: Rules to generate a server domain entity
 globs: /src/server/domain/*.type.ts
+alwaysApply: false
 ---
 ---
-description: Generate a server domain entity
+description: Rules to generate a server domain entity
 globs: /src/server/domain/*.type.ts
 alwaysApply: false
 ---
 # Server Entity Rules
 
 ## Naming Conventions
-- File naming: Use `{entity-name}.type.ts` in kebab-case
-- Type names: Use PascalCase for type definitions (e.g., `Tool`)
-- Constants: Use UPPER_SNAKE_CASE for null/default objects (e.g., `NULL_TOOL`)
-- Functions: Use camelCase for validation functions (e.g., `validateTool`)
-- Fields: Use snake_case for all entity properties (e.g., `user_id`)
+- **File naming**: Use `{entity-name}.type.ts` in `kebab-case`
+- **Type names**: Use `PascalCase` for type definitions (e.g., `Tool`)
+- **Constants**: Use `UPPER_SNAKE_CASE` for null/default objects (e.g., `NULL_TOOL`)
+- **Functions**: Use `camelCase` for validation functions (e.g., `validateTool`)
+- **Fields**: Use `snake_case` for all entity properties (e.g., `user_id`)
 
 ## Required Exports
 1. **Main Entity Type**:
@@ -33,11 +34,10 @@ alwaysApply: false
 
 ## Imports
 - Import `AppError` from `@server/shared/app-error.class`
-- Import related entity types if needed
+- Import related types from `@server/shared/sql.type`
 
-## Documentation
-- Add JSDoc comments to all exported types, constants, and functions
-- Document parameters and thrown exceptions
+## Extras
+- Follow [general typesscript rules]()
 
 ## Example Structure
 ```typescript
