@@ -2,18 +2,21 @@ import { ok } from "@/server/shared/response.utils";
 import { selectAllCategories } from "./categories.repository";
 import type { CategoryResponse } from "./category-response.type";
 
+/**
+ * Routes controller for /api/categories
+ * - GET: Get all categories
+ * @description Object that wires the request to the correct controller
+ */
 export const categoryRoutes = {
-	GET: async (request: Request): Promise<Response> => {
-		const categories = await selectAllCategories();
+	GET: (request: Request): Response => getCategories(request),
+};
 
-		const response: CategoryResponse[] = categories.map((category) => ({
-			id: category.id,
-			name: category.name,
-			risk_level: category.risk_level,
-			liquidity_level: category.liquidity_level,
-			created_at: category.created_at,
-		}));
+const getCategories = (request: Request): Response => {
+	const categories = selectAllCategories();
 
-		return ok<CategoryResponse[]>(response);
-	},
+	const response: CategoryResponse[] = categories.map(
+		(c) => c as CategoryResponse,
+	);
+
+	return ok<CategoryResponse[]>(response);
 };

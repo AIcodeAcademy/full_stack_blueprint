@@ -1,4 +1,8 @@
-import { METHOD_NOT_ALLOWED_ERROR, UNAUTHORIZED_ERROR } from "./api-error.type";
+import {
+	BAD_REQUEST_ERROR,
+	METHOD_NOT_ALLOWED_ERROR,
+	UNAUTHORIZED_ERROR,
+} from "./api-error.type";
 import type { JwtData } from "./jwt-data.type";
 import { verifyJWT } from "./jwt.utils";
 
@@ -64,12 +68,15 @@ export const getSearchParam = (
 };
 
 /**
- * Retrieves the body of a request as a JSON object
+ * Ensures the body of a request is present
  * @param request - The incoming request object
  * @returns The parsed JSON object
+ * @throws BAD_REQUEST_ERROR if the body is not found
  */
-export const getBody = async <T>(request: Request): Promise<T> => {
-	return await request.json();
+export const guardGetBody = async <T>(request: Request): Promise<T> => {
+	const body = await request.json();
+	if (!body) throw BAD_REQUEST_ERROR;
+	return body as T;
 };
 
 /**
@@ -84,7 +91,7 @@ export const setUserId = (request: Request): void => {
 /**
  * Retrieves the user ID from the request headers
  * @param request - The incoming request object
- * @returns The user ID
+ * @returns The user ID or 0 if not found
  */
 export const getUserId = (request: Request): number => {
 	const userId = request.headers.get("userId");
@@ -92,12 +99,12 @@ export const getUserId = (request: Request): number => {
 };
 
 /**
- * Validates the user ID from the request headers
+ * Ensures the user ID is present in the request headers
  * @param request - The incoming request object
  * @returns The user ID
  * @throws UNAUTHORIZED_ERROR if the user ID is not found
  */
-export const validateUserId = (request: Request): number => {
+export const guardGetUserId = (request: Request): number => {
 	const userId = extractUserId(request);
 	if (userId === 0) throw UNAUTHORIZED_ERROR;
 	return userId;

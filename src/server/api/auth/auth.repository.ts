@@ -20,16 +20,16 @@ export const selectUserByEmail = (email: string): User | undefined => {
 
 /**
  * Creates a user
- * @param userToInsert - The user to insert
+ * @param rawUser - The user to insert
  * @returns The user id
  * @throws AppError if the user email already exists
  */
-export const insertUser = async (userToInsert: Raw<User>): Promise<number> => {
-	validateUser(userToInsert);
-	const user = selectUserByEmail(userToInsert.email);
+export const insertUser = async (rawUser: Raw<User>): Promise<number> => {
+	validateUser(rawUser);
+	const user = selectUserByEmail(rawUser.email);
 	if (user) throw new AppError("User already exists", "LOGIC");
-	userToInsert.password = await hashPassword(userToInsert.password);
-	const newUserId = insert<Raw<User>>(usersSql.INSERT, userToInsert);
+	rawUser.password = await hashPassword(rawUser.password);
+	const newUserId = insert<Raw<User>>(usersSql.INSERT, rawUser);
 	return newUserId;
 };
 
