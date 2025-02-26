@@ -1,5 +1,5 @@
-import { Footer } from "./shared/footer.component";
-import { Header } from "./shared/header.component";
+import { Footer } from "@/client/app/layout/footer.component";
+import { Header } from "@/client/app/layout/header.component";
 
 const html = String.raw;
 customElements.define("app-header", Header);

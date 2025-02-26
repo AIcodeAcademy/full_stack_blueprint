@@ -1,5 +1,5 @@
-import { renderAnchor } from "./dom.utils";
-import { navigate } from "./navigation.utils";
+import { renderAnchor } from "@/client/shared/dom.utils";
+import { navigate } from "@/client/shared/navigation.utils";
 import { ThemeToggle } from "./toggle-theme.component";
 
 const html = String.raw;
@@ -13,7 +13,6 @@ export class Header extends HTMLElement {
 	#links = [
 		{ href: "#tools", text: "Tools" },
 		{ href: "#auth", text: "Auth" },
-		{ href: "#assets/add", text: "Add Asset" },
 	];
 	#template = html`
     <header id="main-header">

@@ -1,4 +1,4 @@
-import { select } from "./dom.utils";
+import { select } from "@/client/shared/dom.utils";
 
 const html = String.raw;
 /**

@@ -1,4 +1,4 @@
-import { renderAnchor } from "./dom.utils";
+import { renderAnchor } from "@/client/shared/dom.utils";
 
 const html = String.raw;
 /**

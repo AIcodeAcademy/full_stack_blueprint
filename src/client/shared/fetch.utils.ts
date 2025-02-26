@@ -1,4 +1,6 @@
-import type { UserToken } from "../domain/user-token.type";
+import type { UserToken } from "@/client/domain/user-token.type";
+import type { ResponseBody } from "@/client/shared/response-body.type";
+
 const API_URL = "http://localhost:3000";
 /**
  * Makes a POST request to the specified URL
@@ -43,19 +45,6 @@ export const get = async <T>(url: string): Promise<ResponseBody<T>> => {
 			error: error instanceof Error ? error.message : "Unknown error",
 		};
 	}
-};
-
-/**
- * Response structure for API requests. Avoids error handling in the caller. Only checks for status code and body or error content.
- * @template T - The type of the response body data expected
- * @property {T} body - The response body data if the request is successful
- * @property {string} error - The error message of the response if the request is not successful
- * @property {number} status - The status code of the response
- */
-export type ResponseBody<T> = {
-	body?: T;
-	error?: string;
-	status: number;
 };
 
 async function createResult<T>(response: Response): Promise<ResponseBody<T>> {

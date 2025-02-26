@@ -10,9 +10,6 @@ export class HomePage extends HTMLElement {
 	#template = html`
     <h1>Welcome</h1>
     <p>This is the home page of the ${this.#appName} application.</p>
-    <p>
-      <a href="#assets/add">Add Asset</a>
-    </p>
   `;
 	constructor() {
 		super();

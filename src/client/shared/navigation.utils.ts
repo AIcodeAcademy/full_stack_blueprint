@@ -1,10 +1,8 @@
-import { AddAssetPage } from "../app/add-asset/add-asset.page";
-import { AuthPage } from "../app/auth/auth.page";
-import { HomePage } from "../app/home/home.page";
-import { ToolsPage } from "../app/tools/tools.page";
+import { AuthPage } from "@/client/app/auth/auth.page";
+import { HomePage } from "@/client/app/home/home.page";
+import { ToolsPage } from "@/client/app/tools/tools.page";
 
 customElements.define("app-tools-page", ToolsPage);
-customElements.define("app-assets-add-page", AddAssetPage);
 customElements.define("app-home-page", HomePage);
 customElements.define("app-auth-page", AuthPage);
 
