@@ -10,8 +10,6 @@ Code and other artifacts needed to implement the feature. Documentation for huma
 
 The root source folder is at `src/`. Take care of the OS machine path separator and other OS specific issues.
 
-Follow the IDE rules defined in the `.cursor/rules` folder.
-
 ## Process
 
 There are 4 main steps, with specific instructions for each:
@@ -20,24 +18,19 @@ There are 4 main steps, with specific instructions for each:
    - Read also the blueprints referenced in the plan.
    - Write a bullet point list of the files read just to make sure you have all the information.
 
-1. Make a implementation plan respecting and leveraging on the current code:
+1. Prepare the implementation of the feature respecting and leveraging on the current code:
    - Read project generic documentation at `docs/overview.md` and current status at `CHANGELOG.md`
-   - Read the rules at `.cursor/rules`
-   - Follow existing architectural patterns
-   - Follow modularity practices for file contents
-   - Follow existing naming conventions 
-   - Write a bullet point list of of the files read just to make sure you have all the information.
+   - Take into account the current code.
+   - Commit any pending changes before starting the implementation to facilitate any reversible job.
 
 2. Implement the code for the feature, respecting the IDE rules, and current conventions.
    
-   - Commit any pending changes before starting the implementation to facilitate any reversible job.
-   - Take into account the current code.
-   - Respect rules defined in the `.cursor/rules` folder.
    - Implement each task at the implementation plan.
    - For each task, think about 2 or 3 options.
      - Evaluate the complexity of the implementation.
      - Evaluate the delta changes to the existing code.
      - Choose the simplest option.
+     - Write a bullet point list of the things you will do.
      - When in a folder or file, 
        - make sure to respect the folder or file structure and naming conventions.
        - use existing code as a template for the new code.

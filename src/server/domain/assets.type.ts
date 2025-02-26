@@ -10,6 +10,7 @@ export type Asset = {
 	quantity: number;
 	acquisition_date: string;
 	created_at: string;
+	updated_at: string;
 };
 
 export const NULL_ASSET: Asset = {
@@ -21,9 +22,15 @@ export const NULL_ASSET: Asset = {
 	quantity: 0,
 	acquisition_date: new Date().toISOString(),
 	created_at: new Date().toISOString(),
+	updated_at: new Date().toISOString(),
 };
 
-export function validate(asset: Raw<Asset>): void {
+/**
+ * Validates an asset
+ * @param asset - The asset to validate
+ * @throws AppError if the asset is invalid
+ */
+export function validateAsset(asset: Raw<Asset>): void {
 	if (!asset.name || typeof asset.name !== "string") {
 		throw new AppError("Invalid asset name", "LOGIC");
 	}
@@ -32,7 +39,7 @@ export function validate(asset: Raw<Asset>): void {
 		throw new AppError("Invalid user id", "LOGIC");
 	}
 
-	if (!asset.category_id) {
+	if (!asset.category_id || typeof asset.category_id !== "number") {
 		throw new AppError("Invalid category id", "LOGIC");
 	}
 

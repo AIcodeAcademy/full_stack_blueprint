@@ -1,39 +1,39 @@
 {
 	"TABLE": "categories",
-	"CREATE_TABLE": "CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL UNIQUE, risk_level TEXT NOT NULL, liquidity_level TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)",
+	"CREATE_TABLE": "CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL UNIQUE, risk TEXT NOT NULL, liquidity TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP)",
 	"SELECT_ALL": "SELECT * FROM categories",
 	"SELECT_BY_ID": "SELECT * FROM categories WHERE id = $id",
 	"SELECT_BY_FIELD": "SELECT * FROM categories WHERE $field = $value",
 	"SELECT_BY_QUERY": "SELECT * FROM categories WHERE $query",
 	"SELECT_BY_USER_ID": "SELECT * FROM categories",
-	"INSERT": "INSERT INTO categories (name, risk_level, liquidity_level) VALUES ($name, $risk_level, $liquidity_level)",
-	"UPDATE": "UPDATE categories SET name = $name, risk_level = $risk_level, liquidity_level = $liquidity_level WHERE id = $id",
+	"INSERT": "INSERT INTO categories (name, risk, liquidity) VALUES ($name, $risk, $liquidity)",
+	"UPDATE": "UPDATE categories SET name = $name, risk = $risk, liquidity = $liquidity, updated_at = $updated_at WHERE id = $id",
 	"DELETE": "DELETE FROM categories WHERE id = $id",
 	"SEED": [
 		{
-			"name": "Stocks",
-			"risk_level": "HIGH",
-			"liquidity_level": "HIGH"
-		},
-		{
-			"name": "Bonds",
-			"risk_level": "LOW",
-			"liquidity_level": "MEDIUM"
-		},
-		{
 			"name": "Real Estate",
-			"risk_level": "MEDIUM",
-			"liquidity_level": "LOW"
+			"risk": "Low",
+			"liquidity": "Medium"
 		},
 		{
-			"name": "Cash",
-			"risk_level": "LOW",
-			"liquidity_level": "HIGH"
+			"name": "Stock",
+			"risk": "Medium",
+			"liquidity": "High"
 		},
 		{
-			"name": "Cryptocurrency",
-			"risk_level": "HIGH",
-			"liquidity_level": "HIGH"
+			"name": "Bond",
+			"risk": "Medium",
+			"liquidity": "Low"
+		},
+		{
+			"name": "Raw Materials",
+			"risk": "Medium",
+			"liquidity": "Medium"
+		},
+		{
+			"name": "Crypto",
+			"risk": "High",
+			"liquidity": "High"
 		}
 	]
 }

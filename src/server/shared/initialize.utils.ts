@@ -1,6 +1,7 @@
 import type { Category } from "../domain/categories.type";
 import type { Role } from "../domain/role.type";
 import type { Tool } from "../domain/tool.type";
+import type { Raw } from "./sql.type";
 import { create, drop, insert, readCommands } from "./sql.utils";
 
 const usersSql = await readCommands("users");
@@ -33,7 +34,7 @@ const initializeRolesTable = (): void => {
 
 const seedRoles = (): void => {
 	for (const role of rolesSql.SEED) {
-		insert<Role>(rolesSql.INSERT, role as Role);
+		insert<Role>(rolesSql.INSERT, role as Raw<Role>);
 	}
 };
 
@@ -45,7 +46,7 @@ const initializeToolsTable = (): void => {
 
 const seedTools = (): void => {
 	for (const tool of toolsSql.SEED) {
-		insert<Tool>(toolsSql.INSERT, tool as Tool);
+		insert<Tool>(toolsSql.INSERT, tool as Raw<Tool>);
 	}
 };
 
@@ -57,7 +58,7 @@ const initializeCategoriesTable = (): void => {
 
 const seedCategories = (): void => {
 	for (const item of categoriesSql.SEED) {
-		insert<Category>(categoriesSql.INSERT, item as Category);
+		insert<Category>(categoriesSql.INSERT, item as Raw<Category>);
 	}
 };
 
