@@ -48,7 +48,6 @@ const postRegister = async (
 	};
 	const userId = await insertUser(rawUser);
 	const userToken = createUserToken(userId);
-
 	return ok<UserTokenResponse>(userToken);
 };
 

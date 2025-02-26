@@ -20,65 +20,62 @@ Key technologies and frameworks used include:
 - **TypeScript**:  A strongly typed superset of JavaScript.
 - **Pico CSS**: A minimal CSS framework for styling.
 - **Biome**: A code formatter and linter.
-- **Playwright**: An end-to-end testing framework.
+- **Web Components**: Native browser components without additional frameworks.
+- **SQLite**: In-memory SQL database for data persistence.
 
 ## 2. Key Components
 
 - **`src/client`**: Contains the frontend application code.
-  - `src/client/app`:  Holds page components and their related files (components, repositories).
+  - `src/client/app`: Holds page components and their related files (components, repositories).
   - `src/client/shared`: Contains shared utilities and components for the client-side.
   - `src/client/domain`: Defines client-side data types.
-  - `src/client/index.html`:  The main HTML entry point for the client application.
+  - `src/client/index.html`: The main HTML entry point for the client application.
   - `src/client/app.component.ts`: The root component of the client application, acting as a router outlet.
 - **`src/server`**: Contains the backend application code.
-  - `src/server/api`:  Defines API controllers and repositories for different resources.
+  - `src/server/api`: Defines API controllers and repositories for different resources.
   - `src/server/domain`: Defines server-side data types.
   - `src/server/shared`: Contains shared utilities for the server-side, including database and request/response handling.
   - `src/server/main.ts`: The main entry point for the server application.
+- **`src/sql`**: Contains SQL definition files for the database tables and initial data.
 - **`docs`**: Contains project documentation, including architecture blueprints, feature specifications, and the overview documentation itself.
-- **`tests`**:  Holds end-to-end tests written with Playwright.
 - **`.ai`**: Contains instructions and prompts for AI agents used in the project.
-- **`.cursor` & `.vscode`**:  Configuration files for Cursor and VSCode editors, including rules and settings.
-- **`sql`**: Contains SQL files, potentially for database initialization or queries.
+- **`.cursor` & `.vscode`**: Configuration files for Cursor and VSCode editors, including rules and settings.
 
 Core classes/functions:
 
-- **`app.component.ts` (client)**:  The main application component that handles routing and serves as the root of the client-side application.
-- **`api.controller.ts` (server)**:  The main API controller that routes incoming requests to the appropriate resource controllers.
-- **`sql.utils.ts` (server)**: Provides utility functions for interacting with the SQLite database.
-- **`fetch.utils.ts` (client)**:  Provides utility functions for making HTTP requests to the server API.
-- **`auth.controller.ts` (server)` & `auth.repository.ts` (server)**: Implement authentication logic, handling user registration and login.
+- **`app.component.ts` (client)**: The main application component that handles routing and serves as the root of the client-side application.
+- **`api.controller.ts` (server)**: The main API controller that routes incoming requests to the appropriate resource controllers.
+- **`auth.controller.ts` (server) & `auth.repository.ts` (server)**: Implement authentication logic, handling user registration and login.
+- **`tools`, `categories`, and `assets` controllers and repositories**: Handle CRUD operations for their respective resources.
+- **SQL utilities**: Handle database operations for persisting and retrieving data.
 
 ## 3. Data Flow
 
-The application follows a typical client-server architecture.
+The application follows a typical client-server architecture:
 
-1. **Client Request**: The client-side application, built with web components, initiates requests, often triggered by user interactions on page components.
+1. **Client Request**: The client-side application, built with web components, initiates requests triggered by user interactions.
 2. **API Endpoint**: Client requests are sent to the server API endpoints defined in `src/server/api`.
-3. **Controller Handling**: API requests are first handled by the `api.controller.ts`, which routes them to specific resource controllers (e.g., `auth.controller.ts`, `tools.controller.ts`).
-4. **Repository Interaction**: Controllers interact with repositories (e.g., `auth.repository.ts`, `tools.repository.ts`) to fetch or manipulate data. Repositories use `sql.utils.ts` to interact with the SQLite database.
-5. **Database Queries**: `sql.utils.ts` executes SQL queries against the SQLite database (in-memory in the current setup).
+3. **Controller Handling**: API requests are handled by the `api.controller.ts`, which routes them to specific resource controllers (e.g., `auth.controller.ts`, `tools.controller.ts`, `assets.controller.ts`).
+4. **Repository Interaction**: Controllers interact with repositories to perform CRUD operations on the database.
+5. **Database Queries**: SQL operations are executed against the SQLite database using SQL files defined in the `src/sql` directory.
 6. **Response**: The server sends back responses in JSON format to the client, which are then processed and displayed by the client-side components.
-7. **State Management**: Client-side state management is currently minimal, potentially relying on web component properties and local storage for user tokens.
+7. **State Management**: Client-side state management relies on web component properties and local storage for persisting state between requests.
 
-Authentication data flow involves:
-
-- User login/registration requests sent to `/api/auth/login` or `/api/auth/register`.
-- Server-side authentication logic in `auth.controller.ts` and `auth.repository.ts` verifies credentials, hashes passwords, and generates JWT tokens using `jwt.utils.ts`.
-- JWT tokens are stored in the client's local storage and used for subsequent authenticated requests (though current code doesn't fully demonstrate this yet).
+Authentication flow includes user registration, login, and verification using JWT tokens. Other resource flows include CRUD operations for tools, categories, and assets.
 
 ## 4. Dependencies
 
 - **External Libraries/Services**:
   - **Pico CSS (CDN)**: For minimal CSS styling, included via CDN in `index.html`.
   - **Google Fonts (CDN)**: For custom fonts, also included via CDN in `index.html`.
-  - **Bun Runtime**:  Essential runtime environment.
-  - **Playwright**: For end-to-end testing.
+  - **Bun Runtime**: Essential runtime environment.
   - **Biome**: For code formatting and linting.
+  - **TypeScript**: For static typing and improved developer experience.
 
 - **Infrastructure Requirements**:
   - Node.js/Bun environment to run the server and client development tools.
   - SQLite database (in-memory for the current setup).
+  - Web browser for client-side application.
 
 ## 5. How to Run
 
@@ -94,8 +91,7 @@ Authentication data flow involves:
    - To run only the server: `bun server`
 
 3. **Environment Configuration**:
-   - The project uses environment variables (e.g., `SQL_FOLDER`), but currently, they are mostly defaults.
-   - No specific environment variables are explicitly required to run the basic application.
+   - The project uses minimal environment variables defined in `.env` file.
 
 ## 6. Key Features
 
@@ -104,9 +100,8 @@ Authentication data flow involves:
 - Server-side API with controllers and repositories.
 - SQLite in-memory database integration.
 - Authentication endpoints for login and registration.
-- Example `tools` API resource (though not fully implemented).
+- Resource management APIs for tools, categories, and assets.
 - Minimal styling with Pico CSS.
-- End-to-end testing setup with Playwright.
 - Code formatting and linting with Biome.
 - AI-driven development approach with instructions and prompts for code generation and documentation.
 
@@ -116,45 +111,70 @@ Authentication data flow involves:
 
 ```
 full_stack_blueprint/
-    ├── .ai/ # AI agent instructions and prompts
-    ├── .cursor/ # Cursor editor rules
-    ├── .vscode/ # VSCode editor configurations and instructions
-    ├── docs/ # Project documentation
-    │   ├── OVERVIEW.md # Project overview documentation (this file)
-    │   └── JOURNAL.md # Project journal working notes (to be implemented)
-    ├── tests/ # End-to-end tests
-    ├── .gitignore # Git ignore file
-    ├── LICENSE # License file
-    ├── package.json # Project dependencies and scripts
-    ├── README.md # Project README file
-    └── tsconfig.json # TypeScript configuration
+    ├── .ai/                # AI agent instructions and prompts
+    ├── .cursor/            # Cursor editor rules
+    ├── .vscode/            # VSCode editor configurations and instructions
+    ├── docs/               # Project documentation
+    │   ├── OVERVIEW.md     # Project overview documentation (this file)
+    │   └── JOURNAL.md      # Project journal working notes (to be implemented)
+    ├── src/                # Source code
+    │   ├── client/         # Client-side code
+    │   ├── server/         # Server-side code
+    │   ├── sql/            # SQL definition files
+    │   └── main.ts         # Main application entry point
+    ├── .env                # Environment variables
+    ├── .gitignore          # Git ignore file
+    ├── bun.lock            # Bun lock file
+    ├── CHANGELOG.md        # Changelog
+    ├── LICENSE             # License file
+    ├── package.json        # Project dependencies and scripts
+    ├── README.md           # Project README file
+    ├── tsconfig.json       # TypeScript configuration
+    └── .windsurfrules      # Windsurf rules configuration
 ```
 
 ### Client Application
 
 ```  
 src/client/
-    ├── app/ # Client application components and pages
-    │   ├── auth/ # Authentication feature components and pages
-    │   └── home/ # Home page components
-    ├── domain/ # Client-side data types
-    ├── shared/ # Shared client-side utilities and components
-    ├── index.html # Client HTML entry point
-    ├── app.component.ts # Main client application component (router outlet)
-    └── styles.css # Client-side styles
+    ├── app/                # Client application components and pages
+    │   ├── add-asset/      # Asset addition feature components
+    │   ├── auth/           # Authentication feature components
+    │   ├── home/           # Home page components
+    │   └── tools/          # Tools management components
+    ├── domain/             # Client-side data types
+    ├── shared/             # Shared client-side utilities and components
+    ├── app.component.ts    # Main client application component (router outlet)
+    ├── index.html          # Client HTML entry point
+    ├── logo.png            # Application logo
+    ├── manifest.json       # Web app manifest
+    └── styles.css          # Client-side styles
 ```  	
 
 ### Server Application
 
 ```
 src/server/
-    ├── api/ # API controllers and repositories
-    │   ├── auth/ # Authentication API resource
-    │   └── tools/ # Tools API resource (example)
-    ├── domain/ # Server-side data types
-    ├── shared/ # Shared server-side utilities
-    ├── main.ts # Server entry point
-    └── index.ts # Placeholder index file
-```  	
-	
+    ├── api/                # API controllers and repositories
+    │   ├── api.controller.ts  # Main API router
+    │   ├── assets/         # Assets API resource
+    │   ├── auth/           # Authentication API resource
+    │   ├── categories/     # Categories API resource
+    │   └── tools/          # Tools API resource
+    ├── domain/             # Server-side data types
+    ├── shared/             # Shared server-side utilities
+    └── main.ts             # Server entry point
+```
+
+### SQL Structure
+
+```
+src/sql/
+    ├── assets.sql.json     # Assets table definition and data
+    ├── categories.sql.json # Categories table definition and data
+    ├── roles.sql.json      # User roles definition and data
+    ├── tools.sql.json      # Tools table definition and data
+    └── users.sql.json      # Users table definition and data
+```
+
 [Full Stack Blueprint Repository](https://github.com/AIcodeAcademy/full_stack_blueprint)
