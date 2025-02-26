@@ -10,6 +10,7 @@
   - [Root](#root)
   - [Client Application](#client-application)
 
+
 ## 1. Overview
 
 This project is a blueprint for building full-stack web applications with a focus on simplicity and minimal dependencies. It leverages AI agents for code generation and documentation, aiming to streamline the development process. The blueprint provides a basic structure and tech stack to quickly start new projects, emphasizing convention over configuration and the use of modern web technologies.
