@@ -15,7 +15,7 @@ alwaysApply: false
 - Class naming: Use PascalCase with Component suffix (e.g., `ToolListComponent`)
 - Component tag: Use kebab-case for custom element name (e.g., `tool-list`)
 - Internal properties: Use camelCase prefixed with `_` for private fields
-- Template property: Use `private _template` for HTML template string
+- Template property: Use `private template` for HTML template string
 - Event handlers: Use on{Event} naming (e.g., `onClick`, `onSubmit`)
 
 ## Required Structure
@@ -30,7 +30,7 @@ alwaysApply: false
    - Optionally implement `attributeChangedCallback()` for handling attribute changes
 
 3. **Template Management**:
-   - Use a private `private _template` property for HTML content
+   - Use a private `private template` property for HTML content
    - Use the html helper tag for template literals
    - Add the template to innerHTML in the constructor
 
@@ -38,6 +38,9 @@ alwaysApply: false
    - Use private methods for event handlers
    - Properly bind 'this' context in event listeners
    - Remove event listeners in disconnectedCallback
+
+5. **Web Rules**:
+   - Respect general web rules from [web.mdc](mdc:.cursor/rules/web.mdc)     
 
 ## Imports
 - Import domain entities or other types
