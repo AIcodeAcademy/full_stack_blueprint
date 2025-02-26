@@ -9,6 +9,9 @@
 - [7. Directory Structure](#7-directory-structure)
   - [Root](#root)
   - [Client Application](#client-application)
+  - [Server Application](#server-application)
+  - [SQL Structure](#sql-structure)
+  - [Feature Documentation](#feature-documentation)
 
 
 ## 1. Overview
@@ -39,6 +42,7 @@ Key technologies and frameworks used include:
   - `src/server/main.ts`: The main entry point for the server application.
 - **`src/sql`**: Contains SQL definition files for the database tables and initial data.
 - **`docs`**: Contains project documentation, including architecture blueprints, feature specifications, and the overview documentation itself.
+  - `docs/1-add_asset`: Feature-specific documentation for the Add Asset feature.
 - **`.ai`**: Contains instructions and prompts for AI agents used in the project.
 - **`.cursor` & `.vscode`**: Configuration files for Cursor and VSCode editors, including rules and settings.
 
@@ -49,6 +53,7 @@ Core classes/functions:
 - **`auth.controller.ts` (server) & `auth.repository.ts` (server)**: Implement authentication logic, handling user registration and login.
 - **`tools`, `categories`, and `assets` controllers and repositories**: Handle CRUD operations for their respective resources.
 - **SQL utilities**: Handle database operations for persisting and retrieving data.
+- **Domain entities**: Type definitions and validation functions for `User`, `Asset`, `Category`, etc.
 
 ## 3. Data Flow
 
@@ -63,6 +68,15 @@ The application follows a typical client-server architecture:
 7. **State Management**: Client-side state management relies on web component properties and local storage for persisting state between requests.
 
 Authentication flow includes user registration, login, and verification using JWT tokens. Other resource flows include CRUD operations for tools, categories, and assets.
+
+A typical flow for the Add Asset feature would be:
+1. User authenticates via the login form
+2. User navigates to the asset creation page
+3. User selects a category and fills in asset details
+4. Form data is validated and sent to the server
+5. Server validates the data using domain entity validation functions
+6. Asset is saved to the database using SQL commands
+7. Success response returns to the client, which updates its display
 
 ## 4. Dependencies
 
@@ -102,6 +116,8 @@ Authentication flow includes user registration, login, and verification using JW
 - SQLite in-memory database integration.
 - Authentication endpoints for login and registration.
 - Resource management APIs for tools, categories, and assets.
+- Asset creation functionality with category selection.
+- Domain entity validation for data integrity.
 - Minimal styling with Pico CSS.
 - Code formatting and linting with Biome.
 - AI-driven development approach with instructions and prompts for code generation and documentation.
@@ -116,6 +132,7 @@ full_stack_blueprint/
     ├── .cursor/            # Cursor editor rules
     ├── .vscode/            # VSCode editor configurations and instructions
     ├── docs/               # Project documentation
+    │   ├── 1-add_asset/    # Add Asset feature documentation
     │   ├── OVERVIEW.md     # Project overview documentation (this file)
     │   └── JOURNAL.md      # Project journal working notes (to be implemented)
     ├── src/                # Source code
@@ -163,7 +180,17 @@ src/server/
     │   ├── categories/     # Categories API resource
     │   └── tools/          # Tools API resource
     ├── domain/             # Server-side data types
+    │   ├── assets.type.ts  # Asset entity type definition
+    │   ├── categories.type.ts # Category entity type definition
+    │   ├── role.type.ts    # Role entity type definition
+    │   ├── tool.type.ts    # Tool entity type definition
+    │   └── user.type.ts    # User entity type definition
     ├── shared/             # Shared server-side utilities
+    │   ├── app-error.class.ts # Error handling
+    │   ├── initialize.utils.ts # Database initialization
+    │   ├── jwt.utils.ts    # JWT token utilities
+    │   ├── sql.type.ts     # SQL type definitions
+    │   └── sql.utils.ts    # SQL utility functions
     └── main.ts             # Server entry point
 ```
 
@@ -171,11 +198,20 @@ src/server/
 
 ```
 src/sql/
-    ├── assets.sql.json     # Assets table definition and data
-    ├── categories.sql.json # Categories table definition and data
-    ├── roles.sql.json      # User roles definition and data
-    ├── tools.sql.json      # Tools table definition and data
-    └── users.sql.json      # Users table definition and data
+    ├── assets.sql.json     # Assets table definition and queries
+    ├── categories.sql.json # Categories table definition and queries with seed data
+    ├── roles.sql.json      # User roles definition and queries with seed data
+    ├── tools.sql.json      # Tools table definition and queries with seed data
+    └── users.sql.json      # Users table definition and queries
+```
+
+### Feature Documentation
+
+```
+docs/1-add_asset/
+    ├── 1-add_asset.blueprint.md  # Feature specification
+    ├── 1-add_asset.sql.plan.md   # SQL implementation plan
+    └── 1-add_asset.sql.journal.md # SQL implementation journal with key decisions
 ```
 
 [Full Stack Blueprint Repository](https://github.com/AIcodeAcademy/full_stack_blueprint)
