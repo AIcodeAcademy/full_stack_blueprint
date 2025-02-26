@@ -27,12 +27,6 @@ export class AuthPage extends BasePageComponent {
 		mode: "login" as Mode,
 	};
 
-	constructor() {
-		// Initialize state before calling super() to ensure it's available during first render
-		super();
-		console.log("AuthPage constructed, mode:", this.state.mode);
-	}
-
 	// References to child components
 	protected override presenterComponents: {
 		authForm: AuthFormComponent | null;
@@ -46,7 +40,6 @@ export class AuthPage extends BasePageComponent {
 
 	// Auth page template using state for rendering
 	protected override template(): string {
-		console.log("Template rendering with mode:", this.state.mode);
 		return html`
 		<main class="container">
 			<nav>
@@ -98,58 +91,32 @@ export class AuthPage extends BasePageComponent {
 		this.presenterComponents.registerTab = this.querySelector(
 			'button[data-tab="register"]',
 		) as HTMLButtonElement;
-
-		console.log("Initialized presenters:", {
-			authForm: !!this.presenterComponents.authForm,
-			loginTab: !!this.presenterComponents.loginTab,
-			registerTab: !!this.presenterComponents.registerTab,
-		});
 	}
 
 	// Setup event listeners
 	protected override setupEventListeners(): void {
-		console.log("Setting up event listeners");
-
-		// Use direct event listeners with fixed functions
+		// Add managed event listeners to tab buttons
 		const loginButton = this.querySelector('button[data-tab="login"]');
 		const registerButton = this.querySelector('button[data-tab="register"]');
 
-		console.log("Buttons found?", {
-			loginButton: !!loginButton,
-			registerButton: !!registerButton,
+		this.addManagedEventListener(loginButton, "click", () => {
+			this.state.mode = "login";
+			this.render();
 		});
 
-		if (loginButton) {
-			loginButton.addEventListener("click", () => {
-				console.log("Login button clicked directly");
-				this.state.mode = "login";
-				this.render();
-			});
-		}
+		this.addManagedEventListener(registerButton, "click", () => {
+			this.state.mode = "register";
+			this.render();
+		});
 
-		if (registerButton) {
-			registerButton.addEventListener("click", () => {
-				console.log("Register button clicked directly");
-				this.state.mode = "register";
-				this.render();
-			});
-		}
-
+		// Using bound event listener property for authenticate event
 		this.addEventListener("authenticate", this.#authenticateListener);
 	}
 
-	// Remove event listeners
+	// Remove event listeners - only need to handle non-managed listeners
 	protected override removeEventListeners(): void {
-		console.log("Removing event listeners");
-
-		// Just remove the authenticate listener since we're using local references
-		// for the click handlers that will be garbage collected
 		this.removeEventListener("authenticate", this.#authenticateListener);
 	}
-
-	// Bound event handlers - no longer used but kept for reference
-	// #loginTabHandler: EventListener = () => {};
-	// #registerTabHandler: EventListener = () => {};
 
 	// Handle authentication event
 	#authenticateListener = ((e: CustomEvent<AuthenticateEventDetail>) => {

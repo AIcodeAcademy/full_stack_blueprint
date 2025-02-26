@@ -25,6 +25,12 @@ export abstract class BasePageComponent extends HTMLElement {
 	protected presenterComponents: Record<string, HTMLElement | null> = {};
 
 	/**
+	 * Tracked event listeners for clean removal
+	 * Store tuple of [element, event, handler] for managed listeners
+	 */
+	#managedEventListeners: Array<[EventTarget, string, EventListener]> = [];
+
+	/**
 	 * Abstract template method that must be implemented by subclasses
 	 * Should return an HTML string template based on current state
 	 */
@@ -51,6 +57,32 @@ export abstract class BasePageComponent extends HTMLElement {
 	 */
 	disconnectedCallback() {
 		this.removeEventListeners();
+		this.#removeAllManagedEventListeners();
+	}
+
+	/**
+	 * Add event listener and track it for automatic cleanup
+	 * Use this instead of directly adding event listeners
+	 */
+	protected addManagedEventListener(
+		element: EventTarget | null,
+		event: string,
+		handler: EventListener,
+	): void {
+		if (!element) return;
+
+		element.addEventListener(event, handler);
+		this.#managedEventListeners.push([element, event, handler]);
+	}
+
+	/**
+	 * Remove all tracked event listeners
+	 */
+	#removeAllManagedEventListeners(): void {
+		for (const [element, event, handler] of this.#managedEventListeners) {
+			element.removeEventListener(event, handler);
+		}
+		this.#managedEventListeners = [];
 	}
 
 	/**
