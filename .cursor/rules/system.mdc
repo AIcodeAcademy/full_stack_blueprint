@@ -1,0 +1,14 @@
+---
+description: About the system and terminal
+globs: 
+alwaysApply: true
+---
+--- 
+description: About the system and terminal
+globs: 
+alwaysApply: true
+--- 
+
+This machine is a PC with Windows 11
+Terminal is a Powershell 7.5.0
+This project is based on `bun` instead of `npm` or `node`

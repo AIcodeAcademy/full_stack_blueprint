@@ -2,15 +2,17 @@ import type { Tool } from "../../domain/tool.type";
 import { ToolsTableComponent } from "./tools-table.component";
 import { getTools } from "./tools.repository";
 
-const html = String.raw;
+// Register custom elements
 customElements.define("app-tools-table", ToolsTableComponent);
+
+const html = String.raw;
 
 /**
  * About page component
  */
-export class AboutPage extends HTMLElement {
+export class ToolsPage extends HTMLElement {
 	#template = html`
-    <h1>About</h1>
+    <h1>Tools</h1>
     <app-tools-table></app-tools-table>
   `;
 	#tools: Tool[] = [];
