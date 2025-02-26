@@ -19,6 +19,11 @@ const html = String.raw;
  * Calls the auth repository to login or register the user
  */
 export class AuthPage extends BasePageComponent {
+	constructor() {
+		super();
+		console.log("AuthPage constructed");
+	}
+
 	// Extended state properties for this page
 	protected override state = {
 		loading: false,
@@ -40,6 +45,7 @@ export class AuthPage extends BasePageComponent {
 
 	// Auth page template using state for rendering
 	protected override template(): string {
+		console.log("Template rendering with mode:", this.state.mode);
 		return html`
 		<main class="container">
 			<nav>
@@ -49,6 +55,7 @@ export class AuthPage extends BasePageComponent {
 							class="outline" 
 							data-tab="login" 
 							aria-current="${this.state.mode === "login"}"
+							onclick="console.log('Login button clicked via inline handler')"
 						>
 							Login
 						</button>
@@ -58,6 +65,7 @@ export class AuthPage extends BasePageComponent {
 							class="outline" 
 							data-tab="register" 
 							aria-current="${this.state.mode === "register"}"
+							onclick="console.log('Register button clicked via inline handler')"
 						>
 							Register
 						</button>
@@ -91,6 +99,12 @@ export class AuthPage extends BasePageComponent {
 		this.presenterComponents.registerTab = this.querySelector(
 			'button[data-tab="register"]',
 		) as HTMLButtonElement;
+
+		console.log("Initialized presenters:", {
+			authForm: !!this.presenterComponents.authForm,
+			loginTab: !!this.presenterComponents.loginTab,
+			registerTab: !!this.presenterComponents.registerTab,
+		});
 	}
 
 	// Setup event listeners
@@ -108,6 +122,8 @@ export class AuthPage extends BasePageComponent {
 			this.#registerTabHandler,
 		);
 		this.addEventListener("authenticate", this.#authenticateListener);
+
+		console.log("Event listeners set up for tabs");
 	}
 
 	// Remove event listeners
@@ -129,8 +145,11 @@ export class AuthPage extends BasePageComponent {
 
 	// Show login or register tab
 	#showTab(tab: Mode): void {
+		console.log("Tab clicked:", tab);
 		this.state.mode = tab;
+		console.log("State updated, new mode:", this.state.mode);
 		this.render();
+		console.log("Render called after tab change");
 	}
 
 	// Handle authentication event
