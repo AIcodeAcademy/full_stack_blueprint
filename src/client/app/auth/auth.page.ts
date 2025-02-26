@@ -19,11 +19,6 @@ const html = String.raw;
  * Calls the auth repository to login or register the user
  */
 export class AuthPage extends BasePageComponent {
-	constructor() {
-		super();
-		console.log("AuthPage constructed");
-	}
-
 	// Extended state properties for this page
 	protected override state = {
 		loading: false,
@@ -31,6 +26,12 @@ export class AuthPage extends BasePageComponent {
 		data: null as unknown,
 		mode: "login" as Mode,
 	};
+
+	constructor() {
+		// Initialize state before calling super() to ensure it's available during first render
+		super();
+		console.log("AuthPage constructed, mode:", this.state.mode);
+	}
 
 	// References to child components
 	protected override presenterComponents: {
@@ -55,7 +56,6 @@ export class AuthPage extends BasePageComponent {
 							class="outline" 
 							data-tab="login" 
 							aria-current="${this.state.mode === "login"}"
-							onclick="console.log('Login button clicked via inline handler')"
 						>
 							Login
 						</button>
@@ -65,7 +65,6 @@ export class AuthPage extends BasePageComponent {
 							class="outline" 
 							data-tab="register" 
 							aria-current="${this.state.mode === "register"}"
-							onclick="console.log('Register button clicked via inline handler')"
 						>
 							Register
 						</button>
@@ -109,48 +108,48 @@ export class AuthPage extends BasePageComponent {
 
 	// Setup event listeners
 	protected override setupEventListeners(): void {
-		// Store bound handlers as properties to ensure same reference for removal
-		this.#loginTabHandler = this.#showTab.bind(this, "login");
-		this.#registerTabHandler = this.#showTab.bind(this, "register");
+		console.log("Setting up event listeners");
 
-		this.presenterComponents.loginTab?.addEventListener(
-			"click",
-			this.#loginTabHandler,
-		);
-		this.presenterComponents.registerTab?.addEventListener(
-			"click",
-			this.#registerTabHandler,
-		);
+		// Use direct event listeners with fixed functions
+		const loginButton = this.querySelector('button[data-tab="login"]');
+		const registerButton = this.querySelector('button[data-tab="register"]');
+
+		console.log("Buttons found?", {
+			loginButton: !!loginButton,
+			registerButton: !!registerButton,
+		});
+
+		if (loginButton) {
+			loginButton.addEventListener("click", () => {
+				console.log("Login button clicked directly");
+				this.state.mode = "login";
+				this.render();
+			});
+		}
+
+		if (registerButton) {
+			registerButton.addEventListener("click", () => {
+				console.log("Register button clicked directly");
+				this.state.mode = "register";
+				this.render();
+			});
+		}
+
 		this.addEventListener("authenticate", this.#authenticateListener);
-
-		console.log("Event listeners set up for tabs");
 	}
 
 	// Remove event listeners
 	protected override removeEventListeners(): void {
-		this.presenterComponents.loginTab?.removeEventListener(
-			"click",
-			this.#loginTabHandler,
-		);
-		this.presenterComponents.registerTab?.removeEventListener(
-			"click",
-			this.#registerTabHandler,
-		);
+		console.log("Removing event listeners");
+
+		// Just remove the authenticate listener since we're using local references
+		// for the click handlers that will be garbage collected
 		this.removeEventListener("authenticate", this.#authenticateListener);
 	}
 
-	// Bound event handlers
-	#loginTabHandler: EventListener = () => {};
-	#registerTabHandler: EventListener = () => {};
-
-	// Show login or register tab
-	#showTab(tab: Mode): void {
-		console.log("Tab clicked:", tab);
-		this.state.mode = tab;
-		console.log("State updated, new mode:", this.state.mode);
-		this.render();
-		console.log("Render called after tab change");
-	}
+	// Bound event handlers - no longer used but kept for reference
+	// #loginTabHandler: EventListener = () => {};
+	// #registerTabHandler: EventListener = () => {};
 
 	// Handle authentication event
 	#authenticateListener = ((e: CustomEvent<AuthenticateEventDetail>) => {
