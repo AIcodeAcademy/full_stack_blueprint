@@ -95,25 +95,37 @@ export class AuthPage extends BasePageComponent {
 
 	// Setup event listeners
 	protected override setupEventListeners(): void {
-		this.presenterComponents.loginTab?.addEventListener("click", () =>
-			this.#showTab("login"),
+		// Store bound handlers as properties to ensure same reference for removal
+		this.#loginTabHandler = this.#showTab.bind(this, "login");
+		this.#registerTabHandler = this.#showTab.bind(this, "register");
+
+		this.presenterComponents.loginTab?.addEventListener(
+			"click",
+			this.#loginTabHandler,
 		);
-		this.presenterComponents.registerTab?.addEventListener("click", () =>
-			this.#showTab("register"),
+		this.presenterComponents.registerTab?.addEventListener(
+			"click",
+			this.#registerTabHandler,
 		);
 		this.addEventListener("authenticate", this.#authenticateListener);
 	}
 
 	// Remove event listeners
 	protected override removeEventListeners(): void {
-		this.presenterComponents.loginTab?.removeEventListener("click", () =>
-			this.#showTab("login"),
+		this.presenterComponents.loginTab?.removeEventListener(
+			"click",
+			this.#loginTabHandler,
 		);
-		this.presenterComponents.registerTab?.removeEventListener("click", () =>
-			this.#showTab("register"),
+		this.presenterComponents.registerTab?.removeEventListener(
+			"click",
+			this.#registerTabHandler,
 		);
 		this.removeEventListener("authenticate", this.#authenticateListener);
 	}
+
+	// Bound event handlers
+	#loginTabHandler: EventListener = () => {};
+	#registerTabHandler: EventListener = () => {};
 
 	// Show login or register tab
 	#showTab(tab: Mode): void {
