@@ -1,11 +1,11 @@
 ---
 description: Generate a client web component
-globs: /src/client/components/**/*.component.ts
+globs: /src/client/app/**/*.component.ts
 alwaysApply: false
 ---
 ---
 description: Generate a client web component
-globs: /src/client/components/**/*.component.ts
+globs: /src/client/app/**/*.component.ts
 alwaysApply: false
 ---
 

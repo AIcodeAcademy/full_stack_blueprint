@@ -1,11 +1,11 @@
 ---
 description: Generate a client repository
-globs: /src/client/repositories/*.repository.ts
+globs: /src/client/app/**/*.repository.ts
 alwaysApply: false
 ---
 ---
 description: Generate a client repository
-globs: /src/client/repositories/*.repository.ts
+globs: /src/client/app/**/*.repository.ts
 alwaysApply: false
 ---
 
