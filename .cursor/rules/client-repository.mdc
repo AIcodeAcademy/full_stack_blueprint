@@ -8,6 +8,7 @@ description: Generate a client repository
 globs: /src/client/repositories/*.repository.ts
 alwaysApply: false
 ---
+
 # Client Repository Rules
 
 ## Naming Conventions
