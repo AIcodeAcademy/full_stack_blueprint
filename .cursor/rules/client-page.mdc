@@ -3,11 +3,6 @@ description: Generate a complete client page
 globs: /src/client/app
 alwaysApply: false
 ---
----
-description: Generate a complete client page
-globs: /src/client/app
-alwaysApply: false
----
 
 # Client Resource Rules
 

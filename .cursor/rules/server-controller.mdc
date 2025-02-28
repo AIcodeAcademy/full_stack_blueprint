@@ -3,11 +3,7 @@ description: Generate a server controller
 globs: /src/server/api/*/*.controller.ts
 alwaysApply: false
 ---
----
-description: Generate a server controller
-globs: /src/server/api/*/*.controller.ts
-alwaysApply: false
----
+
 # Server Controller Rules
 
 ## Naming Conventions

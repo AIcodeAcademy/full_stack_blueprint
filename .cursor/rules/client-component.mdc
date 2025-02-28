@@ -3,11 +3,6 @@ description: Generate a client web component
 globs: /src/client/app/**/*.component.ts
 alwaysApply: false
 ---
----
-description: Generate a client web component
-globs: /src/client/app/**/*.component.ts
-alwaysApply: false
----
 
 # Client Web Component Rules
 

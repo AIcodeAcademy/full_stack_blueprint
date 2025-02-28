@@ -3,11 +3,7 @@ description: Rules to generate a server domain entity
 globs: /src/server/domain/*.type.ts
 alwaysApply: false
 ---
----
-description: Rules to generate a server domain entity
-globs: /src/server/domain/*.type.ts
-alwaysApply: false
----
+
 # Server Entity Rules
 
 ## Naming Conventions

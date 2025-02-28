@@ -3,11 +3,6 @@ description: Generate a client repository
 globs: /src/client/app/**/*.repository.ts
 alwaysApply: false
 ---
----
-description: Generate a client repository
-globs: /src/client/app/**/*.repository.ts
-alwaysApply: false
----
 
 # Client Repository Rules
 

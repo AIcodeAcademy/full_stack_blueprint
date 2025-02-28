@@ -3,11 +3,7 @@ description: Html and css code rules
 globs: /src/client/app/**/*.*.ts
 alwaysApply: false
 ---
----
-description: Html and css code rules
-globs: /src/client/app/**/*.*.ts
-alwaysApply: false
----
+
 # Web development rules
 
 ## HTML rules

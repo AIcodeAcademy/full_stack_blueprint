@@ -3,11 +3,7 @@ description: Generate an API resource
 globs: /src/server/api/**/
 alwaysApply: false
 ---
----
-description: Generate an API resource
-globs: /src/server/api/*
-alwaysApply: false
----
+
 # Server Resource Rules
 
 ## Overview

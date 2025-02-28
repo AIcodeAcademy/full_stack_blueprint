@@ -3,11 +3,6 @@ description: Generate a client domain entity
 globs:  /src/client/domain/*.type.ts
 alwaysApply: false
 ---
----
-description: Generate a client domain entity
-globs: /src/client/domain/*.type.ts
-alwaysApply: false
----
 
 # Client Entity Rules
 

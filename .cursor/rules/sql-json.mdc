@@ -3,11 +3,6 @@ description: Rules for generating SQL comands in JSON configuration files
 globs: src/sql/*.sql.json
 alwaysApply: false
 ---
----
-description: Rules for generating SQL comands in JSON configuration files
-globs: "src/sql/*.sql.json"
-alwaysApply: false
----
 
 # SQL JSON Configuration Files
 

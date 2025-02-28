@@ -2,11 +2,7 @@
 description: Generate a server repository
 globs: /src/server/api/*/*.repository.ts
 ---
----
-description: Generate a server repository
-globs: /src/server/api/*/*.repository.ts
-alwaysApply: false
----
+
 # Server Repository Rules
 
 ## Naming Conventions

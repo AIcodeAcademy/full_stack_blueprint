@@ -3,11 +3,6 @@ description: Rules for using git repository commits and release tags
 globs: 
 alwaysApply: true
 ---
---- 
-description: About the system and terminal
-globs: 
-alwaysApply: true
---- 
 
 # Git rules
 
