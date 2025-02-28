@@ -4,7 +4,7 @@ globs: /src/server/domain/*.type.ts
 alwaysApply: false
 ---
 
-# Server Entity Rules
+# Server Domain Entity Rules
 
 ## Naming Conventions
 - **File naming**: Use `{entity-name}.type.ts` in `kebab-case`

@@ -1,17 +1,17 @@
 ---
-description: Generate an API resource
+description: Generate a server full API 
 globs: /src/server/api/**/
 alwaysApply: false
 ---
 
-# Server Resource Rules
+# Server API Rules
 
 ## Overview
 A complete API resource consists of:
-1. A controller to handle HTTP requests/responses (using [server-controller.mdc](mdc:.cursor/rules/server-controller.mdc))
-2. A repository for database operations (using [server-repository.mdc](mdc:.cursor/rules/server-repository.mdc))
-3. Domain entity type definitions if not already existing (using [server-entity.mdc](mdc:.cursor/rules/server-entity.mdc) )
-4. DTO types for requests and responses (defined in [server-controller.mdc](mdc:.cursor/rules/server-controller.mdc))
+1. A controller to handle HTTP requests/responses (using [server-api-controller.mdc](mdc:.cursor/rules/server-api-controller.mdc))
+2. A repository for database operations (using [server-api-repository.mdc](mdc:.cursor/rules/server-api-repository.mdc))
+3. Domain entity type definitions if not already existing (using [server-domain-entity.mdc](mdc:.cursor/rules/server-domain-entity.mdc) )
+4. DTO types for requests and responses (defined in [server-api-controller.mdc](mdc:.cursor/rules/server-api-controller.mdc))
 
 ## Implementation Process
 To create a new API resource, follow these steps:

@@ -1,9 +1,9 @@
 ---
-description: Generate a server repository
+description: Generate a server API repository module
 globs: /src/server/api/*/*.repository.ts
 ---
 
-# Server Repository Rules
+# Server API Repository Rules
 
 ## Naming Conventions
 - File naming: Use `{entity-name}.repository.ts` in kebab-case
