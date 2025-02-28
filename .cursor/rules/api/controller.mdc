@@ -1,10 +1,10 @@
 ---
-description: Generate a server controller
+description: Generate an API controller
 globs: /src/server/api/*/*.controller.ts
 alwaysApply: false
 ---
 
-# Server Controller Rules
+# API Controller Rule
 
 ## Naming Conventions
 - File naming: Use `{entity-name}.controller.ts` in kebab-case

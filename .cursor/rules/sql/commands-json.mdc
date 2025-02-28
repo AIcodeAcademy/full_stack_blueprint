@@ -1,10 +1,10 @@
 ---
-description: Rules for generating SQL comands in JSON configuration files
+description: Rules for generating SQL commands in JSON configuration files
 globs: src/sql/*.sql.json
 alwaysApply: false
 ---
 
-# SQL JSON Configuration Files
+# SQL Commands JSON Configuration Files
 
 These files define SQL operations for a specific database table in a structured JSON format.
 
