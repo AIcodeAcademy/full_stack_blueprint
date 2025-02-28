@@ -1,5 +1,5 @@
-import type { Tool } from "../../domain/tool.type";
-import { get } from "../../shared/fetch.utils";
+import type { Tool } from "@/client/domain/tool.type";
+import { get } from "@/client/shared/fetch.utils";
 
 const API_URL = "/api/tools";
 
@@ -8,7 +8,11 @@ const API_URL = "/api/tools";
  * @returns The tools or an empty array if the response is not successful
  */
 export const getTools = async (): Promise<Tool[]> => {
-	const response = await get<Tool[]>(API_URL);
-	if (response.body) return response.body;
+	const result = await get<Tool[]>(API_URL);
+	if (result.value) return result.value;
+	if (result.error) {
+		console.error(result.error);
+		// no error handling for now
+	}
 	return [];
 };

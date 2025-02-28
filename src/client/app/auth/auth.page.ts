@@ -93,19 +93,14 @@ export class AuthPage extends HTMLElement {
 	}) as EventListener;
 
 	async #handleAuth(credentials: Credentials) {
-		const userToken =
+		const result =
 			this.#mode === "login"
 				? await login(credentials)
 				: await register(credentials);
-		if (userToken.token) {
-			localStorage.setItem("userToken", JSON.stringify(userToken));
-			navigate("#home");
+		if (result.error) {
+			this.#authForm.showError("Invalid credentials.");
 		} else {
-			this.#authForm.showError(
-				this.#mode === "login"
-					? "Invalid credentials"
-					: "Registration failed. Please try again.",
-			);
+			navigate("#home");
 		}
 	}
 }
