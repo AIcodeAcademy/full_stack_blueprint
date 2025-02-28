@@ -3,11 +3,7 @@ description: Rules for documenting the code and the project
 globs: 
 alwaysApply: true
 ---
---- 
-description: Rules for documenting the code and the project
-globs: 
-alwaysApply: true
---- 
+
 # Review
 
 ## Code documentation
@@ -15,6 +11,7 @@ alwaysApply: true
 - Add JSDoc comments to public or exported functions
 - Do not add comments to private or inner blocks of code
 - Except for really complex code that need a explain for the 'why'
+- Use the `@param` tag to describe the parameters of the function
 
 ## Project documentation
 
