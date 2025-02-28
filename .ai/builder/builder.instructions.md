@@ -30,9 +30,6 @@ There are 4 main steps, with specific instructions for each:
      - Evaluate the delta changes to the existing code.
      - Choose the simplest option.
      - Write a bullet point list of the things you will do.
-     - When in a folder or file, 
-       - make sure to respect the folder or file structure and naming conventions.
-       - use existing code as a template for the new code.
    - Repeat until the **implementation plan** for the the feature/tier is complete
 
 4. Document your work:   
